@@ -1,6 +1,8 @@
 ﻿using Azure;
 using Azure.Communication.Email;
+using boulderlog.Domain;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
 namespace boulderlog.Domain.Email
@@ -8,10 +10,12 @@ namespace boulderlog.Domain.Email
     public class EmailSender : IEmailSender
     {
         private readonly ILogger _logger;
+        private readonly AppConfigOptions _appConfig;
 
-        public EmailSender(ILoggerFactory logger)
+        public EmailSender(ILoggerFactory logger, IOptions<AppConfigOptions> appConfig)
         {
             _logger = logger.CreateLogger<EmailSender>();
+            _appConfig = appConfig.Value;
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -27,7 +31,7 @@ namespace boulderlog.Domain.Email
             try
             {
                 var emailClient = new EmailClient(connectionString);
-                await emailClient.SendAsync(WaitUntil.Completed, "DoNotReply@49b5638d-ff62-42b4-8e2e-ed6e33923ade.azurecomm.net", email, $"Boulderlog - {subject}", htmlMessage);
+                await emailClient.SendAsync(WaitUntil.Completed, _appConfig.DoNotReplyEmail, email, $"BoulderLog - {subject}", htmlMessage);
                 _logger.LogInformation("Sent {subject} email to {email}", subject, email);
             }
             catch (SmtpException e)

@@ -4,5 +4,6 @@
     {
         public const string AppConfig = "AppConfig";
         public string AdminUserEmail { get; set; }
+        public string DoNotReplyEmail { get; internal set; }
     }
 }
