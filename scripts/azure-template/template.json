@@ -1,0 +1,550 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_fundamentalsweb_name": {
+            "defaultValue": "fundamentalsweb",
+            "type": "String"
+        },
+        "serverfarms_fundamentals_plan_name": {
+            "defaultValue": "fundamentals-plan",
+            "type": "String"
+        },
+        "emailServices_fundamentals_email_name": {
+            "defaultValue": "fundamentals-email",
+            "type": "String"
+        },
+        "CommunicationServices_fundamentals_communication_name": {
+            "defaultValue": "fundamentals-communication",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Communication/emailServices",
+            "apiVersion": "2023-06-01-preview",
+            "name": "[parameters('emailServices_fundamentals_email_name')]",
+            "location": "global",
+            "properties": {
+                "dataLocation": "Korea"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2023-01-01",
+            "name": "[parameters('serverfarms_fundamentals_plan_name')]",
+            "location": "Korea Central",
+            "sku": {
+                "name": "P0v3",
+                "tier": "Premium0V3",
+                "size": "P0v3",
+                "family": "Pv3",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.Communication/CommunicationServices",
+            "apiVersion": "2023-06-01-preview",
+            "name": "[parameters('CommunicationServices_fundamentals_communication_name')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServices_fundamentals_email_name'), 'AzureManagedDomain')]"
+            ],
+            "properties": {
+                "dataLocation": "korea",
+                "linkedDomains": [
+                    "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServices_fundamentals_email_name'), 'AzureManagedDomain')]"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Communication/emailServices/domains",
+            "apiVersion": "2023-06-01-preview",
+            "name": "[concat(parameters('emailServices_fundamentals_email_name'), '/AzureManagedDomain')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Communication/emailServices', parameters('emailServices_fundamentals_email_name'))]"
+            ],
+            "properties": {
+                "domainManagement": "AzureManaged",
+                "userEngagementTracking": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2023-01-01",
+            "name": "[parameters('sites_fundamentalsweb_name')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_fundamentals_plan_name'))]"
+            ],
+            "tags": {
+                "hidden-related:/subscriptions/9a939cfe-a10d-42f2-a453-71dca4ecfb36/resourceGroups/fundamentals-rg/providers/Microsoft.Web/serverFarms/fundamentals-plan": "empty"
+            },
+            "kind": "app,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_fundamentalsweb_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_fundamentalsweb_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_fundamentals_plan_name'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "DOTNETCORE|8.0",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": true,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 1
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "33A9BB086C25E2240635494794CEF987F8C24A19179A3932AF73E32ED11080A9",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/ftp')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "tags": {
+                "hidden-related:/subscriptions/9a939cfe-a10d-42f2-a453-71dca4ecfb36/resourceGroups/fundamentals-rg/providers/Microsoft.Web/serverFarms/fundamentals-plan": "empty"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/scm')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "tags": {
+                "hidden-related:/subscriptions/9a939cfe-a10d-42f2-a453-71dca4ecfb36/resourceGroups/fundamentals-rg/providers/Microsoft.Web/serverFarms/fundamentals-plan": "empty"
+            },
+            "properties": {
+                "allow": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/web')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "tags": {
+                "hidden-related:/subscriptions/9a939cfe-a10d-42f2-a453-71dca4ecfb36/resourceGroups/fundamentals-rg/providers/Microsoft.Web/serverFarms/fundamentals-plan": "empty"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "DOTNETCORE|8.0",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
+                "httpLoggingEnabled": false,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$fundamentalsweb",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "localMySqlEnabled": false,
+                "managedServiceIdentityId": 2204,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": true,
+                "minTlsVersion": "1.3",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 1,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/1763291a-b57b-4bb2-8304-3e6becebf964')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"d747253f492b973a34740c6c79cf13e86bab1fe9\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"use fixed-bottom style for footer\"}",
+                "start_time": "2024-05-12T05:11:03.0198799Z",
+                "end_time": "2024-05-12T05:11:19.8557174Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2086d86f-90a1-4b70-b4c7-89b00549d361')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"8980a53ecd661e9eb5d4b99bc8e8adc4c4a602f7\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"Rename Custom token provider to App. Set RejectionStatusCode\"}",
+                "start_time": "2024-05-12T09:44:52.0523655Z",
+                "end_time": "2024-05-12T09:45:03.1581927Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/31702aa6-bd44-4da5-827e-d45cc9524003')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"5984cf581074d7a906007ea4af083da6826c72bd\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"create publish workflow\"}",
+                "start_time": "2024-05-12T03:21:29.6199967Z",
+                "end_time": "2024-05-12T03:21:48.5902343Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/3c3fe165-322f-4f2f-8848-ef7acf338397')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"af973652ff617d039b1a0c8523a444d7daeb628d\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"Implement email service.\"}",
+                "start_time": "2024-05-12T08:36:15.2567473Z",
+                "end_time": "2024-05-12T08:36:31.2659261Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/5a8834a9-4228-4ea9-bf7e-263f20f101dd')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"83057c7aac3dadff58d24cbe815baaec814375fa\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"Use Controller isntead of Razer pages\"}",
+                "start_time": "2024-05-12T10:44:55.4176401Z",
+                "end_time": "2024-05-12T10:45:06.2493267Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/5cb02680-eff3-462b-a7f6-5be942b2bb74')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"204815947afcf55a1dca3b4868e21959ffb51ece\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"update application name\"}",
+                "start_time": "2024-05-12T11:44:18.5781367Z",
+                "end_time": "2024-05-12T11:44:28.8450056Z",
+                "active": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/b7c6b17d-eab6-472c-83a2-3b4925c4c791')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"0d48b7a6196b662b61d812e416c26f85c432e440\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"Add rate limiter\"}",
+                "start_time": "2024-05-12T09:39:48.500063Z",
+                "end_time": "2024-05-12T09:39:59.0229949Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/bcf24a79-948b-4039-8d53-d6925eaff862')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"022840dd01c2fedb2edea95e3a6ad57fa9e1a0c2\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"format changes\"}",
+                "start_time": "2024-05-12T08:51:25.5860949Z",
+                "end_time": "2024-05-12T08:51:58.023251Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/c051d069-30d5-4717-be95-27370acec79c')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"4b3faebfdd57d6dc1611671eea371e6be5760372\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"Add footer padding\"}",
+                "start_time": "2024-05-12T11:40:23.9165812Z",
+                "end_time": "2024-05-12T11:40:34.0600437Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/f9ed020f-8c24-41de-81a0-899a14741242')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"4adcd2627592a0dbb2246049bcf58cc994fbf77f\",\"repoName\":\"nicholasbergesen/fundamentals\",\"actor\":\"nicholasbergesen\",\"slotName\":\"production\",\"commitMessage\":\"Merge branch 'main' of https://github.com/nicholasbergesen/fundamentals\"}",
+                "start_time": "2024-05-12T11:38:59.2789958Z",
+                "end_time": "2024-05-12T11:39:10.0512204Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/', parameters('sites_fundamentalsweb_name'), '.azurewebsites.net')]",
+            "location": "Korea Central",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ],
+            "properties": {
+                "siteName": "fundamentalsweb",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T03_21_07_5840836')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T04_21_07_5777587')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T05_21_07_6848098')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T06_21_07_7731565')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T07_21_07_9450704')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T08_21_08_0115193')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T09_21_08_1504835')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T10_21_08_2519167')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_fundamentalsweb_name'), '/2024-05-12T11_21_08_3729743')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_fundamentalsweb_name'))]"
+            ]
+        },
+        {
+            "type": "microsoft.communication/emailservices/domains/senderusernames",
+            "apiVersion": "2023-06-01-preview",
+            "name": "[concat(parameters('emailServices_fundamentals_email_name'), '/azuremanageddomain/donotreply')]",
+            "dependsOn": [
+                "[resourceId('microsoft.communication/emailservices/domains', parameters('emailServices_fundamentals_email_name'), 'azuremanageddomain')]",
+                "[resourceId('microsoft.communication/emailservices', parameters('emailServices_fundamentals_email_name'))]"
+            ],
+            "properties": {
+                "username": "DoNotReply",
+                "displayName": "DoNotReply"
+            }
+        }
+    ]
+}

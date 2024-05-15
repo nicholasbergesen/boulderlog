@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_fundamentalsweb_name": {
+            "value": null
+        },
+        "serverfarms_fundamentals_plan_name": {
+            "value": null
+        },
+        "emailServices_fundamentals_email_name": {
+            "value": null
+        },
+        "CommunicationServices_fundamentals_communication_name": {
+            "value": null
+        }
+    }
+}
