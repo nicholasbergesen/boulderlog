@@ -26,6 +26,9 @@ namespace boulderlog.Controllers
         [Route("Migration")]
         public async Task<IActionResult> Migration()
         {
+            await _context.Database.MigrateAsync();
+            await _context.SaveChangesAsync();
+
             CreateRoleIfNotExist(Role.Admin);
             CreateRoleIfNotExist(Role.User);
             if (!string.IsNullOrEmpty(_appConfigOptions.AdminUserEmail))
@@ -54,7 +57,6 @@ namespace boulderlog.Controllers
             }
 
             await _context.SaveChangesAsync();
-            await _context.Database.MigrateAsync();
             return Ok();
         }
 
