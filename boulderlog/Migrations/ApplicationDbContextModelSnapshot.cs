@@ -213,6 +213,54 @@ namespace boulderlog.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("boulderlog.Data.Models.Climb", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Gym")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Wall")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Climb");
+                });
+
+            modelBuilder.Entity("boulderlog.Data.Models.ClimbLog", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ClimbId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClimbId");
+
+                    b.ToTable("ClimbLog");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("boulderlog.Data.Models.AppRole", null)
@@ -262,6 +310,18 @@ namespace boulderlog.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("boulderlog.Data.Models.ClimbLog", b =>
+                {
+                    b.HasOne("boulderlog.Data.Models.Climb", null)
+                        .WithMany("ClimbLogs")
+                        .HasForeignKey("ClimbId");
+                });
+
+            modelBuilder.Entity("boulderlog.Data.Models.Climb", b =>
+                {
+                    b.Navigation("ClimbLogs");
                 });
 #pragma warning restore 612, 618
         }
