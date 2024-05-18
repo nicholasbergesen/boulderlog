@@ -49,7 +49,7 @@ namespace boulderlog.Controllers
         public IActionResult Create(string climbId)
         {
             ViewBag.ClimbId = climbId;
-            return View();
+            return View(new ClimbLog());
         }
 
         // POST: ClimbLog/Create
