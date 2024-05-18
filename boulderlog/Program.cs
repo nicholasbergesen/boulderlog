@@ -41,6 +41,7 @@ namespace boulderlog
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
             });
+
             builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
             {
                 options.Level = CompressionLevel.Fastest;
@@ -95,9 +96,6 @@ namespace boulderlog
 
             var app = builder.Build();
 
-            app.UseResponseCompression();
-            app.UseRateLimiter();
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -105,6 +103,10 @@ namespace boulderlog
             }
             else
             {
+                // Compression prevents browser Link script injection during development
+                app.UseResponseCompression();
+                app.UseRateLimiter();
+
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();

@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /fundamentals/fundamentals.db
 /fundamentals/fundamentals.db-wal
 /fundamentals/fundamentals.db-shm
+/boulderlog/boulderlog.db

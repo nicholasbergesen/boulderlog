@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using boulderlog.Data;
 
@@ -10,9 +11,11 @@ using boulderlog.Data;
 namespace boulderlog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240516145537_UpdateClimbTables")]
+    partial class UpdateClimbTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -216,7 +219,6 @@ namespace boulderlog.Migrations
             modelBuilder.Entity("boulderlog.Data.Models.Climb", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Color")
@@ -239,6 +241,7 @@ namespace boulderlog.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Wall")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -252,7 +255,6 @@ namespace boulderlog.Migrations
             modelBuilder.Entity("boulderlog.Data.Models.ClimbLog", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClimbId")

@@ -12,5 +12,8 @@ namespace boulderlog.Data
             : base(options)
         {
         }
+
+        public DbSet<Climb> Climb { get; set; }
+        public DbSet<ClimbLog> ClimbLog { get; set; }
     }
 }

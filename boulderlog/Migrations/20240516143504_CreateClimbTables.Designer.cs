@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using boulderlog.Data;
 
@@ -10,9 +11,11 @@ using boulderlog.Data;
 namespace boulderlog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240516143504_CreateClimbTables")]
+    partial class CreateClimbTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -216,7 +219,6 @@ namespace boulderlog.Migrations
             modelBuilder.Entity("boulderlog.Data.Models.Climb", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Color")
@@ -229,22 +231,12 @@ namespace boulderlog.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Wall")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Climb");
                 });
@@ -252,11 +244,9 @@ namespace boulderlog.Migrations
             modelBuilder.Entity("boulderlog.Data.Models.ClimbLog", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClimbId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeStamp")
@@ -325,26 +315,11 @@ namespace boulderlog.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("boulderlog.Data.Models.Climb", b =>
-                {
-                    b.HasOne("boulderlog.Data.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("boulderlog.Data.Models.ClimbLog", b =>
                 {
-                    b.HasOne("boulderlog.Data.Models.Climb", "Climb")
+                    b.HasOne("boulderlog.Data.Models.Climb", null)
                         .WithMany("ClimbLogs")
-                        .HasForeignKey("ClimbId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Climb");
+                        .HasForeignKey("ClimbId");
                 });
 
             modelBuilder.Entity("boulderlog.Data.Models.Climb", b =>
