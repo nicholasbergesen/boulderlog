@@ -2,7 +2,8 @@
 
 @{
     ViewData["Title"] = "Create";
-    Model.TimeStamp = DateTime.Now;
+    var now = DateTime.Now;
+    Model.TimeStamp = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Local);
 }
 
 <h1>Create</h1>
