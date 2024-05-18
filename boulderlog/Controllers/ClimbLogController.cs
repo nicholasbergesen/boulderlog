@@ -63,8 +63,9 @@ namespace boulderlog.Controllers
             {
                 _context.Add(climbLog);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Climb");
             }
+            
             ViewData["ClimbId"] = new SelectList(_context.Climb, "Id", "Id", climbLog.ClimbId);
             return View(climbLog);
         }
