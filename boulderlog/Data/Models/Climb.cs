@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,7 +17,11 @@ namespace Boulderlog.Data.Models
         public string Name { get; set; }
 
         [MaxLength(255), Required]
-        public string Color { get; set; }
+        public string Grade { get; set; }
+
+        [MaxLength(255)]
+        [DisplayName("Hold Color")]
+        public string? HoldColor { get; set; }
 
         [MaxLength(255), Required]
         public string Gym { get; set; }

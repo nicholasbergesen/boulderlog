@@ -16,12 +16,6 @@ namespace Boulderlog.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogInformation("Index");
-            return View();
-        }
-
-        public IActionResult Anonymous()
-        {
             return View();
         }
 
