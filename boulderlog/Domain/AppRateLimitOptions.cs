@@ -3,7 +3,7 @@
     public class AppRateLimitOptions
     {
         public const string AppRateLimit = "AppRateLimit";
-        public string Policy{ get; set; } = "fixed";
+        public string Policy { get; set; } = "fixed";
         public int PermitLimit { get; set; } = 100;
         public int Window { get; set; } = 10;
         public int ReplenishmentPeriod { get; set; } = 2;

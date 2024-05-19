@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Boulderlog.Data;
+using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Boulderlog.Data;
-using Boulderlog.Data.Models;
-using System.Security.Claims;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Boulderlog.Controllers
 {
@@ -67,7 +65,7 @@ namespace Boulderlog.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index", "Climb");
             }
-            
+
             ViewData["ClimbId"] = new SelectList(_context.Climb, "Id", "Id", climbLog.ClimbId);
             return View(climbLog);
         }

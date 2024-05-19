@@ -15,10 +15,10 @@ namespace Boulderlog.Data.Models
         public DateTime TimeStamp { get; set; }
 
         [MaxLength(255), Required]
-        public string Type { get; set; }
+        public required string Type { get; set; }
 
         [Required]
-        public string ClimbId { get; set; }
+        public required string ClimbId { get; set; }
 
         [ForeignKey(nameof(ClimbId))]
         public Climb? Climb { get; set; }

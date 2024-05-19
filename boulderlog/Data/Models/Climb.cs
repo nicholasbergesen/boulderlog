@@ -14,23 +14,23 @@ namespace Boulderlog.Data.Models
         public string? Id { get; set; }
 
         [MaxLength(255), Required]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [MaxLength(255), Required]
-        public string Grade { get; set; }
+        public required string Grade { get; set; }
 
         [MaxLength(255)]
         [DisplayName("Hold Color")]
         public string? HoldColor { get; set; }
 
         [MaxLength(255), Required]
-        public string Gym { get; set; }
+        public required string Gym { get; set; }
 
         [MaxLength(255)]
         public string? Wall { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public required string UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual AppUser? User { get; set; }

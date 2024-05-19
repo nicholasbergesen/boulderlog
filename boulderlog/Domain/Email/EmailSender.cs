@@ -1,8 +1,6 @@
 ﻿using Azure;
 using Azure.Communication.Email;
-using Boulderlog.Domain;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Build.Framework;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;

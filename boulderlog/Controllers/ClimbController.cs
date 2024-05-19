@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Boulderlog.Data;
+using Boulderlog.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Boulderlog.Data;
-using Boulderlog.Data.Models;
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace Boulderlog.Controllers
 {
@@ -33,10 +31,10 @@ namespace Boulderlog.Controllers
                 .Include(c => c.ClimbLogs)
                 .Where(c => c.UserId == userId);
 
-            foreach(var climb in climbs)
+            foreach (var climb in climbs)
             {
                 var attempts = climb.ClimbLogs.GroupBy(x => x.Type);
-                foreach(var attempt in attempts)
+                foreach (var attempt in attempts)
                 {
                     ViewData[attempt.Key] = attempt.Count();
                 }
