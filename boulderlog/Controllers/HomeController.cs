@@ -1,8 +1,9 @@
-using boulderlog.Models;
+using Boulderlog.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace boulderlog.Controllers
+namespace Boulderlog.Controllers
 {
     public class HomeController : Controller
     {

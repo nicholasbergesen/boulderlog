@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "boulderlog", "boulderlog\boulderlog.csproj", "{E58C2E1A-F686-4EEF-A361-D579B8818920}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boulderlog", "boulderlog\Boulderlog.csproj", "{E58C2E1A-F686-4EEF-A361-D579B8818920}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

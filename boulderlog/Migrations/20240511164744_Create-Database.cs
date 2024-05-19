@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
-namespace boulderlog.Migrations
+namespace Boulderlog.Migrations
 {
     /// <inheritdoc />
     public partial class CreateDatabase : Migration

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace boulderlog.Migrations
+namespace Boulderlog.Migrations
 {
     /// <inheritdoc />
     public partial class CreateClimbTables : Migration

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using boulderlog.Data;
-using boulderlog.Data.Models;
+using Boulderlog.Data;
+using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
-namespace boulderlog.Controllers
+namespace Boulderlog.Controllers
 {
     [Authorize]
     public class ClimbController : Controller

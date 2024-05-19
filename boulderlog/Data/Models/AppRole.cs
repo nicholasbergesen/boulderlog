@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace boulderlog.Data.Models
+namespace Boulderlog.Data.Models
 {
     public class AppRole : IdentityRole
     {

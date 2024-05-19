@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using boulderlog.Data;
-using boulderlog.Data.Models;
+using Boulderlog.Data;
+using Boulderlog.Data.Models;
 using System.Security.Claims;
 
-namespace boulderlog.Controllers
+namespace Boulderlog.Controllers
 {
     public class ClimbLogController : Controller
     {

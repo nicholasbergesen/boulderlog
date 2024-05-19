@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace boulderlog.Data.Models
+namespace Boulderlog.Data.Models
 {
     [Table("ClimbLog")]
     public class ClimbLog

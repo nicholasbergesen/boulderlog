@@ -1,13 +1,15 @@
-﻿using boulderlog.Data;
-using boulderlog.Data.Models;
-using boulderlog.Domain;
+﻿using Boulderlog.Data;
+using Boulderlog.Data.Models;
+using Boulderlog.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using static boulderlog.Domain.Const;
+using System.Linq;
+using System.Threading.Tasks;
+using static Boulderlog.Domain.Const;
 
-namespace boulderlog.Controllers
+namespace Boulderlog.Controllers
 {
     [Route("[controller]")]
     public class MaintenanceController : Controller

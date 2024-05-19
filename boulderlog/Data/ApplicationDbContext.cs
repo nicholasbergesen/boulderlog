@@ -1,10 +1,10 @@
-﻿using boulderlog.Data.Models;
+﻿using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using System.Data;
 
-namespace boulderlog.Data
+namespace Boulderlog.Data
 {
     public class ApplicationDbContext : IdentityDbContext<AppUser, AppRole, string>
     {

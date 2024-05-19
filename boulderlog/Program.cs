@@ -1,19 +1,25 @@
-using boulderlog.Data;
-using boulderlog.Data.Models;
-using boulderlog.Domain;
-using boulderlog.Domain.Email;
+using Boulderlog.Data;
+using Boulderlog.Data.Models;
+using Boulderlog.Domain;
+using Boulderlog.Domain.Email;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
+using System;
 using System.IO.Compression;
 using System.Threading.RateLimiting;
 
-namespace boulderlog
+namespace Boulderlog
 {
     public class Program
     {

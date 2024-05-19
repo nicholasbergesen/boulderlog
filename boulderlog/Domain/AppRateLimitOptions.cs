@@ -1,4 +1,4 @@
-﻿namespace boulderlog.Domain
+﻿namespace Boulderlog.Domain
 {
     public class AppRateLimitOptions
     {

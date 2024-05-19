@@ -1,7 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace boulderlog.Data.Models
+namespace Boulderlog.Data.Models
 {
     // The name Route conflicts with the asp.net Route class
     [Table("Climb")]

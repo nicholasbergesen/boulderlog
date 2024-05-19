@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using boulderlog.Data;
+using Boulderlog.Data;
 
 #nullable disable
 
-namespace boulderlog.Migrations
+namespace Boulderlog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240518072929_ValidationChanges")]

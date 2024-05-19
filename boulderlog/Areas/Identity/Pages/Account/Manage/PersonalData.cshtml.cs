@@ -1,11 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-using boulderlog.Data.Models;
+using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
-namespace boulderlog.Areas.Identity.Pages.Account.Manage
+namespace Boulderlog.Areas.Identity.Pages.Account.Manage
 {
     public class PersonalDataModel : PageModel
     {

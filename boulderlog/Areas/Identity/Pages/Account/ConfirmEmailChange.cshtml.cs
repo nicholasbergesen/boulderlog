@@ -2,14 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using boulderlog.Data.Models;
+using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace boulderlog.Areas.Identity.Pages.Account
+namespace Boulderlog.Areas.Identity.Pages.Account
 {
     public class ConfirmEmailChangeModel : PageModel
     {

@@ -1,15 +1,19 @@
 ﻿using Azure;
 using Azure.Communication.Email;
-using boulderlog.Domain;
+using Boulderlog.Domain;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Build.Framework;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
-namespace boulderlog.Domain.Email
+namespace Boulderlog.Domain.Email
 {
     public class EmailSender : IEmailSender
     {
-        private readonly ILogger _logger;
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly AppConfigOptions _appConfig;
 
         public EmailSender(ILoggerFactory logger, IOptions<AppConfigOptions> appConfig)

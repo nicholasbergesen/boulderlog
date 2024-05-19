@@ -1,4 +1,4 @@
-namespace boulderlog.Models
+namespace Boulderlog.Models
 {
     public class ErrorViewModel
     {
