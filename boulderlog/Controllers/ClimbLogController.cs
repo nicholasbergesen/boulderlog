@@ -49,7 +49,7 @@ namespace Boulderlog.Controllers
         {
             ViewData["Type"] = new SelectList(new List<string>() { "Attempt", "Top", "Flash" }, "Attempt");
             ViewBag.ClimbId = climbId;
-            return View(new ClimbLog());
+            return View(new ClimbLog() { ClimbId = climbId, Type = "Attempt" });
         }
 
         // POST: ClimbLog/Create
