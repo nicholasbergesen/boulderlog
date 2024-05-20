@@ -1,49 +1,31 @@
-﻿using Boulderlog.Data;
-using Boulderlog.Data.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+using Boulderlog.Data;
+using Boulderlog.Data.Models;
 
 namespace Boulderlog.Controllers
 {
-    [Authorize]
-    public class ClimbController : Controller
+    public class ImagesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ClimbController(ApplicationDbContext context)
+        public ImagesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Climb
+        // GET: Images
         public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var climbs = _context.Climb
-                .Include(c => c.User)
-                .Include(c => c.ClimbLogs)
-                .Where(c => c.UserId == userId);
-
-            foreach (var climb in climbs)
-            {
-                var attempts = climb.ClimbLogs.GroupBy(x => $"{x.ClimbId}-{x.Type}");
-                foreach (var attempt in attempts)
-                {
-                    ViewData[attempt.Key] = attempt.Count();
-                }
-            }
-
-            return View(await climbs.ToListAsync());
+            return View(await _context.Image.ToListAsync());
         }
 
-        // GET: Climb/Details/5
+        // GET: Images/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -51,49 +33,39 @@ namespace Boulderlog.Controllers
                 return NotFound();
             }
 
-            var climb = await _context.Climb
-                .Include(c => c.User)
+            var image = await _context.Image
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (climb == null)
+            if (image == null)
             {
                 return NotFound();
             }
 
-            return View(climb);
+            return View(image);
         }
 
-        // GET: Climb/Create
+        // GET: Images/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View();
         }
 
-        // POST: Climb/Create
+        // POST: Images/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
+        public async Task<IActionResult> Create([Bind("Id,FileType,FileName,Bytes")] Image image)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (climb.UserId != userId?.Value)
-            {
-                ModelState.AddModelError("Invalid", "Invalid request");
-            }
-
             if (ModelState.IsValid)
             {
-                _context.Add(climb);
+                _context.Add(image);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            return View(climb);
+            return View(image);
         }
 
-        // GET: Climb/Edit/5
+        // GET: Images/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -101,23 +73,22 @@ namespace Boulderlog.Controllers
                 return NotFound();
             }
 
-            var climb = await _context.Climb.FindAsync(id);
-            if (climb == null)
+            var image = await _context.Image.FindAsync(id);
+            if (image == null)
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
-            return View(climb);
+            return View(image);
         }
 
-        // POST: Climb/Edit/5
+        // POST: Images/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,FileType,FileName,Bytes")] Image image)
         {
-            if (id != climb.Id)
+            if (id != image.Id)
             {
                 return NotFound();
             }
@@ -126,12 +97,12 @@ namespace Boulderlog.Controllers
             {
                 try
                 {
-                    _context.Update(climb);
+                    _context.Update(image);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClimbExists(climb.Id))
+                    if (!ImageExists(image.Id))
                     {
                         return NotFound();
                     }
@@ -142,11 +113,10 @@ namespace Boulderlog.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
-            return View(climb);
+            return View(image);
         }
 
-        // GET: Climb/Delete/5
+        // GET: Images/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -154,35 +124,34 @@ namespace Boulderlog.Controllers
                 return NotFound();
             }
 
-            var climb = await _context.Climb
-                .Include(c => c.User)
+            var image = await _context.Image
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (climb == null)
+            if (image == null)
             {
                 return NotFound();
             }
 
-            return View(climb);
+            return View(image);
         }
 
-        // POST: Climb/Delete/5
+        // POST: Images/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var climb = await _context.Climb.FindAsync(id);
-            if (climb != null)
+            var image = await _context.Image.FindAsync(id);
+            if (image != null)
             {
-                _context.Climb.Remove(climb);
+                _context.Image.Remove(image);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClimbExists(string id)
+        private bool ImageExists(string id)
         {
-            return _context.Climb.Any(e => e.Id == id);
+            return _context.Image.Any(e => e.Id == id);
         }
     }
 }

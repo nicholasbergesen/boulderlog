@@ -44,8 +44,8 @@
                 @Html.DisplayFor(modelItem => item.Wall)
             </td>
             <td>
-                @foreach(var log in ViewData) {
-                   <span>@log.Key: @log.Value</span>
+                @foreach(var log in ViewData.Where(x => x.Key.StartsWith(item.Id))) {
+                   <span>@log.Key.Substring(37, log.Key.Length - 37): @log.Value</span>
                 }
             </td>
             <td>

@@ -13,5 +13,6 @@ namespace Boulderlog.Data
 
         public DbSet<Climb> Climb { get; set; }
         public DbSet<ClimbLog> ClimbLog { get; set; }
+        public DbSet<Image> Image { get; set; }
     }
 }
