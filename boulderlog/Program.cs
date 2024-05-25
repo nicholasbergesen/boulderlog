@@ -67,6 +67,7 @@ namespace Boulderlog
                     opt.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
                 });
             builder.Services.AddRazorPages();
+            builder.Services.AddResponseCaching();
 
             builder.Services.ConfigureApplicationCookie(o =>
             {
@@ -139,6 +140,7 @@ namespace Boulderlog
             app.UseRouting();
 
             app.UseCors();
+            app.UseResponseCaching();
             app.UseAuthorization();
 
             app.MapControllerRoute(
