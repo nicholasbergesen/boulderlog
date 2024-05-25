@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Boulderlog.Data;
 using Boulderlog.Data.Models;
+using System.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Boulderlog.ApiController
@@ -22,19 +22,12 @@ namespace Boulderlog.ApiController
             _context = context;
         }
 
-        // GET: api/Images
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Image>>> GetImage()
-        {
-            return new List<Image>() { new Image() { FileType = "png", Bytes = [0], FileName = "Apple", Id = "Newberry"  } }; //await _context.Image.ToListAsync();
-        }
-
         // GET: api/Images/5
         [HttpGet("{id}")]
         //[ResponseCache(Location = ResponseCacheLocation.Client, Duration = 31536000, VaryByQueryKeys = ["id"])]
         // InvalidOperationException: 'VaryByQueryKeys' requires the response cache middleware.
         //Microsoft.AspNetCore.Mvc.Filters.ResponseCacheFilterExecutor.Execute(FilterContext context)
-        public async Task<ActionResult<Image>> GetImage(string id)
+        public async Task<IActionResult> GetImage(string id)
         {
             var image = await _context.Image.FindAsync(id);
 
@@ -43,7 +36,7 @@ namespace Boulderlog.ApiController
                 return NotFound();
             }
 
-            return image;
+            return File(image.Bytes, image.FileType);
         }
 
         // PUT: api/Images/5
@@ -80,8 +73,26 @@ namespace Boulderlog.ApiController
         // POST: api/Images
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Image>> PostImage(Image image)
+        public async Task<ActionResult<Image>> PostImage([FromBody] string imageBase64)
         {
+            string[] split = imageBase64.Split(',');
+            string[] dataType = split[0].Substring(split[0].IndexOf(':') + 1).Split(';');
+            string fileType = dataType[0];
+            string format = dataType[1];
+
+            if (format != "base64")
+            {
+                return BadRequest($"Image data format {format} unkown, base64 expected");
+            }
+
+            var image = new Image()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FileName = "FileName",
+                FileType = fileType,
+                Bytes = Convert.FromBase64String(split[1])
+            };
+
             _context.Image.Add(image);
             try
             {

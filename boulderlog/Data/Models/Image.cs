@@ -8,6 +8,7 @@ namespace Boulderlog.Data.Models
     public class Image
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 
         [Required, MaxLength(255)]

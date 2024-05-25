@@ -4,44 +4,57 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<button id="start-camera" class="btn btn-outline-primary pt-1">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
+        <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z" />
+        <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+    </svg>
+</button>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FileType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Bytes)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bytes)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<video id="video" width="320" height="240" autoplay></video>
+<button id="click-photo" class="btn btn-outline-primary">Take Photo</button>
+<canvas id="canvas" width="320" height="240"></canvas>
+<button id="save-image" type="submit" class="btn btn-outline-primary">Save</button>
+<img id="display-image" />
+
+<script>
+    let start_camera = document.querySelector("#start-camera");
+    let video = document.querySelector("#video");
+    let click_button = document.querySelector("#click-photo");
+    let canvas = document.querySelector("#canvas");
+    let save_image = document.querySelector("#save-image");
+    let display_image = document.querySelector("#display-image");
+
+    start_camera.addEventListener('click', async function() {
+        let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = stream;
+    });
+
+    click_button.addEventListener('click', function() {
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    });
+
+    save_image.addEventListener('click', async function() {
+        let image_data_url = canvas.toDataURL('image/jpeg');
+        display_image.src = image_data_url;
+        console.log(image_data_url);
+        await createImage(image_data_url);
+    });
+
+    function createImage(imageBlob) {
+        const headers = new Headers()
+        headers.set('Content-Type', 'application/json')
+        headers.set('Accept', 'application/json')
+
+        const request = new Request('/api/images', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(imageBlob)
+        })
+
+        return fetch(request)
+            .then(res => {
+                console.log("got response:", res)
+            })
+    }
+</script>
