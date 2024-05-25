@@ -80,7 +80,7 @@ namespace Boulderlog.Controllers
 
             if (climb.UserId != userId?.Value)
             {
-                ModelState.AddModelError("Invalid", "Invalid request");
+                ModelState.AddModelError("UserId", "UserId is invalid");
             }
 
             if (ModelState.IsValid)

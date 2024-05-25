@@ -33,7 +33,7 @@ document.querySelector("#capture-image").addEventListener('click', async functio
     let imageData = image_data_url.split(",");
     let dataType = imageData[0].substring(imageData[0].indexOf(':', 0) + 1).split(";");
 
-    await createImage(imageData[0], dataType[0]);
+    await createImage(imageData[1], dataType[0]);
 });
 
 async function createImage(base64, fileType) {
