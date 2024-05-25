@@ -18,9 +18,6 @@ namespace Boulderlog.Data.Models
         [Required, MaxLength(255)]
         public required string FileType { get; set; }
 
-        [Required, MaxLength(400)]
-        public required string FileName { get; set; }
-
         [Required]
         public required byte[] Bytes { get; set; }
     }
