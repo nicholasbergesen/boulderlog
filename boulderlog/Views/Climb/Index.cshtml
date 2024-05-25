@@ -16,7 +16,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.ImageId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Grade)
@@ -36,7 +36,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                <img src="/api/images/@item.ImageId" alt="Boulder Image" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Grade)

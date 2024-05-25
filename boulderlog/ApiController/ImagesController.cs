@@ -88,6 +88,7 @@ namespace Boulderlog.ApiController
             var image = new Image()
             {
                 Id = Guid.NewGuid().ToString(),
+                CreatedAt = DateTime.UtcNow,
                 FileName = "FileName",
                 FileType = fileType,
                 Bytes = Convert.FromBase64String(split[1])

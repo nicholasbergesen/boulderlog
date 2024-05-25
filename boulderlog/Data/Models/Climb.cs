@@ -9,12 +9,13 @@ namespace Boulderlog.Data.Models
     [Table("Climb")]
     public class Climb
     {
-        [Key]
+        [Key, MaxLength(36)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 
-        [MaxLength(255), Required]
-        public required string Name { get; set; }
+        [MaxLength(36), Required]
+        [DisplayName("Image")]
+        public string? ImageId { get; set; }
 
         [MaxLength(255), Required]
         public required string Grade { get; set; }

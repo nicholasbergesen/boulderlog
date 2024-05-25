@@ -111,6 +111,7 @@ namespace Boulderlog.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Grade")
@@ -127,9 +128,9 @@ namespace Boulderlog.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ImageId")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -151,6 +152,7 @@ namespace Boulderlog.Migrations
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClimbId")
@@ -175,11 +177,16 @@ namespace Boulderlog.Migrations
             modelBuilder.Entity("Boulderlog.Data.Models.Image", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("Bytes")
                         .IsRequired()
                         .HasColumnType("BLOB");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("FileName")
                         .IsRequired()

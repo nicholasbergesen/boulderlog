@@ -74,7 +74,7 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
+        public async Task<IActionResult> Create([Bind("ImageId,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
 

@@ -7,7 +7,7 @@ namespace Boulderlog.Data.Models
     [Table("ClimbLog")]
     public class ClimbLog
     {
-        [Key]
+        [Key, MaxLength(36)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
 

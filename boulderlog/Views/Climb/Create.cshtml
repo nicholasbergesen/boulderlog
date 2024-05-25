@@ -42,7 +42,7 @@
                 <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="Name" type="hidden" />
+                <input asp-for="ImageId" type="hidden" />
                 <input asp-for="UserId" type="hidden" value="@ViewData["UserId"]" />
             </div>
             <div class="form-group">
@@ -100,7 +100,7 @@
         let response = await fetch(request);
         let body = await response.json()
         console.log(body);
-        document.querySelector("#Name").value = body.id;
+        document.querySelector("#ImageId").value = body.id;
     });
 </script>
 
