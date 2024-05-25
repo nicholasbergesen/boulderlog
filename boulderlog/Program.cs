@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO.Compression;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 
 namespace Boulderlog
@@ -59,7 +60,12 @@ namespace Boulderlog
             builder.Services.Configure<AppRateLimitOptions>(builder.Configuration.GetSection(AppRateLimitOptions.AppRateLimit));
             builder.Services.Configure<AppConfigOptions>(builder.Configuration.GetSection(AppConfigOptions.AppConfig));
 
-            builder.Services.AddControllersWithViews();
+            builder.Services
+                .AddControllersWithViews()
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString;
+                });
             builder.Services.AddRazorPages();
 
             builder.Services.ConfigureApplicationCookie(o =>

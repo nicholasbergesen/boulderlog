@@ -70,28 +70,29 @@ namespace Boulderlog.ApiController
             return NoContent();
         }
 
+        public class ImageModel
+        {
+            public required string Base64 { get; set; }
+            public string? CreatedAt { get; set; }
+            public required string FileType { get; set; }
+        }
+
         // POST: api/Images
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Image>> PostImage([FromBody] string imageBase64)
+        public async Task<ActionResult<Image>> PostImage(ImageModel imageRequest)
         {
-            string[] split = imageBase64.Split(',');
-            string[] dataType = split[0].Substring(split[0].IndexOf(':') + 1).Split(';');
-            string fileType = dataType[0];
-            string format = dataType[1];
-
-            if (format != "base64")
-            {
-                return BadRequest($"Image data format {format} unkown, base64 expected");
-            }
+            var createdAt = string.IsNullOrEmpty(imageRequest.CreatedAt)
+                ? DateTime.Now
+                : new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(double.Parse(imageRequest.CreatedAt)).ToLocalTime();
 
             var image = new Image()
             {
                 Id = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
                 FileName = "FileName",
-                FileType = fileType,
-                Bytes = Convert.FromBase64String(split[1])
+                CreatedAt = createdAt,
+                FileType = imageRequest.FileType,
+                Bytes = Convert.FromBase64String(imageRequest.Base64)
             };
 
             _context.Image.Add(image);
