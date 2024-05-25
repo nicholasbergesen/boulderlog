@@ -4,10 +4,19 @@
 
 document.querySelector("#file-image").addEventListener('change', async function (event) {
     console.log(event)
-    let arrayBuffer = await event.target.files[0].arrayBuffer();
+    let file = event.target.files[0];
+    let arrayBuffer = await file.arrayBuffer();
     let base64 = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+    let imageString = `data:${file.type};base64,${base64}`;
+    let canvas = document.querySelector("#canvas");
+    var image = new Image();
+    image.onload = function () {
+        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+    };
+    image.src = imageString;
+    $(canvas).removeClass("placeholder");
 
-    await createImage(base64, "image/jpeg");
+    await createImage(base64, file.type);
 });
 
 document.querySelector("#open-camera-modal").addEventListener('click', async function () {
