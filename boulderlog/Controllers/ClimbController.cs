@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -65,6 +66,10 @@ namespace Boulderlog.Controllers
         // GET: Climb/Create
         public IActionResult Create()
         {
+            ViewData["Gym"] = new SelectList(new List<string>() { "TheClimb-Yeonnam" }, "TheClimb-Yeonnam");
+            ViewData["Grade"] = new SelectList(new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" }, "Red");
+            ViewData["HoldColor"] = new SelectList(new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" }, "Red");
+            ViewData["Wall"] = new SelectList(new List<string>() { "Yeonnam", "Toitmaru", "Sinchon" }, "Yeonnam");
             ViewData["UserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View();
         }
@@ -76,6 +81,12 @@ namespace Boulderlog.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ImageId,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
         {
+            ViewData["Gym"] = new SelectList(new List<string>() { "TheClimb-Yeonnam" }, climb.Gym);
+            ViewData["Grade"] = new SelectList(new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" }, climb.Grade);
+            ViewData["HoldColor"] = new SelectList(new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" }, climb.HoldColor);
+            ViewData["Wall"] = new SelectList(new List<string>() { "Yeonnam", "Toitmaru", "Sinchon" }, climb.Wall);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
 
             if (climb.UserId != userId?.Value)
@@ -106,7 +117,11 @@ namespace Boulderlog.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
+
+            ViewData["Gym"] = new SelectList(new List<string>() { "TheClimb-Yeonnam" }, climb.Gym);
+            ViewData["Grade"] = new SelectList(new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" }, climb.Grade);
+            ViewData["HoldColor"] = new SelectList(new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" }, climb.HoldColor);
+            ViewData["Wall"] = new SelectList(new List<string>() { "Yeonnam", "Toitmaru", "Sinchon" }, climb.Wall);
             return View(climb);
         }
 
@@ -115,7 +130,7 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,ImageId,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
         {
             if (id != climb.Id)
             {

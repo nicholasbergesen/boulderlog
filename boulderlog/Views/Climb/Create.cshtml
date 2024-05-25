@@ -13,7 +13,7 @@
         <form asp-action="javascript:void(0)">
             <div class="d-flex align-items-center">
                 <div class="pe-1">
-                    <canvas class="placeholder" id="canvas" width="130" height="248"></canvas>
+                    <canvas class="placeholder" id="canvas" width="180" height="248"></canvas>
                 </div>
                 <div>
                     <button id="open-camera-modal" class="btn btn-primary pt-1" data-bs-toggle="modal" data-bs-target="#cameraModal" type="button">
@@ -36,22 +36,22 @@
             <div asp-validation-summary="None" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Grade" class="control-label"></label>
-                <input asp-for="Grade" class="form-control" />
+                <select asp-for="Grade" class="form-control" asp-items="ViewBag.Grade"></select>
                 <span asp-validation-for="Grade" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HoldColor" class="control-label"></label>
-                <input asp-for="HoldColor" class="form-control" />
+                <select asp-for="HoldColor" class="form-control" asp-items="ViewBag.HoldColor"></select>
                 <span asp-validation-for="HoldColor" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Gym" class="control-label"></label>
-                <input asp-for="Gym" class="form-control" />
+                <select asp-for="Gym" class="form-control" asp-items="ViewBag.Gym"></select>
                 <span asp-validation-for="Gym" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Wall" class="control-label"></label>
-                <input asp-for="Wall" class="form-control" />
+                <select asp-for="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
                 <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -78,7 +78,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <video id="video" width="130" height="248" autoplay></video>
+                <video id="video" width="180" height="248" autoplay></video>
             </div>
             <div class="modal-footer">
                 <button type="button" id="capture-image" data-bs-dismiss="modal" class="btn btn-primary">Capture</button>
