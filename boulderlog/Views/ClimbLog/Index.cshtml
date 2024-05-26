@@ -1,30 +1,31 @@
-﻿@model IEnumerable<Boulderlog.Data.Models.ClimbLog>
-
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
-
-<h1>ClimbLog</h1>
 
 <h3>Climbs by Grade</h3>
 <div>
   <canvas id="gradeChart"></canvas>
 </div>
 
+<h3>Climbs by Session</h3>
+<div>
+    <canvas id="sessionChart"></canvas>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    const ctx = document.getElementById('gradeChart');
+    const gradeCtx = document.getElementById('gradeChart');
 
     var gradeLabels = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.GradeLabels))')
     var gradeValues = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.GradeValues))')
 
-    new Chart(ctx, {
+    new Chart(gradeCtx, {
         type: 'bar',
         data: {
             labels: gradeLabels,
             datasets: [{
-                label: '# of Attempts by grade',
+                label: '# of Attempts',
                 data: gradeValues,
                 borderWidth: 1
             }]
@@ -38,6 +39,49 @@
                     }
                 }
                     
+            }
+        }
+    });
+
+    const sessionCtx = document.getElementById('sessionChart');
+
+    var sessionLabels = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionLabels))')
+    var sessionAttempt = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionAttempt))')
+    var sessionTop = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionTop))')
+    var sessionFlash = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionFlash))')
+
+    new Chart(sessionCtx, {
+        type: 'line',
+        data: {
+            labels: sessionLabels,
+            datasets: [{
+                label: 'Attempt',
+                data: sessionAttempt,
+                borderColor: 'lightblue',
+                backgroundColor: '#9BD0F5',
+            },
+            {
+                label: 'Top',
+                data: sessionTop,
+                borderColor: 'green',
+                backgroundColor: '#FFB1C1',
+            },
+            {
+                label: 'Flash',
+                data: sessionFlash,
+                borderColor: 'red',
+                backgroundColor: '#FFB1C1',
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+
             }
         }
     });

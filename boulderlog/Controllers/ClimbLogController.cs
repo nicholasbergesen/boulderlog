@@ -19,8 +19,9 @@ namespace Boulderlog.Controllers
         private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam" };
         private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" };
         private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
+        private static IEnumerable<string> Type = new List<string>() { "Attempt", "Top", "Flash" };
 
-        public ClimbLogController(ApplicationDbContext context)
+    public ClimbLogController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -30,10 +31,11 @@ namespace Boulderlog.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var climbLogs = _context
+            var climbLogs = await _context
                 .ClimbLog
                 .Include(c => c.Climb)
-                .Where(x => x.Climb.UserId == userId);
+                .Where(x => x.Climb.UserId == userId)
+                .ToListAsync();
 
             var gradeCount = new List<int>();
             foreach (var grade in Grades)
@@ -41,10 +43,28 @@ namespace Boulderlog.Controllers
                 gradeCount.Add(climbLogs.Count(x => grade.Equals(x.Climb.Grade)));
             }
 
-            ViewData["GradeLabels"] = Grades.ToArray();
-            ViewData["GradeValues"] = gradeCount.ToArray();
+            ViewData["GradeLabels"] = Grades;
+            ViewData["GradeValues"] = gradeCount;
 
-            return View(await climbLogs.ToListAsync());
+            var climbsPerDay = climbLogs.GroupBy(x => $"{x.TimeStamp.Year}-{x.TimeStamp.Month}-{x.TimeStamp.Date}", x => x.Type);
+            List<string> sessionLabels = new List<string>();
+            List<int> sessionValuesAttempt = new List<int>();
+            List<int> sessionValuesTop = new List<int>();
+            List<int> sessionValuesFlash = new List<int>();
+            foreach (var climbs in climbsPerDay)
+            {
+                sessionLabels.Add($"{climbs.Key}");
+                sessionValuesAttempt.Add(climbs.Count(x => x == "Attempt"));
+                sessionValuesTop.Add(climbs.Count(x => x == "Top"));
+                sessionValuesFlash.Add(climbs.Count(x => x == "Flash"));
+            }
+
+            ViewData["SessionLabels"] = sessionLabels;
+            ViewData["SessionAttempt"] = sessionValuesAttempt;
+            ViewData["SessionTop"] = sessionValuesTop;
+            ViewData["SessionFlash"] = sessionValuesFlash;
+
+            return View();
         }
 
         // GET: ClimbLog/Details/5
@@ -69,7 +89,7 @@ namespace Boulderlog.Controllers
         // GET: ClimbLog/Create
         public IActionResult Create(string climbId)
         {
-            ViewData["Type"] = new SelectList(new List<string>() { "Attempt", "Top", "Flash" }, "Attempt");
+            ViewData["Type"] = new SelectList(Type, "Attempt");
             ViewBag.ClimbId = climbId;
             return View(new ClimbLog() { ClimbId = climbId, Type = "Attempt" });
         }
