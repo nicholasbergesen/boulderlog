@@ -2,6 +2,8 @@
 
 ## Base repo: nicholasbergesen/fundamentals
 
+Changes to the main branch are deployed automatically.
+
 ## Useful scripts
 ### Clear form validation client side
 ```typescript
