@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Boulderlog.Data;
 using Boulderlog.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Boulderlog.Controllers
 {
+    [Authorize]
     public class ImagesController : Controller
     {
         private readonly ApplicationDbContext _context;
