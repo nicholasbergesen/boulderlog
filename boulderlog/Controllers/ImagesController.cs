@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Boulderlog.Data;
 using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Boulderlog.Models;
 
 namespace Boulderlog.Controllers
 {
@@ -24,7 +25,16 @@ namespace Boulderlog.Controllers
         // GET: Images
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Image.ToListAsync());
+            var images = await _context.Image
+                .Select(x => new ImageViewModel() 
+                { 
+                    Id = x.Id, 
+                    CreatedAt = x.CreatedAt, 
+                    FileType = x.FileType
+                })
+                .ToListAsync();
+
+            return View(images);
         }
 
         // GET: Images/Details/5
@@ -56,7 +66,7 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FileType,FileName,Bytes")] Image image)
+        public async Task<IActionResult> Create([Bind("Id,FileType,CreatedAt,Bytes")] Image image)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +98,7 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,FileType,FileName,Bytes")] Image image)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,FileType,CreatedAt,Bytes")] Image image)
         {
             if (id != image.Id)
             {
