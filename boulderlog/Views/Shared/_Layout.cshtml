@@ -8,7 +8,7 @@
     <link defer rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="mb-0 vh-100 d-flex flex-column ">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
@@ -27,12 +27,11 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top fixed-bottom text-muted p-3">
+    <footer class="footer mt-auto py-3 border-top">
         <div class="container">
             &copy; 2024 - Boulderlog
         </div>
