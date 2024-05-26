@@ -12,6 +12,22 @@
     </p>
 </div>
 
+<div class="row pt-2 pb-2">
+    <form asp-action="Index" asp-controller="Climb" method="get">
+        <div class="d-flex align-items-center">
+            <div class="pr-2">
+                <select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
+            </div>
+            <div class="p-2">
+                <select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
+            </div>
+            <div class="p-2">
+                <input class="btn btn-secondary" type="submit" value="Filter" />
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach (var item in Model)
     {
