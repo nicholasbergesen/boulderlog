@@ -47,6 +47,14 @@ namespace Boulderlog.Controllers
                 climbs = climbs.Where(x => gym.Equals(x.Gym));
             }
 
+            if (string.IsNullOrEmpty(grade) && string.IsNullOrEmpty(gym))
+            {
+                var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
+                var koreaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+                koreaTime = koreaTime.AddDays(-30);
+                climbs = climbs.Where(c => c.ClimbLogs.Count == 0 || c.ClimbLogs.Any(x => x.TimeStamp > koreaTime));
+            }
+
             foreach (var climb in climbs)
             {
                 var attempts = climb.ClimbLogs.GroupBy(x => $"{x.ClimbId}-{x.Type}");
