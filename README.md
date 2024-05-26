@@ -2,10 +2,6 @@
 
 ## Base repo: nicholasbergesen/fundamentals
 
-## Purpose
-Log boulder sessions
-
-
 ## Useful scripts
 ### Clear form validation client side
 ```typescript
