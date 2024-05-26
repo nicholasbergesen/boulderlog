@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Boulderlog.Controllers
@@ -14,6 +15,10 @@ namespace Boulderlog.Controllers
     public class ClimbLogController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private static IEnumerable<string> Grades = new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" };
+        private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam" };
+        private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" };
+        private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
 
         public ClimbLogController(ApplicationDbContext context)
         {
@@ -23,8 +28,23 @@ namespace Boulderlog.Controllers
         // GET: ClimbLog
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ClimbLog.Include(c => c.Climb);
-            return View(await applicationDbContext.ToListAsync());
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var climbLogs = _context
+                .ClimbLog
+                .Include(c => c.Climb)
+                .Where(x => x.Climb.UserId == userId);
+
+            var gradeCount = new List<int>();
+            foreach (var grade in Grades)
+            {
+                gradeCount.Add(climbLogs.Count(x => grade.Equals(x.Climb.Grade)));
+            }
+
+            ViewData["GradeLabels"] = Grades.ToArray();
+            ViewData["GradeValues"] = gradeCount.ToArray();
+
+            return View(await climbLogs.ToListAsync());
         }
 
         // GET: ClimbLog/Details/5

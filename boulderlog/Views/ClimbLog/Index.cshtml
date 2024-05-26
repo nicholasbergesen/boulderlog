@@ -4,44 +4,41 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>ClimbLog</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TimeStamp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Climb)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeStamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Climb.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<h3>Climbs by Grade</h3>
+<div>
+  <canvas id="gradeChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('gradeChart');
+
+    var gradeLabels = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.GradeLabels))')
+    var gradeValues = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.GradeValues))')
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: gradeLabels,
+            datasets: [{
+                label: '# of Attempts by grade',
+                data: gradeValues,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+                    
+            }
+        }
+    });
+</script>

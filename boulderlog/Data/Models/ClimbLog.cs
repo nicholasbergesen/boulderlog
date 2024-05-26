@@ -21,6 +21,6 @@ namespace Boulderlog.Data.Models
         public required string ClimbId { get; set; }
 
         [ForeignKey(nameof(ClimbId))]
-        public Climb? Climb { get; set; }
+        public virtual Climb? Climb { get; set; }
     }
 }
