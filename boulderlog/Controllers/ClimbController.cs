@@ -67,9 +67,7 @@ namespace Boulderlog.Controllers
             ViewData["Gym"] = new SelectList(GymSelect, gym);
 
             var now = DateTime.UtcNow;
-            climbs.OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp));
-
-            return View(await climbs.ToListAsync());
+            return View(await climbs.OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp)).ToListAsync());
         }
 
         // GET: Climb/Details/5
