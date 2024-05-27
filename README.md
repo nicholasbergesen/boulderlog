@@ -2,9 +2,7 @@
 
 ## Base repo: nicholasbergesen/fundamentals
 
-## Purpose
-Log boulder sessions
-
+Changes to the main branch are deployed automatically.
 
 ## Useful scripts
 ### Clear form validation client side
