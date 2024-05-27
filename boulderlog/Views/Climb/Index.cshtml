@@ -15,11 +15,11 @@
 <div class="row pt-2 pb-2">
     <form asp-action="Index" asp-controller="Climb" method="get">
         <div class="d-flex align-items-center">
-            <div class="pr-2">
-                <select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
+            <div class="pr-2 d-inline-flex align-items-center">
+                <span class="pe-1">Grade:</span><select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
             </div>
-            <div class="p-2">
-                <select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
+            <div class="p-2 d-inline-flex align-items-center">
+                <span class="pe-1">Gym:</span><select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
             </div>
             <div class="p-2">
                 <input class="btn btn-secondary" type="submit" value="Filter" />
@@ -37,17 +37,20 @@
                 <div class="card-body">
                     <p class="card-text">
                         <div class="row">
-                            <div class="col-md-4 col-sm-12 m-0">@Html.DisplayNameFor(modelItem => item.Grade):</div> 
-                            <div class="col-md-8 col-sm-12"> 
-                                <div style="display:inline-block;width: 13px;height:13px;background-color:@item.Grade;"></div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Grade):</div> 
+                            <div class="col-8">
+                                <div class="row">
+                                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.Grade;"></div>
+                                    <div class="col-3"  style="display:inline-block;width:20px;height:20px;background-color:@item.HoldColor;"></div>
+                                    <div class="col-6">(Hold)</div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
-
-                            <div class="col-md-4 col-sm-12 m-0">@Html.DisplayNameFor(modelItem => item.Gym):</div> <div class="col-md-8 colsm-12">@Html.DisplayFor(modelItem => item.Gym)</div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Gym):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Gym)</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 col-sm-12 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-md-8 colsm-12">@Html.DisplayFor(modelItem => item.Wall)</div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Wall)</div>
                         </div>
                     </p>
                 </div>
