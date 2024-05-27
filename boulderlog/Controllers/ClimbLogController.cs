@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -30,11 +31,14 @@ namespace Boulderlog.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
 
             var climbLogs = await _context
                 .ClimbLog
                 .Include(c => c.Climb)
                 .Where(x => x.Climb.UserId == userId)
+                .Where(x => x.TimeStamp > thirtyDaysAgo)
+                .OrderBy(x => x.TimeStamp)
                 .ToListAsync();
 
             var gradeCount = new List<int>();
