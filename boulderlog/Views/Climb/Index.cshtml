@@ -13,20 +13,27 @@
 </div>
 
 <div class="row pt-2 pb-2">
-    <form asp-action="Index" asp-controller="Climb" method="get">
-        <div class="d-flex align-items-center">
-            <div class="pr-2 d-inline-flex align-items-center">
-                <span class="pe-1">Grade:</span><select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
+    <div class="col-8">
+        <form asp-action="Index" asp-controller="Climb" method="get">
+            <div class="d-flex align-items-center">
+                <div class="pr-2 d-inline-flex align-items-center">
+                    <span class="pe-1">Grade:</span><select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
+                </div>
+                <div class="p-2 d-inline-flex align-items-center">
+                    <span class="pe-1">Gym:</span><select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
+                </div>
+                <div class="p-2">
+                    <input class="btn btn-secondary" type="submit" value="Filter" />
+                </div>
             </div>
-            <div class="p-2 d-inline-flex align-items-center">
-                <span class="pe-1">Gym:</span><select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
-            </div>
-            <div class="p-2">
-                <input class="btn btn-secondary" type="submit" value="Filter" />
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
+    <div class="col-4 text-end">
+        <small>Climbs for the last 30 days</small>
+    </div>
 </div>
+
+<hr />
 
 <div class="row">
     @foreach (var item in Model)

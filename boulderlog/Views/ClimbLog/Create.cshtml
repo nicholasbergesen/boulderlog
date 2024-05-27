@@ -6,9 +6,7 @@
     Model.TimeStamp = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Local);
 }
 
-<h1>Create</h1>
-
-<h4>ClimbLog</h4>
+<h1>Log attempt</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,20 +22,15 @@
                 <select asp-for="Type" class="form-control" asp-items="ViewBag.Type"></select>
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ClimbId" class="control-label"></label>
-                <input asp-for="ClimbId" class="form-control" value="@ViewBag.ClimbId" />
-                <span asp-validation-for="ClimbId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+
+            <hidden asp-for="ClimbId" value="@ViewBag.ClimbId" />
+
+            <div class="form-group pt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-action="Index" asp-controller="Climb">Back</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
