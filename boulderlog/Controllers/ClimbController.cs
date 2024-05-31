@@ -17,9 +17,11 @@ namespace Boulderlog.Controllers
     public class ClimbController : Controller
     {
         private static IEnumerable<string> GradeSelect = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" };
-        private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam" };
+        private static IEnumerable<string> GradeBSelect = new List<string>() { string.Empty, "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam", "TheClimb-B-Hongdae" };
         private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" };
         private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
+        private static IEnumerable<string> WallB = new List<string>() { string.Empty, "Sector1", "Sector2" };
         private readonly ApplicationDbContext _context;
 
         public ClimbController(ApplicationDbContext context)
@@ -64,6 +66,7 @@ namespace Boulderlog.Controllers
                 }
             }
             ViewData["Grade"] = new SelectList(GradeSelect, grade);
+            ViewData["GradeB"] = new SelectList(GradeBSelect, grade);
             ViewData["Gym"] = new SelectList(GymSelect, gym);
 
             var now = DateTime.UtcNow;
@@ -94,8 +97,10 @@ namespace Boulderlog.Controllers
         {
             ViewData["Gym"] = new SelectList(GymSelect, "TheClimb-Yeonnam");
             ViewData["Grade"] = new SelectList(GradeSelect, "Red");
+            ViewData["GradeB"] = new SelectList(GradeBSelect, "Red");
             ViewData["HoldColor"] = new SelectList(HoldColor, "Red");
             ViewData["Wall"] = new SelectList(Wall, "Yeonnam");
+            ViewData["WallB"] = new SelectList(WallB, "Sector1");
             ViewData["UserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View();
         }
@@ -109,8 +114,10 @@ namespace Boulderlog.Controllers
         {
             ViewData["Gym"] = new SelectList(GymSelect, climb.Gym);
             ViewData["Grade"] = new SelectList(GradeSelect, climb.Grade);
+            ViewData["GradeB"] = new SelectList(GradeBSelect, climb.Grade);
             ViewData["HoldColor"] = new SelectList(HoldColor, climb.HoldColor);
             ViewData["Wall"] = new SelectList(Wall, climb.Wall);
+            ViewData["WallB"] = new SelectList(WallB, climb.Wall);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -146,8 +153,10 @@ namespace Boulderlog.Controllers
 
             ViewData["Gym"] = new SelectList(GymSelect, climb.Gym);
             ViewData["Grade"] = new SelectList(GradeSelect, climb.Grade);
+            ViewData["GradeB"] = new SelectList(GradeBSelect, climb.Grade);
             ViewData["HoldColor"] = new SelectList(HoldColor, climb.HoldColor);
             ViewData["Wall"] = new SelectList(Wall, climb.Wall);
+            ViewData["WallB"] = new SelectList(WallB, climb.Wall);
             return View(climb);
         }
 

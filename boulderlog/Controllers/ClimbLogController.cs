@@ -17,7 +17,7 @@ namespace Boulderlog.Controllers
     {
         private readonly ApplicationDbContext _context;
         private static IEnumerable<string> Grades = new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" };
-        private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam" };
+        private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam", "TheClimb-B-Hongdae" };
         private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" };
         private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
         private static IEnumerable<string> Type = new List<string>() { "Attempt", "Top", "Flash" };

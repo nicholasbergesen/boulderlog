@@ -45,7 +45,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Gym" class="control-label"></label>
-                <select asp-for="Gym" class="form-control" asp-items="ViewBag.Gym"></select>
+                <select asp-for="Gym" class="form-control" onchange="onGymChange()" asp-items="ViewBag.Gym"></select>
                 <span asp-validation-for="Gym" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -93,3 +93,38 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+<script>
+    function onGymChange() {
+        var gym = $("#Gym");
+
+        $('#Grade option').remove();
+        $('#Wall option').remove();
+
+        let wall = $("#Wall");
+        let grade = $("#Grade");
+
+        if (gym.val() == "TheClimb-Yeonnam") {
+            let newGrades = @Html.Raw(Json.Serialize(@ViewBag.Grade));
+            $.each(newGrades, function (key, value) {
+                grade.append($("<option></option>").text(value.text));
+            });
+
+            let newWalls = @Html.Raw(Json.Serialize(@ViewBag.Wall));
+            $.each(newWalls, function (key, value) {
+                wall.append($("<option></option>").text(value.text));
+            });
+        }
+        else {
+            let newGrades = @Html.Raw(Json.Serialize(@ViewBag.GradeB));
+            $.each(newGrades, function (key, value) {
+                grade.append($("<option></option>").text(value.text));
+            });
+
+            let newWalls = @Html.Raw(Json.Serialize(@ViewBag.WallB));
+            $.each(newWalls, function (key, value) {
+                wall.append($("<option></option>").text(value.text));
+            });
+        }
+    }
+</script>
