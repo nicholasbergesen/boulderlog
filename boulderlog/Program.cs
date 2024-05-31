@@ -115,7 +115,7 @@ namespace Boulderlog
             {
                 // Compression prevents browser Link script injection during development
                 app.UseResponseCompression();
-                app.UseRateLimiter();
+                //app.UseRateLimiter();
 
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
@@ -145,8 +145,8 @@ namespace Boulderlog
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}").RequireRateLimiting(rateLimitOptions.Policy);
-            app.MapRazorPages().RequireRateLimiting(rateLimitOptions.Policy);
+                pattern: "{controller=Home}/{action=Index}/{id?}");//.RequireRateLimiting(rateLimitOptions.Policy);
+            app.MapRazorPages();//.RequireRateLimiting(rateLimitOptions.Policy);
 
             app.Run();
         }
