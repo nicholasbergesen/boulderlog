@@ -17,11 +17,14 @@
     <div class="col-8">
         <form asp-action="Index" asp-controller="Climb" method="get">
             <div class="d-flex align-items-center">
+                <div class="p-2 d-inline-flex align-items-center">
+                    <span class="pe-1">Gym:</span><select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
+                </div>
                 <div class="pr-2 d-inline-flex align-items-center">
                     <span class="pe-1">Grade:</span><select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
                 </div>
                 <div class="p-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Gym:</span><select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
+                    <span class="pe-1">Wall:</span><select title="Wall" name="wall" class="form-select" aria-label="Wall" asp-items="ViewBag.Wall"></select>
                 </div>
                 <div class="p-2">
                     <input class="btn btn-secondary" type="submit" value="Filter" />

@@ -30,7 +30,7 @@ namespace Boulderlog.Controllers
         }
 
         // GET: Climb
-        public async Task<IActionResult> Index(string grade, string gym)
+        public async Task<IActionResult> Index(string grade, string gym, string wall)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -39,14 +39,19 @@ namespace Boulderlog.Controllers
                 .Include(c => c.ClimbLogs)
                 .Where(c => c.UserId == userId);
 
+            if (!string.IsNullOrEmpty(gym))
+            {
+                climbs = climbs.Where(x => gym.Equals(x.Gym));
+            }
+
             if (!string.IsNullOrEmpty(grade))
             {
                 climbs = climbs.Where(x => grade.Equals(x.Grade));
             }
 
-            if (!string.IsNullOrEmpty(gym))
+            if (!string.IsNullOrEmpty(wall))
             {
-                climbs = climbs.Where(x => gym.Equals(x.Gym));
+                climbs = climbs.Where(x => wall.Equals(x.Wall));
             }
 
             if (string.IsNullOrEmpty(grade) && string.IsNullOrEmpty(gym))
@@ -65,9 +70,17 @@ namespace Boulderlog.Controllers
                     ViewData[attempt.Key] = attempt.Count();
                 }
             }
-            ViewData["Grade"] = new SelectList(GradeSelect, grade);
-            ViewData["GradeB"] = new SelectList(GradeBSelect, grade);
             ViewData["Gym"] = new SelectList(GymSelect, gym);
+            if (gym == "TheClimb-Yeonnam" || gym == null)
+            {
+                ViewData["Grade"] = new SelectList(GradeSelect, grade);
+                ViewData["Wall"] = new SelectList(Wall, wall);
+            }
+            else
+            {
+                ViewData["Grade"] = new SelectList(GradeBSelect, grade);
+                ViewData["Wall"] = new SelectList(WallB, wall);
+            }
 
             var now = DateTime.UtcNow;
             return View(await climbs.OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp)).ToListAsync());
