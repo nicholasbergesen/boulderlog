@@ -76,7 +76,7 @@ namespace Boulderlog.Controllers
         public async Task<IActionResult> CleanDatabase()
         {
             var imagesIds = _context.Climb.Select(x => x.ImageId).ToList();
-            var orphanedImages= _context.Image.Where(x => !imagesIds.Contains(x.Id)).ToList();
+            var orphanedImages = _context.Image.Where(x => !imagesIds.Contains(x.Id)).ToList();
             _context.Image.RemoveRange(orphanedImages);
             await _context.SaveChangesAsync();
 

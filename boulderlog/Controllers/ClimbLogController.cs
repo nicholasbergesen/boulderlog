@@ -22,7 +22,7 @@ namespace Boulderlog.Controllers
         private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
         private static IEnumerable<string> Type = new List<string>() { "Attempt", "Top", "Flash" };
 
-    public ClimbLogController(ApplicationDbContext context)
+        public ClimbLogController(ApplicationDbContext context)
         {
             _context = context;
         }
