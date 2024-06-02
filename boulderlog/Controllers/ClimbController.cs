@@ -83,7 +83,9 @@ namespace Boulderlog.Controllers
 
             var climb = await _context.Climb
                 .Include(c => c.User)
+                .Include(c => c.ClimbLogs)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (climb == null)
             {
                 return NotFound();
