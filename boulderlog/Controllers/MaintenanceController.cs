@@ -4,6 +4,7 @@ using Boulderlog.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Threading.Tasks;
@@ -69,6 +70,28 @@ namespace Boulderlog.Controllers
             {
                 _context.Roles.Add(new AppRole(role));
             }
+        }
+
+        [Route("CleanDatabase")]
+        public async Task<IActionResult> CleanDatabase()
+        {
+            var imagesIds = _context.Climb.Select(x => x.ImageId).ToList();
+            var orphanedImages= _context.Image.Where(x => !imagesIds.Contains(x.Id)).ToList();
+            _context.Image.RemoveRange(orphanedImages);
+            await _context.SaveChangesAsync();
+
+            foreach (var climbLogItem in _context.ClimbLog)
+            {
+                var climb = await _context.Climb.FindAsync(climbLogItem.ClimbId);
+                if (climb == null) 
+                {
+                    _context.ClimbLog.Remove(climbLogItem);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

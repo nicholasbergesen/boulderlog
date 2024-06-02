@@ -14,7 +14,14 @@ document.querySelector("#file-image").addEventListener('change', async function 
         canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
     };
     image.src = imageString;
+    let imageTag = document.querySelector("#imageTag");
+    if (imageTag) {
+        $(imageTag).addClass("visually-hidden")
+    }
+
     $(canvas).removeClass("placeholder");
+    $(canvas).removeClass("visually-hidden");
+    
 
     await createImage(base64, file.type);
 });

@@ -220,9 +220,19 @@ namespace Boulderlog.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var climb = await _context.Climb.FindAsync(id);
+            var climb = await _context.Climb
+                .Include(x => x.ClimbLogs)
+                .FirstOrDefaultAsync(x=> id.Equals(x.Id));
+
             if (climb != null)
             {
+                var image = await _context.Image.FindAsync(climb.ImageId);
+                if (image != null)
+                {
+                    _context.Image.Remove(image);
+                }
+
+                _context.ClimbLog.RemoveRange(climb.ClimbLogs);
                 _context.Climb.Remove(climb);
             }
 
