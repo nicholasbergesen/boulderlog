@@ -89,9 +89,9 @@ namespace Boulderlog.Controllers
                 }
             }
 
-            await _context.SaveChangesAsync();
+            var num = await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(num);
         }
     }
 }

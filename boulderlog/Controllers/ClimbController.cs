@@ -19,7 +19,7 @@ namespace Boulderlog.Controllers
         private static IEnumerable<string> GradeSelect = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" };
         private static IEnumerable<string> GradeBSelect = new List<string>() { string.Empty, "1", "2", "3", "4", "5", "6", "7", "8", "9" };
         private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam", "TheClimb-B-Hongdae" };
-        private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" };
+        private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink", "Mint" };
         private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
         private static IEnumerable<string> WallB = new List<string>() { string.Empty, "Sector1", "Sector2" };
         private readonly ApplicationDbContext _context;
@@ -152,11 +152,19 @@ namespace Boulderlog.Controllers
             }
 
             ViewData["Gym"] = new SelectList(GymSelect, climb.Gym);
-            ViewData["Grade"] = new SelectList(GradeSelect, climb.Grade);
-            ViewData["GradeB"] = new SelectList(GradeBSelect, climb.Grade);
+
+            if (climb.Gym == "TheClimb-Yeonnam")
+            {
+                ViewData["Grade"] = new SelectList(GradeSelect, climb.Grade);
+                ViewData["Wall"] = new SelectList(Wall, climb.Wall);
+            }
+            else
+            {
+                ViewData["Grade"] = new SelectList(GradeBSelect, climb.Grade);
+                ViewData["Wall"] = new SelectList(WallB, climb.Wall);
+            }
+
             ViewData["HoldColor"] = new SelectList(HoldColor, climb.HoldColor);
-            ViewData["Wall"] = new SelectList(Wall, climb.Wall);
-            ViewData["WallB"] = new SelectList(WallB, climb.Wall);
             return View(climb);
         }
 
