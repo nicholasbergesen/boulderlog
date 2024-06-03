@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
+using NuGet.Protocol;
 using System.Linq;
 using System.Threading.Tasks;
 using static Boulderlog.Domain.Const;
@@ -92,6 +93,12 @@ namespace Boulderlog.Controllers
             var num = await _context.SaveChangesAsync();
 
             return Ok(num);
+        }
+
+        [Route("SeedDatabase")]
+        public async Task<IActionResult> SeedDatabase()
+        {
+            return Ok();
         }
     }
 }
