@@ -28,11 +28,13 @@ document.querySelector("#file-image").addEventListener('change', async function 
 
 document.querySelector("#open-camera-modal").addEventListener('click', async function () {
     let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+    let video = document.getElementById('video')
     video.srcObject = stream;
 });
 
 document.querySelector("#capture-image").addEventListener('click', async function () {
     let canvas = document.querySelector("#canvas");
+    let video = document.getElementById('video')
     canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
     video.srcObject.getTracks()[0].stop();
     $(canvas).removeClass("placeholder");
