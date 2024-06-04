@@ -7,7 +7,7 @@ namespace Boulderlog.Data.Models
 
     public class Grade
     {
-        [Key, MaxLength(36)]
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public required int Id { get; set; }
 
@@ -23,9 +23,9 @@ namespace Boulderlog.Data.Models
         public required string VScale { get; set; }
 
         [MaxLength(36)]
-        public required int GymId { get; set; }
+        public int GymId { get; set; }
 
         [ForeignKey(nameof(GymId))]
-        public virtual Gym Gym { get; set; }
+        public virtual Gym? Gym { get; set; }
     }
 }

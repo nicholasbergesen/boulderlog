@@ -96,50 +96,50 @@ namespace Boulderlog.Controllers
             return Ok(num);
         }
 
-        [Route("SeedDatabase")]
-        public async Task<IActionResult> SeedDatabase()
-        {
-            Dictionary<string, int> grades = new Dictionary<string, int>()
-            {
-                 {"1",1},
-                 {"2",2},
-                 {"3",3},
-                 {"4",4},
-                 {"5",5},
-                 {"6",6},
-                 {"7",7},
-                 {"8",8},
-                 {"9",9 },
-                 {"White",10},
-                 {"Yellow",11},
-                 {"Orange",12},
-                 {"Green",13},
-                 {"Blue", 14},
-                 {"Red", 15},
-                 {"Purple",16},
-                 {"Grey", 17},
-                 {"Brown",18},
-                 {"Black",19}
-            };
+        //[Route("SeedDatabase")]
+        //public async Task<IActionResult> SeedDatabase()
+        //{
+        //    //Dictionary<string, int> grades = new Dictionary<string, int>()
+        //    //{
+        //    //     {"1",1},
+        //    //     {"2",2},
+        //    //     {"3",3},
+        //    //     {"4",4},
+        //    //     {"5",5},
+        //    //     {"6",6},
+        //    //     {"7",7},
+        //    //     {"8",8},
+        //    //     {"9",9 },
+        //    //     {"White",10},
+        //    //     {"Yellow",11},
+        //    //     {"Orange",12},
+        //    //     {"Green",13},
+        //    //     {"Blue", 14},
+        //    //     {"Red", 15},
+        //    //     {"Purple",16},
+        //    //     {"Grey", 17},
+        //    //     {"Brown",18},
+        //    //     {"Black",19}
+        //    //};
 
-            var climbs = _context.Climb;
-            foreach (var climb in climbs)
-            {
-                if (climb.Gym == "TheClimb-Yeonnam")
-                {
-                    climb.GymId = 2;
-                }
-                else
-                {
-                    climb.GymId = 1;
-                }
+        //    //var climbs = _context.Climb;
+        //    //foreach (var climb in climbs)
+        //    //{
+        //    //    if (climb.Gym == "TheClimb-Yeonnam")
+        //    //    {
+        //    //        climb.GymId = 2;
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        climb.GymId = 1;
+        //    //    }
 
-                climb.GradeId = grades[climb.Grade];
-            }
+        //    //    climb.GradeId = grades[climb.Grade];
+        //    //}
 
-            await _context.SaveChangesAsync();
+        //    //await _context.SaveChangesAsync();
 
-            return Ok();
-        }
+        //    //return Ok();
+        //}
     }
 }

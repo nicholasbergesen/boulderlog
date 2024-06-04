@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,9 +17,6 @@ namespace Boulderlog.Data.Models
         [DisplayName("Image")]
         public string? ImageId { get; set; }
 
-        [DataType(DataType.DateTime)]
-        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         [MaxLength(255), Required]
         public required string Grade { get; set; }
 
@@ -34,21 +30,11 @@ namespace Boulderlog.Data.Models
         [MaxLength(255)]
         public string? Wall { get; set; }
 
-        public required int GradeId { get; set; }
-
-        public required int GymId { get; set; }
-
-        [MaxLength(36), Required]
+        [Required]
         public required string UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual AppUser? User { get; set; }
-
-        [ForeignKey(nameof(GradeId))]
-        public virtual Grade? GradeCol { get; set; }
-
-        [ForeignKey(nameof(GymId))]
-        public virtual Gym? GymCol { get; set; }
 
         public ICollection<ClimbLog> ClimbLogs { get; set; } = new List<ClimbLog>();
     }
