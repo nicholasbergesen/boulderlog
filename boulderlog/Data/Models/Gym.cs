@@ -7,9 +7,9 @@ namespace Boulderlog.Data.Models
     [Table("Gym")]
     public class Gym
     {
-        [Key, MaxLength(36)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string? Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public required int Id { get; set; }
 
         [MaxLength(255)]
         public required string Name { get; set; }

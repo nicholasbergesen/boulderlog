@@ -8,8 +8,8 @@ namespace Boulderlog.Data.Models
     public class Grade
     {
         [Key, MaxLength(36)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string? Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public required int Id { get; set; }
 
         [MaxLength(7)]
         public required string ColorHex { get; set; }
@@ -23,7 +23,7 @@ namespace Boulderlog.Data.Models
         public required string VScale { get; set; }
 
         [MaxLength(36)]
-        public required string GymId { get; set; }
+        public required int GymId { get; set; }
 
         [ForeignKey(nameof(GymId))]
         public virtual Gym Gym { get; set; }

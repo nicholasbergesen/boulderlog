@@ -10,14 +10,6 @@ namespace Boulderlog.Data.Models
     [Table("Climb")]
     public class Climb
     {
-        public Climb()
-        {
-            if (CreatedAt == default)
-            {
-                CreatedAt = DateTime.UtcNow;
-            }
-        }
-
         [Key, MaxLength(36)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string? Id { get; set; }
@@ -27,16 +19,10 @@ namespace Boulderlog.Data.Models
         public string? ImageId { get; set; }
 
         [DataType(DataType.DateTime)]
-        public DateTime CreatedAt { get; set; }
+        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [MaxLength(255), Required]
         public required string Grade { get; set; }
-
-        [MaxLength(36)]
-        public required string GradeId { get; set; }
-
-        [MaxLength(36)]
-        public required string GymId { get; set; }
 
         [MaxLength(255)]
         [DisplayName("Hold Color")]
@@ -48,6 +34,10 @@ namespace Boulderlog.Data.Models
         [MaxLength(255)]
         public string? Wall { get; set; }
 
+        public required int GradeId { get; set; }
+
+        public required int GymId { get; set; }
+
         [MaxLength(36), Required]
         public required string UserId { get; set; }
 
@@ -58,7 +48,7 @@ namespace Boulderlog.Data.Models
         public virtual Grade? GradeCol { get; set; }
 
         [ForeignKey(nameof(GymId))]
-        public virtual Grade? GymCol { get; set; }
+        public virtual Gym? GymCol { get; set; }
 
         public ICollection<ClimbLog> ClimbLogs { get; set; } = new List<ClimbLog>();
     }
