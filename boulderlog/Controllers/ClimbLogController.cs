@@ -44,7 +44,7 @@ namespace Boulderlog.Controllers
             var gradeCount = new List<int>();
             foreach (var grade in Grades)
             {
-                gradeCount.Add(climbLogs.Count(x => grade.Equals(x.Climb.Grade)));
+                gradeCount.Add(climbLogs.Count(x => grade.Equals(x.Climb.GradeOld)));
             }
 
             ViewData["GradeLabels"] = Grades;

@@ -41,12 +41,12 @@ namespace Boulderlog.Controllers
 
             if (!string.IsNullOrEmpty(gym))
             {
-                climbs = climbs.Where(x => gym.Equals(x.Gym));
+                climbs = climbs.Where(x => gym.Equals(x.GymOld));
             }
 
             if (!string.IsNullOrEmpty(grade))
             {
-                climbs = climbs.Where(x => grade.Equals(x.Grade));
+                climbs = climbs.Where(x => grade.Equals(x.GradeOld));
             }
 
             if (!string.IsNullOrEmpty(wall))
@@ -127,9 +127,9 @@ namespace Boulderlog.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ImageId,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
         {
-            ViewData["Gym"] = new SelectList(GymSelect, climb.Gym);
-            ViewData["Grade"] = new SelectList(GradeSelect, climb.Grade);
-            ViewData["GradeB"] = new SelectList(GradeBSelect, climb.Grade);
+            ViewData["Gym"] = new SelectList(GymSelect, climb.GymOld);
+            ViewData["Grade"] = new SelectList(GradeSelect, climb.GradeOld);
+            ViewData["GradeB"] = new SelectList(GradeBSelect, climb.GradeOld);
             ViewData["HoldColor"] = new SelectList(Const.HoldColors, climb.HoldColor);
             ViewData["Wall"] = new SelectList(Wall, climb.Wall);
             ViewData["WallB"] = new SelectList(WallB, climb.Wall);
@@ -166,16 +166,16 @@ namespace Boulderlog.Controllers
                 return NotFound();
             }
 
-            ViewData["Gym"] = new SelectList(GymSelect, climb.Gym);
+            ViewData["Gym"] = new SelectList(GymSelect, climb.GymOld);
 
-            if (climb.Gym == "TheClimb-Yeonnam")
+            if (climb.GymOld == "TheClimb-Yeonnam")
             {
-                ViewData["Grade"] = new SelectList(GradeSelect, climb.Grade);
+                ViewData["Grade"] = new SelectList(GradeSelect, climb.GradeOld);
                 ViewData["Wall"] = new SelectList(Wall, climb.Wall);
             }
             else
             {
-                ViewData["Grade"] = new SelectList(GradeBSelect, climb.Grade);
+                ViewData["Grade"] = new SelectList(GradeBSelect, climb.GradeOld);
                 ViewData["Wall"] = new SelectList(WallB, climb.Wall);
             }
 

@@ -18,14 +18,14 @@ namespace Boulderlog.Data.Models
         public string? ImageId { get; set; }
 
         [MaxLength(255), Required]
-        public required string Grade { get; set; }
+        public required string GradeOld { get; set; }
 
         [MaxLength(255)]
         [DisplayName("Hold Color")]
         public string? HoldColor { get; set; }
 
         [MaxLength(255), Required]
-        public required string Gym { get; set; }
+        public required string GymOld { get; set; }
 
         [MaxLength(255)]
         public string? Wall { get; set; }

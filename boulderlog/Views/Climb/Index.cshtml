@@ -45,16 +45,16 @@
                 <div class="card-body">
                     <p class="card-text">
                         <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Grade):</div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.GradeOld):</div>
                             <div class="col-8">
                                 <div class="row ps-3">
-                                    @if (item.Gym == "TheClimb-Yeonnam")
+                                    @if (item.GymOld == "TheClimb-Yeonnam")
                                     {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.Grade;"></div>
+                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.GradeOld;"></div>
                                     }
                                     else
                                     {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;">@item.Grade</div>
+                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;">@item.GradeOld</div>
                                     }
                                     <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.HoldColor;"></div>
                                     <div class="col-6">(Hold)</div>
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Gym):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Gym)</div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.GymOld):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.GymOld)</div>
                         </div>
                         <div class="row">
                             <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Wall)</div>

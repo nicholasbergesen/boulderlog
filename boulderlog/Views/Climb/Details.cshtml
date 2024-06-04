@@ -14,27 +14,27 @@
             <img src="/api/images/@Model.ImageId" alt="Boulder Image" width="250" height="250" class="ps-1" />
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Grade)
+            @Html.DisplayNameFor(model => model.GradeOld)
         </dt>
         <dd class="col-sm-10">
             <div class="row ps-3">
-                @if (Model.Gym == "TheClimb-Yeonnam")
+                @if (Model.GymOld == "TheClimb-Yeonnam")
                 {
-                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@Model.Grade;"></div>
+                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@Model.GradeOld;"></div>
                 }
                 else
                 {
-                    <div class="col-3" style="display:inline-block;width:20px;height:20px;">@Model.Grade</div>
+                    <div class="col-3" style="display:inline-block;width:20px;height:20px;">@Model.GradeOld</div>
                 }
                 <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@Model.HoldColor;"></div>
                 <div class="col-6">(Hold)</div>
             </div>
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gym)
+            @Html.DisplayNameFor(model => model.GymOld)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gym)
+            @Html.DisplayFor(model => model.GymOld)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Wall)
