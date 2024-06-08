@@ -7,11 +7,33 @@
 namespace Boulderlog.Migrations
 {
     /// <inheritdoc />
-    public partial class AddGradeGymTables : Migration
+    public partial class CreateGymGradeTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.RenameColumn(
+                name: "Gym",
+                table: "Climb",
+                newName: "GymOld");
+
+            migrationBuilder.RenameColumn(
+                name: "Grade",
+                table: "Climb",
+                newName: "GradeOld");
+
+            migrationBuilder.AddColumn<int>(
+                name: "GradeId",
+                table: "Climb",
+                type: "INTEGER",
+                nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "GymId",
+                table: "Climb",
+                type: "INTEGER",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "Gym",
                 columns: table => new
@@ -34,7 +56,7 @@ namespace Boulderlog.Migrations
                     ColorName = table.Column<string>(type: "TEXT", maxLength: 25, nullable: false),
                     SortOrder = table.Column<int>(type: "INTEGER", nullable: false),
                     VScale = table.Column<string>(type: "TEXT", maxLength: 3, nullable: false),
-                    GymId = table.Column<int>(type: "INTEGER", maxLength: 36, nullable: false)
+                    GymId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,19 +105,77 @@ namespace Boulderlog.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Climb_GradeId",
+                table: "Climb",
+                column: "GradeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Climb_GymId",
+                table: "Climb",
+                column: "GymId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Grade_GymId",
                 table: "Grade",
                 column: "GymId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Climb_Grade_GradeId",
+                table: "Climb",
+                column: "GradeId",
+                principalTable: "Grade",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Climb_Gym_GymId",
+                table: "Climb",
+                column: "GymId",
+                principalTable: "Gym",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Climb_Grade_GradeId",
+                table: "Climb");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Climb_Gym_GymId",
+                table: "Climb");
+
             migrationBuilder.DropTable(
                 name: "Grade");
 
             migrationBuilder.DropTable(
                 name: "Gym");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Climb_GradeId",
+                table: "Climb");
+
+            migrationBuilder.DropIndex(
+                name: "IX_Climb_GymId",
+                table: "Climb");
+
+            migrationBuilder.DropColumn(
+                name: "GradeId",
+                table: "Climb");
+
+            migrationBuilder.DropColumn(
+                name: "GymId",
+                table: "Climb");
+
+            migrationBuilder.RenameColumn(
+                name: "GymOld",
+                table: "Climb",
+                newName: "Gym");
+
+            migrationBuilder.RenameColumn(
+                name: "GradeOld",
+                table: "Climb",
+                newName: "Grade");
         }
     }
 }

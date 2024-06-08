@@ -9,7 +9,7 @@ namespace Boulderlog.Data.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public required int Id { get; set; }
+        public int? Id { get; set; }
 
         [MaxLength(255)]
         public required string Name { get; set; }

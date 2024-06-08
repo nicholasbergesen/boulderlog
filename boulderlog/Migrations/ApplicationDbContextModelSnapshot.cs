@@ -114,10 +114,16 @@ namespace Boulderlog.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("GradeId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("GradeOld")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("GymId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("GymOld")
                         .IsRequired()
@@ -142,6 +148,10 @@ namespace Boulderlog.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GradeId");
+
+                    b.HasIndex("GymId");
 
                     b.HasIndex("UserId");
 
@@ -176,7 +186,7 @@ namespace Boulderlog.Migrations
 
             modelBuilder.Entity("Boulderlog.Data.Models.Grade", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ColorHex")
@@ -190,7 +200,6 @@ namespace Boulderlog.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("GymId")
-                        .HasMaxLength(36)
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SortOrder")
@@ -383,7 +392,7 @@ namespace Boulderlog.Migrations
 
             modelBuilder.Entity("Boulderlog.Data.Models.Gym", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
@@ -547,11 +556,23 @@ namespace Boulderlog.Migrations
 
             modelBuilder.Entity("Boulderlog.Data.Models.Climb", b =>
                 {
+                    b.HasOne("Boulderlog.Data.Models.Grade", "Grade")
+                        .WithMany()
+                        .HasForeignKey("GradeId");
+
+                    b.HasOne("Boulderlog.Data.Models.Gym", "Gym")
+                        .WithMany()
+                        .HasForeignKey("GymId");
+
                     b.HasOne("Boulderlog.Data.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Grade");
+
+                    b.Navigation("Gym");
 
                     b.Navigation("User");
                 });

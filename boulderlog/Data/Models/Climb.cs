@@ -36,6 +36,16 @@ namespace Boulderlog.Data.Models
         [ForeignKey(nameof(UserId))]
         public virtual AppUser? User { get; set; }
 
+        public required int? GymId { get; set; }
+
+        [ForeignKey(nameof(GymId))]
+        public virtual Gym? Gym { get; set; }
+
+        public required int? GradeId { get; set; }
+
+        [ForeignKey(nameof(GradeId))]
+        public virtual Grade? Grade { get; set; }
+
         public ICollection<ClimbLog> ClimbLogs { get; set; } = new List<ClimbLog>();
     }
 }

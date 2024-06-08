@@ -9,7 +9,7 @@ namespace Boulderlog.Data.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public required int Id { get; set; }
+        public int? Id { get; set; }
 
         [MaxLength(7)]
         public required string ColorHex { get; set; }
@@ -22,7 +22,6 @@ namespace Boulderlog.Data.Models
         [MaxLength(3)]
         public required string VScale { get; set; }
 
-        [MaxLength(36)]
         public int GymId { get; set; }
 
         [ForeignKey(nameof(GymId))]
