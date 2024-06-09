@@ -1,5 +1,5 @@
 ﻿@using Boulderlog.Data.Models
-@model IEnumerable<Boulderlog.Data.Models.Climb>
+@model ClimbPageViewModel
 
 <div class="d-flex flex-row justify-content-between">
     <h1>Climbs</h1>
@@ -13,101 +13,82 @@
     </p>
 </div>
 
-<div class="row pt-2 pb-2">
-    <div class="col-12">
-        <form asp-action="Index" asp-controller="Climb" method="get">
-            <div class="d-flex align-items-center">
-                <div class="p-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Gym:</span><select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
-                </div>
-                <div class="pr-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Grade:</span><select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
-                </div>
-                <div class="p-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Wall:</span><select title="Wall" name="wall" class="form-select" aria-label="Wall" asp-items="ViewBag.Wall"></select>
-                </div>
-                <div class="p-2">
-                    <input class="btn btn-secondary" type="submit" value="Filter" />
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+<partial name="_ClimbFilterPartial" model="Model.Gyms" />
 
 <hr />
 
 <div class="row">
-    @foreach (var item in Model)
+    @foreach (var item in Model.ClimbViewModels)
     {
         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
             <div class="card">
-                <img src="/api/images/@item.ImageId" class="card-img-top" alt="Boulder Image" style="max-height: 20rem;">
+                <img src="/api/images/@item.Climb.ImageId" class="card-img-top" alt="Boulder Image" style="max-height: 20rem;">
                 <div class="card-body">
                     <p class="card-text">
                         <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.GradeOld):</div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Climb.GradeOld):</div>
                             <div class="col-8">
                                 <div class="row ps-3">
-                                    @if (item.GymOld == "TheClimb-Yeonnam")
+                                    @if (item.Climb.GymOld == "TheClimb-B-Hongdae")
                                     {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.GradeOld;"></div>
+                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;">@item.Climb.GradeOld</div>
                                     }
                                     else
                                     {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;">@item.GradeOld</div>
+                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.Climb.GradeOld;"></div>
                                     }
-                                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.HoldColor;"></div>
+                                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.Climb.HoldColor;"></div>
                                     <div class="col-6">(Hold)</div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.GymOld):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.GymOld)</div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Climb.GymOld):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Climb.GymOld)</div>
                         </div>
                         <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Wall)</div>
+                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Climb.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Climb.Wall)</div>
                         </div>
                     </p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Attempts: @(ViewData.FirstOrDefault(x => x.Key.StartsWith(item.Id) && x.Key.EndsWith("Attempt")).Value ?? "0")</span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Attempt", TimeStamp=DateTime.Now})" />
+                            <span class="align-content-center"> Attempts: @item.Attempt</span>
+                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Climb.Id, Type="Attempt", TimeStamp=DateTime.Now})" />
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Top: @(ViewData.FirstOrDefault(x => x.Key.StartsWith(item.Id) && x.Key.EndsWith("Top")).Value ?? "0")</span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Top", TimeStamp=DateTime.Now})" />
+                            <span class="align-content-center"> Top: @item.Top</span>
+                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Climb.Id, Type="Top", TimeStamp=DateTime.Now})" />
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Flash: @(ViewData.FirstOrDefault(x => x.Key.StartsWith(item.Id) && x.Key.EndsWith("Flash")).Value ?? "0")</span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Flash", TimeStamp=DateTime.Now})" />
+                            <span class="align-content-center"> Flash: @item.Flash</span>
+                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Climb.Id, Type="Flash", TimeStamp=DateTime.Now})" />
                         </div>
                     </li>
                 </ul>
                 <div class="card-footer">
                     <div class="d-flex flex-row justify-content-between">
-                        <a class="btn btn-dark" asp-action="Create" asp-controller="ClimbLog" asp-route-climbId="@item.Id" alt="create">
+                        <a class="btn btn-dark" asp-action="Create" asp-controller="ClimbLog" asp-route-climbId="@item.Climb.Id" alt="create">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tree p-0 m-0 pb-1" viewBox="0 0 16 16">
                                 <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507" />
                             </svg>
                         </a>
-                        <a class="btn btn-dark" asp-action="Edit" asp-route-id="@item.Id" alt="edit">
+                        <a class="btn btn-dark" asp-action="Edit" asp-route-id="@item.Climb.Id" alt="edit">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil p-0 m-0 pb-1" viewBox="0 0 16 16">
                                 <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
                             </svg>
                         </a>
-                        <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.Id" alt="details">
+                        <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.Climb.Id" alt="details">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-card-list p-0 m-0 pb-1" viewBox="0 0 16 16">
                                 <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
                                 <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
                             </svg>
                         </a>
-                        <a class="btn btn-dark" asp-action="Delete" asp-route-id="@item.Id" alt="delete">
+                        <a class="btn btn-dark" asp-action="Delete" asp-route-id="@item.Climb.Id" alt="delete">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash p-0 m-0 pb-1" viewBox="0 0 16 16">
                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
@@ -119,3 +100,32 @@
         </div>
     }
 </div>
+
+<script>
+    async function getGymData() {
+        const selectedGymId = $("#Gym option:selected").val();
+        const request = new Request(`/api/gym/${selectedGymId}`);
+        let response = await fetch(request);
+        let body = await response.json();
+
+        $("#Grade option").remove();
+        $("#Wall option").remove();
+
+        $.each(body.grade, function (i, v) {
+            $("#Grade").append($('<option></option>').val(v.value).html(v.text));
+        });
+
+        $.each(body.wall, function (i, v) {
+            $("#Wall").append($('<option></option>').val(v.text).html(v.text));
+        });
+
+        var urlParams = new URLSearchParams(window.location.search);
+        const gradeId = urlParams.get("gradeId");
+        const wall = urlParams.get("wall");
+
+        $(`#Grade option[value='${gradeId}']`).attr("selected", "selected");
+        $(`#Wall option[value='${wall}']`).attr("selected", "selected");
+    }
+
+    getGymData();
+</script>

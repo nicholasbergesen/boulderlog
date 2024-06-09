@@ -1,6 +1,7 @@
 ﻿using Boulderlog.Data;
 using Boulderlog.Data.Models;
 using Boulderlog.Domain;
+using Boulderlog.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,7 +31,7 @@ namespace Boulderlog.Controllers
         }
 
         // GET: Climb
-        public async Task<IActionResult> Index(string grade, string gym, string wall)
+        public async Task<IActionResult> Index(int? gymId, int? gradeId, string wall)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -39,14 +40,14 @@ namespace Boulderlog.Controllers
                 .Include(c => c.ClimbLogs)
                 .Where(c => c.UserId == userId);
 
-            if (!string.IsNullOrEmpty(gym))
+            if (gymId.HasValue)
             {
-                climbs = climbs.Where(x => gym.Equals(x.GymOld));
+                climbs = climbs.Where(x => gymId.Equals(x.GymId));
             }
 
-            if (!string.IsNullOrEmpty(grade))
+            if (gradeId.HasValue)
             {
-                climbs = climbs.Where(x => grade.Equals(x.GradeOld));
+                climbs = climbs.Where(x => gradeId.Equals(x.GradeId));
             }
 
             if (!string.IsNullOrEmpty(wall))
@@ -54,7 +55,7 @@ namespace Boulderlog.Controllers
                 climbs = climbs.Where(x => wall.Equals(x.Wall));
             }
 
-            if (string.IsNullOrEmpty(grade) && string.IsNullOrEmpty(gym))
+            if (gradeId.HasValue && gymId.HasValue)
             {
                 var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
                 var koreaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
@@ -62,28 +63,43 @@ namespace Boulderlog.Controllers
                 climbs = climbs.Where(c => c.ClimbLogs.Count == 0 || c.ClimbLogs.Any(x => x.TimeStamp > koreaTime));
             }
 
+            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
+            var now = DateTime.UtcNow;
+            climbs = climbs.OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp));
+
             foreach (var climb in climbs)
             {
-                var attempts = climb.ClimbLogs.GroupBy(x => $"{x.ClimbId}-{x.Type}");
+                var climbModel = new ClimbViewModel(climb);
+                var attempts = climb
+                    .ClimbLogs
+                    .GroupBy(x => x.Type);
+
                 foreach (var attempt in attempts)
                 {
-                    ViewData[attempt.Key] = attempt.Count();
+                    switch (attempt.Key)
+                    {
+                        case "Attempt":
+                            climbModel.Attempt = attempt.Count();
+                            break;
+                        case "Top":
+                            climbModel.Top = attempt.Count();
+                            break;
+                        case "Flash":
+                            climbModel.Flash = attempt.Count();
+                            break;
+                        default:
+                            throw new Exception("Unhandled ClimbLog Type");
+                    }
                 }
-            }
-            ViewData["Gym"] = new SelectList(GymSelect, gym);
-            if (gym == "TheClimb-Yeonnam" || gym == null)
-            {
-                ViewData["Grade"] = new SelectList(GradeSelect, grade);
-                ViewData["Wall"] = new SelectList(Wall, wall);
-            }
-            else
-            {
-                ViewData["Grade"] = new SelectList(GradeBSelect, grade);
-                ViewData["Wall"] = new SelectList(WallB, wall);
+                climbViewModels.Add(climbModel);
             }
 
-            var now = DateTime.UtcNow;
-            return View(await climbs.OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp)).ToListAsync());
+            var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
+            var pageModel = new ClimbPageViewModel();
+            pageModel.Gyms = new SelectList(gyms, "Id", "Name", gymId ?? 2);
+            pageModel.ClimbViewModels = climbViewModels;
+
+            return View(pageModel);
         }
 
         // GET: Climb/Details/5

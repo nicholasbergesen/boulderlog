@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
+using System.Collections.Generic;
 
 namespace Boulderlog.Data.Models
 {
@@ -16,5 +17,7 @@ namespace Boulderlog.Data.Models
 
         [MaxLength(1000)]
         public required string Walls { get; set; }
+
+        public ICollection<Grade> Grades { get; set; }
     }
 }
