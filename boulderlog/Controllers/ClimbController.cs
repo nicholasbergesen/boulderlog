@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -31,7 +30,7 @@ namespace Boulderlog.Controllers
         }
 
         // GET: Climb
-        public async Task<IActionResult> Index(int? gymId, int? gradeId, string wall)
+        public IActionResult Index(int? gymId, int? gradeId, string wall)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -65,7 +64,8 @@ namespace Boulderlog.Controllers
 
             List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
             var now = DateTime.UtcNow;
-            climbs = climbs.OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp));
+            climbs = climbs
+                .OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp));
 
             foreach (var climb in climbs)
             {
@@ -126,14 +126,14 @@ namespace Boulderlog.Controllers
         // GET: Climb/Create
         public IActionResult Create()
         {
-            ViewData["Gym"] = new SelectList(GymSelect, "TheClimb-Yeonnam");
-            ViewData["Grade"] = new SelectList(GradeSelect, "Red");
-            ViewData["GradeB"] = new SelectList(GradeBSelect, "Red");
-            ViewData["HoldColor"] = new SelectList(Const.HoldColors, "Red");
-            ViewData["Wall"] = new SelectList(Wall, "Yeonnam");
-            ViewData["WallB"] = new SelectList(WallB, "Sector1");
-            ViewData["UserId"] = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return View();
+            var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
+            ViewData["Gym"] = new SelectList(gyms, "Id", "Name");
+            ViewData["HoldColor"] = new SelectList(Const.HoldColors);
+            var model = new Climb();
+            model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            model.GymOld = gyms.First().Name;
+            model.GradeOld = "White";
+            return View(model);
         }
 
         // POST: Climb/Create
@@ -141,16 +141,8 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ImageId,Grade,HoldColor,Gym,Wall,UserId")] Climb climb)
+        public async Task<IActionResult> Create([Bind("ImageId,GymId,Wall,GradeId,HoldColor,UserId,GradeOld,GymOld")] Climb climb)
         {
-            ViewData["Gym"] = new SelectList(GymSelect, climb.GymOld);
-            ViewData["Grade"] = new SelectList(GradeSelect, climb.GradeOld);
-            ViewData["GradeB"] = new SelectList(GradeBSelect, climb.GradeOld);
-            ViewData["HoldColor"] = new SelectList(Const.HoldColors, climb.HoldColor);
-            ViewData["Wall"] = new SelectList(Wall, climb.Wall);
-            ViewData["WallB"] = new SelectList(WallB, climb.Wall);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
-
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
 
             if (climb.UserId != userId?.Value)
@@ -160,11 +152,21 @@ namespace Boulderlog.Controllers
 
             if (ModelState.IsValid)
             {
+                var climbGrade = await _context.Grade.Include(x => x.Gym).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
+                climb.GradeOld = climbGrade.ColorName;
+                climb.GymOld = climbGrade.Gym.Name;
+
                 _context.Add(climb);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
+            var gyms = _context.Gym.Select(x => new { x.Id, x.Name, x.Walls });
+            var grade = _context.Grade.Where(x => x.Id == climb.GymId).Select(x => new { x.Id, x.ColorName });
+            ViewData["Gym"] = new SelectList(gyms, "Id", "Name", climb.GymId);
+            ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", climb.GradeId);
+            ViewData["Wall"] = new SelectList(gyms.First(x => x.Id == climb.GymId).Walls.Split(";"), climb.Wall);
+            ViewData["HoldColor"] = new SelectList(Const.HoldColors, climb.HoldColor);
             return View(climb);
         }
 

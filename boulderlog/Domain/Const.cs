@@ -10,6 +10,6 @@ namespace Boulderlog.Domain
             public const string User = "User";
         }
 
-        public static IEnumerable<string> HoldColors = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink", "Mint" };
+        public static IEnumerable<string> HoldColors = new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink", "Mint" };
     }
 }
