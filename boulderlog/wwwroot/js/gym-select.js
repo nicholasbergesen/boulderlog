@@ -19,6 +19,11 @@
     const gradeId = urlParams.get("gradeId");
     const wall = urlParams.get("wall");
 
-    $(`#Grade option[value='${gradeId}']`).attr("selected", "selected");
-    $(`#Wall option[value='${wall}']`).attr("selected", "selected");
+    if (gradeId) {
+        $(`#Grade option[value='${gradeId}']`).attr("selected", "selected");
+    }
+
+    if (wall) {
+        $(`#Wall option[value='${wall}']`).attr("selected", "selected");
+    }
 }
