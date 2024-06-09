@@ -38,8 +38,13 @@ namespace Boulderlog.ApiController
             }
 
             var model = new FilterViewModel();
-            model.Grade = new SelectList(selectedGym.Grades.Select(x => new { x.Id, x.ColorName }), "Id", "ColorName");
-            model.Wall = new SelectList(selectedGym.Walls.Split(";"));
+            var grades = selectedGym.Grades.Select(x => new { x.Id, x.ColorName }).ToList();
+            grades.Insert(0, new { Id = (int?)-1, ColorName = "" });
+            model.Grade = new SelectList(grades, "Id", "ColorName");
+
+            var walls = selectedGym.Walls.Split(";").ToList();
+            walls.Insert(0, "");
+            model.Wall = new SelectList(walls);
 
             return model;
         }

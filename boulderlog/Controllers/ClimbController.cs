@@ -17,11 +17,6 @@ namespace Boulderlog.Controllers
     [Authorize]
     public class ClimbController : Controller
     {
-        private static IEnumerable<string> GradeSelect = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" };
-        private static IEnumerable<string> GradeBSelect = new List<string>() { string.Empty, "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-        private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam", "TheClimb-B-Hongdae" };
-        private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
-        private static IEnumerable<string> WallB = new List<string>() { string.Empty, "Sector1", "Sector2" };
         private readonly ApplicationDbContext _context;
 
         public ClimbController(ApplicationDbContext context)
@@ -67,9 +62,24 @@ namespace Boulderlog.Controllers
             climbs = climbs
                 .OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp));
 
+            climbs = climbs
+                .Include(x => x.Grade)
+                .Include(x => x.Grade.Gym);
+
             foreach (var climb in climbs)
             {
-                var climbModel = new ClimbViewModel(climb);
+                var climbModel = new ClimbViewModel()
+                {
+                    Id = climb.Id,
+                    Gym = climb.Grade.Gym.Name,
+                    Grade = climb.Grade.ColorName,
+                    GradeColor = climb.Grade.ColorHex,
+                    ImageId = climb.ImageId,
+                    HoldColor = climb.HoldColor,
+                    Wall = climb.Wall,
+                    UserId = climb.UserId
+                };
+
                 var attempts = climb
                     .ClimbLogs
                     .GroupBy(x => x.Type);
