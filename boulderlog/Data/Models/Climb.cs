@@ -18,23 +18,35 @@ namespace Boulderlog.Data.Models
         public string? ImageId { get; set; }
 
         [MaxLength(255), Required]
-        public required string Grade { get; set; }
+        public string GradeOld { get; set; }
 
         [MaxLength(255)]
         [DisplayName("Hold Color")]
         public string? HoldColor { get; set; }
 
         [MaxLength(255), Required]
-        public required string Gym { get; set; }
+        public string GymOld { get; set; }
 
         [MaxLength(255)]
         public string? Wall { get; set; }
 
         [Required]
-        public required string UserId { get; set; }
+        public string UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual AppUser? User { get; set; }
+
+        [DisplayName("Gym")]
+        public int? GymId { get; set; }
+
+        [ForeignKey(nameof(GymId))]
+        public virtual Gym? Gym { get; set; }
+
+        [DisplayName("Grade")]
+        public int? GradeId { get; set; }
+
+        [ForeignKey(nameof(GradeId))]
+        public virtual Grade? Grade { get; set; }
 
         public ICollection<ClimbLog> ClimbLogs { get; set; } = new List<ClimbLog>();
     }

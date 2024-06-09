@@ -1,5 +1,5 @@
 ﻿@using Boulderlog.Data.Models
-@model IEnumerable<Boulderlog.Data.Models.Climb>
+@model ClimbPageViewModel
 
 <div class="d-flex flex-row justify-content-between">
     <h1>Climbs</h1>
@@ -13,31 +13,12 @@
     </p>
 </div>
 
-<div class="row pt-2 pb-2">
-    <div class="col-12">
-        <form asp-action="Index" asp-controller="Climb" method="get">
-            <div class="d-flex align-items-center">
-                <div class="p-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Gym:</span><select title="Gym" name="gym" class="form-select" aria-label="Gym" asp-items="ViewBag.Gym"></select>
-                </div>
-                <div class="pr-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Grade:</span><select title="Grade" name="grade" class="form-select" aria-label="Grade" asp-items="ViewBag.Grade"></select>
-                </div>
-                <div class="p-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Wall:</span><select title="Wall" name="wall" class="form-select" aria-label="Wall" asp-items="ViewBag.Wall"></select>
-                </div>
-                <div class="p-2">
-                    <input class="btn btn-secondary" type="submit" value="Filter" />
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+<partial name="_ClimbFilterPartial" model="Model.Gyms" />
 
 <hr />
 
 <div class="row">
-    @foreach (var item in Model)
+    @foreach (var item in Model.ClimbViewModels)
     {
         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
             <div class="card">
@@ -48,15 +29,23 @@
                             <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Grade):</div>
                             <div class="col-8">
                                 <div class="row ps-3">
-                                    @if (item.Gym == "TheClimb-Yeonnam")
-                                    {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.Grade;"></div>
-                                    }
-                                    else
+                                    @if (item.Gym == "TheClimb-B-Hongdae")
                                     {
                                         <div class="col-3" style="display:inline-block;width:20px;height:20px;">@item.Grade</div>
                                     }
-                                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.HoldColor;"></div>
+                                    else
+                                    {
+                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.GradeColor;"></div>
+                                    }
+                                    
+                                    @if (item.HoldColor == "Mint")
+                                    {
+                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:#3EB489;"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.HoldColor;"></div>
+                                    }
                                     <div class="col-6">(Hold)</div>
                                 </div>
                             </div>
@@ -72,19 +61,19 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Attempts: @(ViewData.FirstOrDefault(x => x.Key.StartsWith(item.Id) && x.Key.EndsWith("Attempt")).Value ?? "0")</span>
+                            <span class="align-content-center"> Attempts: @item.Attempt</span>
                             <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Attempt", TimeStamp=DateTime.Now})" />
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Top: @(ViewData.FirstOrDefault(x => x.Key.StartsWith(item.Id) && x.Key.EndsWith("Top")).Value ?? "0")</span>
+                            <span class="align-content-center"> Top: @item.Top</span>
                             <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Top", TimeStamp=DateTime.Now})" />
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Flash: @(ViewData.FirstOrDefault(x => x.Key.StartsWith(item.Id) && x.Key.EndsWith("Flash")).Value ?? "0")</span>
+                            <span class="align-content-center"> Flash: @item.Flash</span>
                             <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Flash", TimeStamp=DateTime.Now})" />
                         </div>
                     </li>
@@ -119,3 +108,9 @@
         </div>
     }
 </div>
+
+<script src="~/js/gym-select.js" asp-append-version="true"></script>
+
+<script>
+    getGymData();
+</script>

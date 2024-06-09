@@ -1,4 +1,6 @@
-﻿namespace Boulderlog.Domain
+﻿using System.Collections.Generic;
+
+namespace Boulderlog.Domain
 {
     public static class Const
     {
@@ -7,5 +9,7 @@
             public const string Admin = "Admin";
             public const string User = "User";
         }
+
+        public static IEnumerable<string> HoldColors = new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink", "Mint" };
     }
 }

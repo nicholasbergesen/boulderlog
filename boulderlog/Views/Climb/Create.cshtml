@@ -11,8 +11,16 @@
         <form asp-action="javascript:void(0)">
             <div class="d-flex align-items-center">
                 <div class="pe-1">
-                    <canvas class="placeholder" id="canvas" width="250" height="250"></canvas>
-                    <span></span>
+                    @if (string.IsNullOrEmpty(Model.ImageId))
+                    {
+                        <canvas class="placeholder" id="canvas" width="250" height="250"></canvas>
+                        <span></span>
+                    }
+                    else
+                    {
+                        <img src="/api/images/@Model.ImageId" width="250" height="250" id="imageTag" />
+                        <canvas class="visually-hidden" id="canvas" width="250" height="250"></canvas>
+                    }
                 </div>
                 <div>
                     <button id="open-camera-modal" class="btn btn-primary pt-1" data-bs-toggle="modal" data-bs-target="#cameraModal" type="button">
@@ -32,30 +40,32 @@
             </div>
         </form>
         <form asp-action="Create">
-            <div asp-validation-summary="None" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="ImageId" />
+            <input type="hidden" asp-for="GradeOld" />
+            <input type="hidden" asp-for="GymOld" />
+
             <div class="form-group">
-                <label asp-for="Grade" class="control-label"></label>
-                <select asp-for="Grade" class="form-control" asp-items="ViewBag.Grade"></select>
-                <span asp-validation-for="Grade" class="text-danger"></span>
+                <label asp-for="GymId" class="control-label"></label>
+                <select asp-for="GymId" id="Gym" class="form-control" asp-items="ViewBag.Gym" onchange="getGymData()"></select>
+                <span asp-validation-for="GymId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradeId" class="control-label"></label>
+                <select asp-for="GradeId" id="Grade" class="form-control" asp-items="ViewBag.Grade"></select>
+                <span asp-validation-for="GradeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Wall" class="control-label"></label>
+                <select asp-for="Wall" id="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
+                <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HoldColor" class="control-label"></label>
                 <select asp-for="HoldColor" class="form-control" asp-items="ViewBag.HoldColor"></select>
                 <span asp-validation-for="HoldColor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gym" class="control-label"></label>
-                <select asp-for="Gym" class="form-control" onchange="onGymChange()" asp-items="ViewBag.Gym"></select>
-                <span asp-validation-for="Gym" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Wall" class="control-label"></label>
-                <select asp-for="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
-                <span asp-validation-for="Wall" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input asp-for="ImageId" type="hidden" />
-                <input asp-for="UserId" type="hidden" value="@ViewData["UserId"]" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -87,44 +97,10 @@
 </div>
 
 <script src="~/js/climb-create.js" asp-append-version="true"></script>
+<script src="~/js/gym-select.js" asp-append-version="true"></script>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-<script>
-    function onGymChange() {
-        var gym = $("#Gym");
-
-        $('#Grade option').remove();
-        $('#Wall option').remove();
-
-        let wall = $("#Wall");
-        let grade = $("#Grade");
-
-        if (gym.val() == "TheClimb-Yeonnam") {
-            let newGrades = @Html.Raw(Json.Serialize(@ViewBag.Grade));
-            $.each(newGrades, function (key, value) {
-                grade.append($("<option></option>").text(value.text));
-            });
-
-            let newWalls = @Html.Raw(Json.Serialize(@ViewBag.Wall));
-            $.each(newWalls, function (key, value) {
-                wall.append($("<option></option>").text(value.text));
-            });
-        }
-        else {
-            let newGrades = @Html.Raw(Json.Serialize(@ViewBag.GradeB));
-            $.each(newGrades, function (key, value) {
-                grade.append($("<option></option>").text(value.text));
-            });
-
-            let newWalls = @Html.Raw(Json.Serialize(@ViewBag.WallB));
-            $.each(newWalls, function (key, value) {
-                wall.append($("<option></option>").text(value.text));
-            });
-        }
-    }
-</script>

@@ -1,12 +1,6 @@
 ﻿@model Boulderlog.Data.Models.Climb
 
-@{
-    ViewData["Title"] = "Edit";
-}
-
-<h1>Edit</h1>
-
-<h4>Climb</h4>
+<h1>Edit climb</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -34,33 +28,35 @@
             </div>
         </form>
         <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="All" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="UserId" />
             <input type="hidden" asp-for="ImageId" />
+            <input type="hidden" asp-for="GradeOld" />
+            <input type="hidden" asp-for="GymOld" />
 
             <div class="form-group">
-                <label asp-for="Grade" class="control-label"></label>
-                <select asp-for="Grade" class="form-control" asp-items="ViewBag.Grade"></select>
+                <label asp-for="GymId" class="control-label"></label>
+                <select asp-for="GymId" id="Gym" class="form-control" asp-items="ViewBag.Gym" onchange="getGymData()"></select>
+                <span asp-validation-for="Gym" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GradeId" class="control-label"></label>
+                <select asp-for="GradeId" id="Grade" class="form-control" asp-items="ViewBag.Grade"></select>
                 <span asp-validation-for="Grade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Wall" class="control-label"></label>
+                <select asp-for="Wall" id="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
+                <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="HoldColor" class="control-label"></label>
                 <select asp-for="HoldColor" class="form-control" asp-items="ViewBag.HoldColor"></select>
                 <span asp-validation-for="HoldColor" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Gym" class="control-label"></label>
-                <select asp-for="Gym" class="form-control" asp-items="ViewBag.Gym"></select>
-                <span asp-validation-for="Gym" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Wall" class="control-label"></label>
-                <select asp-for="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
-                <span asp-validation-for="Wall" class="text-danger"></span>
-            </div>
             <div class="form-group pt-3">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Edit" class="btn btn-primary" />
                 <a class="btn btn-secondary" asp-action="Index" asp-controller="Climb">Back</a>
             </div>
         </form>
@@ -86,6 +82,7 @@
 </div>
 
 <script src="~/js/climb-create.js" asp-append-version="true"></script>
+<script src="~/js/gym-select.js" asp-append-version="true"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

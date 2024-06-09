@@ -18,7 +18,7 @@ namespace Boulderlog.Controllers
         private readonly ApplicationDbContext _context;
         private static IEnumerable<string> Grades = new List<string>() { "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black" };
         private static IEnumerable<string> GymSelect = new List<string>() { string.Empty, "TheClimb-Yeonnam", "TheClimb-B-Hongdae" };
-        private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink" };
+        private static IEnumerable<string> HoldColor = new List<string>() { string.Empty, "White", "Yellow", "Orange", "Green", "Blue", "Red", "Purple", "Grey", "Brown", "Black", "Pink", "Mint" };
         private static IEnumerable<string> Wall = new List<string>() { string.Empty, "Yeonnam", "Toitmaru", "Sinchon" };
         private static IEnumerable<string> Type = new List<string>() { "Attempt", "Top", "Flash" };
 
@@ -44,7 +44,7 @@ namespace Boulderlog.Controllers
             var gradeCount = new List<int>();
             foreach (var grade in Grades)
             {
-                gradeCount.Add(climbLogs.Count(x => grade.Equals(x.Climb.Grade)));
+                gradeCount.Add(climbLogs.Count(x => grade.Equals(x.Climb.GradeOld)));
             }
 
             ViewData["GradeLabels"] = Grades;

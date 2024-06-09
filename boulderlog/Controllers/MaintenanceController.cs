@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
+using NuGet.Protocol;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static Boulderlog.Domain.Const;
@@ -83,7 +85,7 @@ namespace Boulderlog.Controllers
             foreach (var climbLogItem in _context.ClimbLog)
             {
                 var climb = await _context.Climb.FindAsync(climbLogItem.ClimbId);
-                if (climb == null) 
+                if (climb == null)
                 {
                     _context.ClimbLog.Remove(climbLogItem);
                 }
@@ -92,6 +94,52 @@ namespace Boulderlog.Controllers
             var num = await _context.SaveChangesAsync();
 
             return Ok(num);
+        }
+
+        [Route("SeedDatabase")]
+        public async Task<IActionResult> SeedDatabase()
+        {
+            Dictionary<string, int> grades = new Dictionary<string, int>()
+            {
+                 {"1",1},
+                 {"2",2},
+                 {"3",3},
+                 {"4",4},
+                 {"5",5},
+                 {"6",6},
+                 {"7",7},
+                 {"8",8},
+                 {"9",9 },
+                 {"White",10},
+                 {"Yellow",11},
+                 {"Orange",12},
+                 {"Green",13},
+                 {"Blue", 14},
+                 {"Red", 15},
+                 {"Purple",16},
+                 {"Grey", 17},
+                 {"Brown",18},
+                 {"Black",19}
+            };
+
+            var climbs = _context.Climb;
+            foreach (var climb in climbs)
+            {
+                if (climb.GymOld == "TheClimb-Yeonnam")
+                {
+                    climb.GymId = 2;
+                }
+                else
+                {
+                    climb.GymId = 1;
+                }
+
+                climb.GradeId = grades[climb.GradeOld];
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
