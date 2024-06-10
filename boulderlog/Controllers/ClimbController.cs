@@ -123,6 +123,8 @@ namespace Boulderlog.Controllers
             var climb = await _context.Climb
                 .Include(c => c.User)
                 .Include(c => c.ClimbLogs)
+                .Include(x => x.Grade)
+                .Include(x => x.Grade.Gym)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (climb == null)
@@ -130,7 +132,20 @@ namespace Boulderlog.Controllers
                 return NotFound();
             }
 
-            return View(climb);
+            var climbModel = new ClimbViewModel()
+            {
+                Id = climb.Id,
+                Gym = climb.Grade.Gym.Name,
+                Grade = climb.Grade.ColorName,
+                GradeColor = climb.Grade.ColorHex,
+                ImageId = climb.ImageId,
+                HoldColor = climb.HoldColor,
+                Wall = climb.Wall,
+                UserId = climb.UserId,
+                ClimbLogs = climb.ClimbLogs
+            };
+
+            return View(climbModel);
         }
 
         // GET: Climb/Create
@@ -141,8 +156,6 @@ namespace Boulderlog.Controllers
             ViewData["HoldColor"] = new SelectList(Const.HoldColors);
             var model = new Climb();
             model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            model.GymOld = gyms.First().Name;
-            model.GradeOld = "White";
             return View(model);
         }
 
@@ -151,7 +164,7 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ImageId,GymId,Wall,GradeId,HoldColor,UserId,GradeOld,GymOld,TimeStamp")] Climb climb)
+        public async Task<IActionResult> Create([Bind("ImageId,GymId,Wall,GradeId,HoldColor,UserId,TimeStamp")] Climb climb)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
 
@@ -163,8 +176,6 @@ namespace Boulderlog.Controllers
             if (ModelState.IsValid)
             {
                 var climbGrade = await _context.Grade.Include(x => x.Gym).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
-                climb.GradeOld = climbGrade.ColorName;
-                climb.GymOld = climbGrade.Gym.Name;
 
                 _context.Add(climb);
                 await _context.SaveChangesAsync();
@@ -220,8 +231,6 @@ namespace Boulderlog.Controllers
                 try
                 {
                     var climbGrade = await _context.Grade.Include(x => x.Gym).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
-                    climb.GradeOld = climbGrade.ColorName;
-                    climb.GymOld = climbGrade.Gym.Name;
                     _context.Update(climb);
                     await _context.SaveChangesAsync();
                 }

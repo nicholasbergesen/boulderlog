@@ -21,15 +21,9 @@ namespace Boulderlog.Data.Models
         [Required, DataType(DataType.DateTime)]
         public DateTime TimeStamp { get; set; }
 
-        [MaxLength(255), Required]
-        public string GradeOld { get; set; }
-
         [MaxLength(255)]
         [DisplayName("Hold Color")]
         public string? HoldColor { get; set; }
-
-        [MaxLength(255), Required]
-        public string GymOld { get; set; }
 
         [MaxLength(255)]
         public string? Wall { get; set; }
