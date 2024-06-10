@@ -2,12 +2,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h3>Climbs by Grade</h3>
-<div>
-  <canvas id="gradeChart"></canvas>
-</div>
-
-<h3>Climbs by Session</h3>
+<h3>Past Sessions</h3>
 <div>
     <canvas id="sessionChart"></canvas>
 </div>
@@ -15,61 +10,41 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    const gradeCtx = document.getElementById('gradeChart');
-
-    var gradeLabels = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.GradeLabels))')
-    var gradeValues = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.GradeValues))')
-
-    new Chart(gradeCtx, {
-        type: 'bar',
-        data: {
-            labels: gradeLabels,
-            datasets: [{
-                label: '# of Attempts',
-                data: gradeValues,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-                    
-            }
-        }
-    });
-
     const sessionCtx = document.getElementById('sessionChart');
 
     var sessionLabels = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionLabels))')
     var sessionAttempt = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionAttempt))')
     var sessionTop = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionTop))')
     var sessionFlash = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionFlash))')
+    var sessionBoulders = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionBoulders))')
 
     new Chart(sessionCtx, {
         type: 'line',
         data: {
             labels: sessionLabels,
             datasets: [{
-                label: 'Attempt',
+                label: 'Attempts',
                 data: sessionAttempt,
                 borderColor: 'lightblue',
                 backgroundColor: '#9BD0F5',
             },
             {
-                label: 'Top',
+                label: 'Tops',
                 data: sessionTop,
                 borderColor: 'green',
                 backgroundColor: '#FFB1C1',
             },
             {
-                label: 'Flash',
+                label: 'Flashs',
                 data: sessionFlash,
                 borderColor: 'red',
+                backgroundColor: '#FFB1C1',
+            },
+            {
+                label: 'Climbs',
+                data: sessionBoulders,
+                borderColor: 'navy',
+                borderDash: [10],
                 backgroundColor: '#FFB1C1',
             }]
         },
