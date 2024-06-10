@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,6 +17,9 @@ namespace Boulderlog.Data.Models
         [MaxLength(36), Required]
         [DisplayName("Image")]
         public string? ImageId { get; set; }
+
+        [Required, DataType(DataType.DateTime)]
+        public DateTime TimeStamp { get; set; }
 
         [MaxLength(255), Required]
         public string GradeOld { get; set; }

@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Create";
+    var now = DateTime.Now;
+    Model.TimeStamp = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Local);
 }
 
 <h1>Add Climb</h1>
@@ -46,6 +48,7 @@
             <input type="hidden" asp-for="ImageId" />
             <input type="hidden" asp-for="GradeOld" />
             <input type="hidden" asp-for="GymOld" />
+            <input type="hidden" asp-for="TimeStamp" />
 
             <div class="form-group">
                 <label asp-for="GymId" class="control-label"></label>

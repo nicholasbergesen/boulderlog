@@ -139,6 +139,9 @@ namespace Boulderlog.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -591,7 +594,7 @@ namespace Boulderlog.Migrations
             modelBuilder.Entity("Boulderlog.Data.Models.Grade", b =>
                 {
                     b.HasOne("Boulderlog.Data.Models.Gym", "Gym")
-                        .WithMany()
+                        .WithMany("Grades")
                         .HasForeignKey("GymId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -653,6 +656,11 @@ namespace Boulderlog.Migrations
             modelBuilder.Entity("Boulderlog.Data.Models.Climb", b =>
                 {
                     b.Navigation("ClimbLogs");
+                });
+
+            modelBuilder.Entity("Boulderlog.Data.Models.Gym", b =>
+                {
+                    b.Navigation("Grades");
                 });
 #pragma warning restore 612, 618
         }
