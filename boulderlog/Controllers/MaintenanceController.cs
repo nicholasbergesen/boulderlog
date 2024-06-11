@@ -96,11 +96,5 @@ namespace Boulderlog.Controllers
 
             return Ok(num);
         }
-
-        [Route("SeedDatabase")]
-        public async Task<IActionResult> SeedDatabase()
-        {
-            return Ok();
-        }
     }
 }
