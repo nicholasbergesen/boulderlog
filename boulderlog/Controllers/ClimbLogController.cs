@@ -1,5 +1,6 @@
 ﻿using Boulderlog.Data;
 using Boulderlog.Data.Models;
+using Boulderlog.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -38,25 +39,16 @@ namespace Boulderlog.Controllers
                 .ToListAsync();
 
             var climbsPerDay = climbLogs.GroupBy(x => $"{x.TimeStamp.Year}-{x.TimeStamp.Month}-{x.TimeStamp.Day}", x => new { x.Type, x.ClimbId });
-            List<string> sessionLabels = new List<string>();
-            List<int> sessionValuesAttempt = new List<int>();
-            List<int> sessionValuesTop = new List<int>();
-            List<int> sessionBoulders = new List<int>();
-            HashSet<string> unique = new HashSet<string>();
+            var model = new ClimbLogViewModel();
             foreach (var climbs in climbsPerDay)
             {
-                sessionLabels.Add($"{climbs.Key}");
-                sessionValuesAttempt.Add(climbs.Count(x => x.Type == "Attempt"));
-                sessionValuesTop.Add(climbs.Count(x => x.Type == "Top"));
-                sessionBoulders.Add(climbs.Select(x => x.ClimbId).Distinct().Count());
+                model.SessionLabels.Add($"{climbs.Key}");
+                model.SessionValuesAttempt.Add(climbs.Count(x => x.Type == "Attempt"));
+                model.SessionValuesTop.Add(climbs.Count(x => x.Type == "Top"));
+                model.SessionBoulders.Add(climbs.Select(x => x.ClimbId).Distinct().Count());
             }
 
-            ViewData["SessionLabels"] = sessionLabels;
-            ViewData["SessionAttempt"] = sessionValuesAttempt;
-            ViewData["SessionTop"] = sessionValuesTop;
-            ViewData["SessionBoulders"] = sessionBoulders;
-
-            return View();
+            return View(model);
         }
 
         // GET: ClimbLog/Details/5

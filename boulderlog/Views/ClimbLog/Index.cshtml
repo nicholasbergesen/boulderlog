@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ClimbLogViewModel
+
+@{
     ViewData["Title"] = "Index";
 }
 
@@ -12,10 +14,10 @@
 <script>
     const sessionCtx = document.getElementById('sessionChart');
 
-    var sessionLabels = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionLabels))')
-    var sessionAttempt = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionAttempt))')
-    var sessionTop = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionTop))')
-    var sessionBoulders = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionBoulders))')
+    var sessionLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.SessionLabels))')
+    var sessionAttempt = JSON.parse('@Html.Raw(Json.Serialize(Model.SessionValuesAttempt))')
+    var sessionTop = JSON.parse('@Html.Raw(Json.Serialize(Model.SessionValuesTop))')
+    var sessionBoulders = JSON.parse('@Html.Raw(Json.Serialize(Model.SessionBoulders))')
 
     new Chart(sessionCtx, {
         type: 'line',
