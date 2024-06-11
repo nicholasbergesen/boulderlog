@@ -21,9 +21,13 @@
 <div class="row">
     <canvas id="gradeSuccessRateChart"></canvas>
 </div>
-<h4>Average attempts by grade</h4>
+<h4>[Tops:Attempts] ratio by grade</h4>
 <div class="row">
-    <canvas id="gradeAverageAttempts"></canvas>
+    <canvas id="gradeRatioAttemptsChart"></canvas>
+</div>
+<h4>Average attempts per route</h4>
+<div class="row">
+    <canvas id="gradeAverateAttemptsChart"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -88,17 +92,50 @@
         }
     })
 
-    const gradeAverageCtx = document.getElementById('gradeAverageAttempts');
-    var gradeLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeAverageAttempt_Label))')
-    var gradeValues = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeAverageAttempt_Values))')
+    const gradeRatioCtx = document.getElementById('gradeRatioAttemptsChart');
+    var gradeRatioLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeRatioAttempt_Label))')
+    var gradeRatioAttemptValues = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeRatioAttempt_Values))')
+    var gradeRatioTopValues = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeRatioTop_Values))')
+
+    new Chart(gradeRatioCtx, {
+        type: 'bar',
+        data: {
+            labels: gradeRatioLabels,
+            datasets: [{
+                label: 'Attempts',
+                data: gradeRatioAttemptValues,
+                borderWidth: 1
+            },
+            {
+                label: 'Tops',
+                data: gradeRatioTopValues,
+                borderWidth: 1
+                
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true
+                }
+            }
+        }
+    })
+
+    const gradeAverageCtx = document.getElementById('gradeAverateAttemptsChart');
+    var gradeAverageLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeAverageAttempt_Label))')
+    var gradeAverateValues = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeAverageAttempt_Values))')
 
     new Chart(gradeAverageCtx, {
         type: 'bar',
         data: {
-            labels: gradeLabels,
+            labels: gradeAverageLabels,
             datasets: [{
-                label: 'Average attempts',
-                data: gradeValues,
+                label: 'Attempts',
+                data: gradeAverateValues,
                 borderWidth: 1
             }]
         }

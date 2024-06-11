@@ -65,12 +65,22 @@ namespace Boulderlog.Controllers
                         continue;
                     }
 
+                    var tops = logsForGrade.Count(x => x.Type == "Top");
+                    var attempt = logsForGrade.Count(x => x.Type == "Attempt");
+                    var uniqueClimbs = logsForGrade.DistinctBy(x => x.ClimbId).Count();
+                    var totalClimbs = logsForGrade.Count();
+
                     // Sucecss rate
-                    model.GradeSuccessRate_Values.Add(1.0 * logsForGrade.Count(x => x.Type == "Top") / logsForGrade.Count());
+                    model.GradeSuccessRate_Values.Add(Math.Round(1.0 * tops / totalClimbs * 100, 2));
                     model.GradeSuccessRate_Label.Add(grade.ColorName);
 
-                    // Averate Attempts
-                    model.GradeAverageAttempt_Values.Add(1.0 * logsForGrade.Count() / logsForGrade.DistinctBy(x => x.ClimbId).Count());
+                    // Attempt:Top ratio
+                    model.GradeRatioAttempt_Values.Add(Math.Round(1.0 * attempt / totalClimbs, 2));
+                    model.GradeRatioTop_Values.Add(Math.Round(1.0 * tops / totalClimbs, 2));
+                    model.GradeRatioAttempt_Label.Add(grade.ColorName);
+
+                    // Average attempts
+                    model.GradeAverageAttempt_Values.Add(Math.Round(1.0 * totalClimbs / uniqueClimbs, 2));
                     model.GradeAverageAttempt_Label.Add(grade.ColorName);
                 }
             }
