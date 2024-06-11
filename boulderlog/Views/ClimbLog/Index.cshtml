@@ -3,6 +3,24 @@
 @{
     ViewData["Title"] = "Index";
 }
+<form method="get">
+    <div class="row g-4 align-items-center mb-4">
+        <div class="col-auto">
+            <label asp-for="From" class="col-form-label"></label>
+        </div>
+        <div class="col-auto">
+            <input asp-for="From" class="form-control" onchange="this.form.submit()" />
+        </div>
+        <div class="col-auto">
+            <label asp-for="To" class="control-label"></label>
+        </div>
+        <div class="col-auto">
+            <input asp-for="To" class="form-control" onchange="this.form.submit()" />
+        </div>
+
+        <input asp-for="GymId" type="hidden" value="@Model.Gyms.SelectedValue" />
+    </div>
+</form>
 
 <h3>Past Sessions</h3>
 <div>
@@ -15,6 +33,8 @@
 <div class="row">
     <form method="get">
         <select asp-for="GymId" id="Gym" class="form-control" asp-items="Model.Gyms" onchange="this.form.submit()"></select>
+        <input type="hidden" asp-for="From" />
+        <input type="hidden" asp-for="To" />
     </form>
 </div>
 <h4>Success rate by grade</h4>
@@ -114,7 +134,7 @@
                 label: 'Tops',
                 data: gradeRatioTopValues,
                 borderWidth: 1
-                
+
             }]
         },
         options: {

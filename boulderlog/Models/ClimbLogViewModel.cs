@@ -1,6 +1,8 @@
 ﻿using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Boulderlog.Models
 {
@@ -24,6 +26,10 @@ namespace Boulderlog.Models
         public List<double> Untopped_Values { get; set; } = new List<double>();
         public List<string> Untopped_Label { get; set; } = new List<string>();
 
+        [DataType(DataType.Date)]
+        public DateTime From { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime To { get; set; }
         public SelectList Gyms { get; set; }
         public int? GymId { get; set; }
     }

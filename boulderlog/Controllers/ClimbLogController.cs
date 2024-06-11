@@ -18,6 +18,7 @@ namespace Boulderlog.Controllers
     {
         private readonly ApplicationDbContext _context;
         private static IEnumerable<string> Type = new List<string>() { "Attempt", "Top" };
+        private static IEnumerable<Gym> _gyms;
 
         public ClimbLogController(ApplicationDbContext context)
         {
@@ -25,26 +26,31 @@ namespace Boulderlog.Controllers
         }
 
         // GET: ClimbLog
-        public async Task<IActionResult> Index(int? gymId)
+        public async Task<IActionResult> Index(int? gymId, DateTime? from, DateTime? to)
         {
-            if (gymId is null)
+            if (_gyms == null)
             {
-                gymId = 2;
+                _gyms = _context.Gym.ToList();
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
+            var model = new ClimbLogViewModel()
+            {
+                GymId = gymId ?? 2,
+                From = from ?? DateTime.Now.AddDays(-30),
+                To = to ?? DateTime.Now,
+                Gyms = new SelectList(_gyms, "Id", "Name", gymId)
+            };
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var climbLogs = await _context
                 .ClimbLog
                 .Include(c => c.Climb)
                 .Where(x => x.Climb.UserId == userId)
-                .Where(x => x.TimeStamp > thirtyDaysAgo)
+                .Where(x => model.From <= x.TimeStamp && x.TimeStamp <= model.To)
                 .OrderBy(x => x.TimeStamp)
                 .ToListAsync();
 
             var climbsPerDay = climbLogs.GroupBy(x => $"{x.TimeStamp.Year}-{x.TimeStamp.Month}-{x.TimeStamp.Day}", x => new { x.Type, x.ClimbId });
-            var model = new ClimbLogViewModel();
             foreach (var climbs in climbsPerDay)
             {
                 model.SessionLabels.Add($"{climbs.Key}");
@@ -53,49 +59,39 @@ namespace Boulderlog.Controllers
                 model.SessionBoulders.Add(climbs.Select(x => x.ClimbId).Distinct().Count());
             }
 
-            if (gymId > 0)
+            var grades = _context.Grade.Where(x => x.GymId == model.GymId);
+            foreach (var grade in grades)
             {
-                var grades = _context.Grade.Where(x => x.GymId == gymId);
-                foreach (var grade in grades)
+                var logsForGrade = climbLogs.Where(x => grade.Id.Equals(x.Climb.GradeId));
+
+                if (logsForGrade.Count() == 0)
                 {
-                    var logsForGrade = climbLogs.Where(x => grade.Id.Equals(x.Climb.GradeId));
-
-                    if (logsForGrade.Count() == 0)
-                    {
-                        continue;
-                    }
-
-                    var tops = logsForGrade.Count(x => x.Type == "Top");
-                    var attempt = logsForGrade.Count(x => x.Type == "Attempt");
-                    var uniqueClimbs = logsForGrade.DistinctBy(x => x.ClimbId).Count();
-                    var totalClimbs = logsForGrade.Count();
-                    //var climbsWithoutTops = _context.Climb
-                    //    .Where(x => x.UserId == userId)
-                    //    .Include(x => x.ClimbLogs)
-                    //    .Where(x => !x.ClimbLogs.Any(x => x.Type == "Top"));
-
-                    // Sucecss rate
-                    model.GradeSuccessRate_Values.Add(Math.Round(1.0 * tops / totalClimbs * 100, 2));
-                    model.GradeSuccessRate_Label.Add(grade.ColorName);
-
-                    // Attempt:Top ratio
-                    model.GradeRatioAttempt_Values.Add(Math.Round(1.0 * attempt / totalClimbs, 2));
-                    model.GradeRatioTop_Values.Add(Math.Round(1.0 * tops / totalClimbs, 2));
-                    model.GradeRatioAttempt_Label.Add(grade.ColorName);
-
-                    // Average attempts
-                    model.GradeAverageAttempt_Values.Add(Math.Round(1.0 * totalClimbs / uniqueClimbs, 2));
-                    model.GradeAverageAttempt_Label.Add(grade.ColorName);
-
-                    // Untopped
-                    var climbsWithoutTops = logsForGrade.GroupBy(x => x.ClimbId, x => x.Type).Count(x => !x.Any(x => x == "Top"));
-                    model.Untopped_Values.Add(climbsWithoutTops);
-                    model.Untopped_Label.Add(grade.ColorName);
+                    continue;
                 }
-            }
 
-            var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
-            model.Gyms = new SelectList(gyms, "Id", "Name", gymId);
+                var tops = logsForGrade.Count(x => x.Type == "Top");
+                var attempt = logsForGrade.Count(x => x.Type == "Attempt");
+                var uniqueClimbs = logsForGrade.DistinctBy(x => x.ClimbId).Count();
+                var totalClimbs = logsForGrade.Count();
+
+                // Sucecss rate
+                model.GradeSuccessRate_Values.Add(Math.Round(1.0 * tops / totalClimbs * 100, 2));
+                model.GradeSuccessRate_Label.Add(grade.ColorName);
+
+                // Attempt:Top ratio
+                model.GradeRatioAttempt_Values.Add(Math.Round(1.0 * attempt / totalClimbs, 2));
+                model.GradeRatioTop_Values.Add(Math.Round(1.0 * tops / totalClimbs, 2));
+                model.GradeRatioAttempt_Label.Add(grade.ColorName);
+
+                // Average attempts
+                model.GradeAverageAttempt_Values.Add(Math.Round(1.0 * totalClimbs / uniqueClimbs, 2));
+                model.GradeAverageAttempt_Label.Add(grade.ColorName);
+
+                // Untopped
+                var climbsWithoutTops = logsForGrade.GroupBy(x => x.ClimbId, x => x.Type).Count(x => !x.Any(x => x == "Top"));
+                model.Untopped_Values.Add(climbsWithoutTops);
+                model.Untopped_Label.Add(grade.ColorName);
+            }
 
             return View(model);
         }
