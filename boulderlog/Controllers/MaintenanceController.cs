@@ -100,17 +100,6 @@ namespace Boulderlog.Controllers
         [Route("SeedDatabase")]
         public async Task<IActionResult> SeedDatabase()
         {
-            var climbsLogs = _context.ClimbLog
-                .Where(x => x.Type == "Flash")
-                .Include(x => x.Climb);
-
-            foreach (var climblog in climbsLogs)
-            {
-                climblog.Type = "Top";
-            }
-
-            await _context.SaveChangesAsync();
-
             return Ok();
         }
     }
