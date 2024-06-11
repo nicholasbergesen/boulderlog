@@ -93,7 +93,6 @@ namespace Boulderlog.Controllers
                             climbModel.Attempt = attempt.Count();
                             break;
                         case "Top":
-                        case "Flash":
                             climbModel.Top = attempt.Count();
                             break;
                         default:
