@@ -21,6 +21,9 @@ namespace Boulderlog.Models
         public List<double> GradeAverageAttempt_Values { get; set; } = new List<double>();
         public List<string> GradeAverageAttempt_Label { get; set; } = new List<string>();
 
+        public List<double> Untopped_Values { get; set; } = new List<double>();
+        public List<string> Untopped_Label { get; set; } = new List<string>();
+
         public SelectList Gyms { get; set; }
         public int? GymId { get; set; }
     }

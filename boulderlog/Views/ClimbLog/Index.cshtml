@@ -29,6 +29,10 @@
 <div class="row">
     <canvas id="gradeAverateAttemptsChart"></canvas>
 </div>
+<h4>Untopped Boulders</h4>
+<div class="row">
+    <canvas id="untoppedBouldersChart"></canvas>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -136,6 +140,22 @@
             datasets: [{
                 label: 'Attempts',
                 data: gradeAverateValues,
+                borderWidth: 1
+            }]
+        }
+    })
+
+    const untoppedCtx = document.getElementById('untoppedBouldersChart');
+    var untoppedLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.Untopped_Label))')
+    var untoppedValues = JSON.parse('@Html.Raw(Json.Serialize(Model.Untopped_Values))')
+
+    new Chart(untoppedCtx, {
+        type: 'bar',
+        data: {
+            labels: untoppedLabels,
+            datasets: [{
+                label: 'Untopped',
+                data: untoppedValues,
                 borderWidth: 1
             }]
         }

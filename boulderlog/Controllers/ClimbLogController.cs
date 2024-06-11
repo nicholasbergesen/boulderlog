@@ -69,6 +69,10 @@ namespace Boulderlog.Controllers
                     var attempt = logsForGrade.Count(x => x.Type == "Attempt");
                     var uniqueClimbs = logsForGrade.DistinctBy(x => x.ClimbId).Count();
                     var totalClimbs = logsForGrade.Count();
+                    //var climbsWithoutTops = _context.Climb
+                    //    .Where(x => x.UserId == userId)
+                    //    .Include(x => x.ClimbLogs)
+                    //    .Where(x => !x.ClimbLogs.Any(x => x.Type == "Top"));
 
                     // Sucecss rate
                     model.GradeSuccessRate_Values.Add(Math.Round(1.0 * tops / totalClimbs * 100, 2));
@@ -82,6 +86,11 @@ namespace Boulderlog.Controllers
                     // Average attempts
                     model.GradeAverageAttempt_Values.Add(Math.Round(1.0 * totalClimbs / uniqueClimbs, 2));
                     model.GradeAverageAttempt_Label.Add(grade.ColorName);
+
+                    // Untopped
+                    var climbsWithoutTops = logsForGrade.GroupBy(x => x.ClimbId, x => x.Type).Count(x => !x.Any(x => x == "Top"));
+                    model.Untopped_Values.Add(climbsWithoutTops);
+                    model.Untopped_Label.Add(grade.ColorName);
                 }
             }
 
