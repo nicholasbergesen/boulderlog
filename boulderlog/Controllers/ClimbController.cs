@@ -25,7 +25,7 @@ namespace Boulderlog.Controllers
         }
 
         // GET: Climb
-        public IActionResult Index(int? gymId, int? gradeId, string wall)
+        public IActionResult Index(int? gymId, int gradeId, string wall)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -39,7 +39,7 @@ namespace Boulderlog.Controllers
                 climbs = climbs.Where(x => gymId.Equals(x.GymId));
             }
 
-            if (gradeId.HasValue)
+            if (gradeId > 0)
             {
                 climbs = climbs.Where(x => gradeId.Equals(x.GradeId));
             }
@@ -49,7 +49,7 @@ namespace Boulderlog.Controllers
                 climbs = climbs.Where(x => wall.Equals(x.Wall));
             }
 
-            if (gradeId.HasValue && gymId.HasValue)
+            if (gradeId > 0 && gymId.HasValue)
             {
                 var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
                 var koreaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
