@@ -25,8 +25,13 @@ namespace Boulderlog.Controllers
         }
 
         // GET: ClimbLog
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? gymId)
         {
+            if (gymId is null)
+            {
+                gymId = 2;
+            }
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
 
@@ -47,6 +52,31 @@ namespace Boulderlog.Controllers
                 model.SessionValuesTop.Add(climbs.Count(x => x.Type == "Top"));
                 model.SessionBoulders.Add(climbs.Select(x => x.ClimbId).Distinct().Count());
             }
+
+            if (gymId > 0)
+            {
+                var grades = _context.Grade.Where(x => x.GymId == gymId);
+                foreach (var grade in grades)
+                {
+                    var logsForGrade = climbLogs.Where(x => grade.Id.Equals(x.Climb.GradeId));
+
+                    if (logsForGrade.Count() == 0)
+                    {
+                        continue;
+                    }
+
+                    // Sucecss rate
+                    model.GradeSuccessRate_Values.Add(1.0 * logsForGrade.Count(x => x.Type == "Top") / logsForGrade.Count());
+                    model.GradeSuccessRate_Label.Add(grade.ColorName);
+
+                    // Averate Attempts
+                    model.GradeAverageAttempt_Values.Add(1.0 * logsForGrade.Count() / logsForGrade.DistinctBy(x => x.ClimbId).Count());
+                    model.GradeAverageAttempt_Label.Add(grade.ColorName);
+                }
+            }
+
+            var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
+            model.Gyms = new SelectList(gyms, "Id", "Name", gymId);
 
             return View(model);
         }

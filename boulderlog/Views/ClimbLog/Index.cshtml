@@ -9,11 +9,27 @@
     <canvas id="sessionChart"></canvas>
 </div>
 
+<hr />
+
+<h3>Stats by Gym</h3>
+<div class="row">
+    <form method="get">
+        <select asp-for="GymId" id="Gym" class="form-control" asp-items="Model.Gyms" onchange="this.form.submit()"></select>
+    </form>
+</div>
+<h4>Success rate by grade</h4>
+<div class="row">
+    <canvas id="gradeSuccessRateChart"></canvas>
+</div>
+<h4>Average attempts by grade</h4>
+<div class="row">
+    <canvas id="gradeAverageAttempts"></canvas>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
     const sessionCtx = document.getElementById('sessionChart');
-
     var sessionLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.SessionLabels))')
     var sessionAttempt = JSON.parse('@Html.Raw(Json.Serialize(Model.SessionValuesAttempt))')
     var sessionTop = JSON.parse('@Html.Raw(Json.Serialize(Model.SessionValuesTop))')
@@ -55,4 +71,36 @@
             }
         }
     });
+
+    const gradeSuccessCtx = document.getElementById('gradeSuccessRateChart');
+    var gradeSuccessRateLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeSuccessRate_Label))')
+    var gradeSuccessRateValues = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeSuccessRate_Values))')
+
+    new Chart(gradeSuccessCtx, {
+        type: 'bar',
+        data: {
+            labels: gradeSuccessRateLabels,
+            datasets: [{
+                label: 'Success rate',
+                data: gradeSuccessRateValues,
+                borderWidth: 1
+            }]
+        }
+    })
+
+    const gradeAverageCtx = document.getElementById('gradeAverageAttempts');
+    var gradeLabels = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeAverageAttempt_Label))')
+    var gradeValues = JSON.parse('@Html.Raw(Json.Serialize(Model.GradeAverageAttempt_Values))')
+
+    new Chart(gradeAverageCtx, {
+        type: 'bar',
+        data: {
+            labels: gradeLabels,
+            datasets: [{
+                label: 'Average attempts',
+                data: gradeValues,
+                borderWidth: 1
+            }]
+        }
+    })
 </script>
