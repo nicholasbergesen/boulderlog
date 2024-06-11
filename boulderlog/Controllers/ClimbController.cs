@@ -77,7 +77,8 @@ namespace Boulderlog.Controllers
                     ImageId = climb.ImageId,
                     HoldColor = climb.HoldColor,
                     Wall = climb.Wall,
-                    UserId = climb.UserId
+                    UserId = climb.UserId,
+                    IsFlashed = "Top" == climb.ClimbLogs.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
                 };
 
                 var attempts = climb
@@ -92,10 +93,8 @@ namespace Boulderlog.Controllers
                             climbModel.Attempt = attempt.Count();
                             break;
                         case "Top":
-                            climbModel.Top = attempt.Count();
-                            break;
                         case "Flash":
-                            climbModel.Flash = attempt.Count();
+                            climbModel.Top = attempt.Count();
                             break;
                         default:
                             throw new Exception("Unhandled ClimbLog Type");

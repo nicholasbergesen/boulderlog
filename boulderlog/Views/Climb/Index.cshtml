@@ -56,6 +56,14 @@
                         <div class="row">
                             <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Wall)</div>
                         </div>
+                        @if (item.IsFlashed)
+                        {
+                            <div class="float-end">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+                                    <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z" />
+                                </svg>
+                            </div>
+                        }
                     </p>
                 </div>
                 <ul class="list-group list-group-flush">
@@ -67,14 +75,8 @@
                     </li>
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Top: @item.Top</span>
+                            <span class="align-content-center"> Tops: @item.Top</span>
                             <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Top", TimeStamp=DateTime.Now})" />
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Flash: @item.Flash</span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Flash", TimeStamp=DateTime.Now})" />
                         </div>
                     </li>
                 </ul>

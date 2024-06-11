@@ -100,15 +100,13 @@ namespace Boulderlog.Controllers
         [Route("SeedDatabase")]
         public async Task<IActionResult> SeedDatabase()
         {
-            var climbs = _context.Climb.Include(x => x.ClimbLogs).Where(x => x.TimeStamp == DateTime.MinValue);
-            foreach (var climb in climbs)
+            var climbsLogs = _context.ClimbLog
+                .Where(x => x.Type == "Flash")
+                .Include(x => x.Climb);
+
+            foreach (var climblog in climbsLogs)
             {
-                DateTime youngest = DateTime.Now;
-                if (climb.ClimbLogs.Count > 0)
-                {
-                    youngest = climb.ClimbLogs.Min(x => x.TimeStamp);
-                }
-                climb.TimeStamp = youngest;
+                climblog.Type = "Top";
             }
 
             await _context.SaveChangesAsync();

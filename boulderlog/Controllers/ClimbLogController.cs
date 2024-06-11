@@ -16,7 +16,7 @@ namespace Boulderlog.Controllers
     public class ClimbLogController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private static IEnumerable<string> Type = new List<string>() { "Attempt", "Top", "Flash" };
+        private static IEnumerable<string> Type = new List<string>() { "Attempt", "Top" };
 
         public ClimbLogController(ApplicationDbContext context)
         {
@@ -41,7 +41,6 @@ namespace Boulderlog.Controllers
             List<string> sessionLabels = new List<string>();
             List<int> sessionValuesAttempt = new List<int>();
             List<int> sessionValuesTop = new List<int>();
-            List<int> sessionValuesFlash = new List<int>();
             List<int> sessionBoulders = new List<int>();
             HashSet<string> unique = new HashSet<string>();
             foreach (var climbs in climbsPerDay)
@@ -49,14 +48,12 @@ namespace Boulderlog.Controllers
                 sessionLabels.Add($"{climbs.Key}");
                 sessionValuesAttempt.Add(climbs.Count(x => x.Type == "Attempt"));
                 sessionValuesTop.Add(climbs.Count(x => x.Type == "Top"));
-                sessionValuesFlash.Add(climbs.Count(x => x.Type == "Flash"));
                 sessionBoulders.Add(climbs.Select(x => x.ClimbId).Distinct().Count());
             }
 
             ViewData["SessionLabels"] = sessionLabels;
             ViewData["SessionAttempt"] = sessionValuesAttempt;
             ViewData["SessionTop"] = sessionValuesTop;
-            ViewData["SessionFlash"] = sessionValuesFlash;
             ViewData["SessionBoulders"] = sessionBoulders;
 
             return View();

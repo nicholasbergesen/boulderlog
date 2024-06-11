@@ -15,7 +15,6 @@
     var sessionLabels = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionLabels))')
     var sessionAttempt = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionAttempt))')
     var sessionTop = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionTop))')
-    var sessionFlash = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionFlash))')
     var sessionBoulders = JSON.parse('@Html.Raw(Json.Serialize(ViewBag.SessionBoulders))')
 
     new Chart(sessionCtx, {
@@ -32,12 +31,6 @@
                 label: 'Tops',
                 data: sessionTop,
                 borderColor: 'green',
-                backgroundColor: '#FFB1C1',
-            },
-            {
-                label: 'Flashs',
-                data: sessionFlash,
-                borderColor: 'red',
                 backgroundColor: '#FFB1C1',
             },
             {

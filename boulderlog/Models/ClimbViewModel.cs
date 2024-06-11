@@ -20,8 +20,8 @@ namespace Boulderlog.Models
         public string Grade { get; set; }
         public int Attempt { get; set; }
         public int Top { get; set; }
-        public int Flash { get; set; }
         public string GradeColor { get; internal set; }
+        public bool IsFlashed { get; set; }
 
         public IEnumerable<ClimbLog> ClimbLogs { get; set; }
     }
