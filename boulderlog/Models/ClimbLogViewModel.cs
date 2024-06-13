@@ -30,8 +30,7 @@ namespace Boulderlog.Models
         public DateTime From { get; set; }
         [DataType(DataType.Date)]
         public DateTime To { get; set; }
-        public SelectList Gyms { get; set; }
-        public int? GymId { get; set; }
-        public int? SelectedGymId { get; set; }
+        public SelectList Franchises { get; set; }
+        public int? FranchiseId { get; set; }
     }
 }

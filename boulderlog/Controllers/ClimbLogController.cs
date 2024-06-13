@@ -25,17 +25,16 @@ namespace Boulderlog.Controllers
         }
 
         // GET: ClimbLog
-        public async Task<IActionResult> Index(int? gymId, DateTime? from, DateTime? to)
+        public async Task<IActionResult> Index(int? franchiseId, DateTime? from, DateTime? to)
         {
-            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+            var franchises = _context.Franchise.Select(x => new { x.Id, x.Name });
 
             var model = new ClimbLogViewModel()
             {
-                GymId = gymId ?? 2,
+                FranchiseId = franchiseId ?? 2,
                 From = from ?? DateTime.Now.AddDays(-30),
                 To = to ?? DateTime.Now,
-                Gyms = new SelectList(gyms, "Id", "Name", null, "Group.Name"),
-                SelectedGymId = gymId
+                Franchises = new SelectList(franchises, "Id", "Name", null),
             };
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -56,7 +55,7 @@ namespace Boulderlog.Controllers
                 model.SessionBoulders.Add(climbs.Select(x => x.ClimbId).Distinct().Count());
             }
 
-            var grades = _context.Gym.Include(x => x.Franchise.Grade).FirstOrDefault(x => x.Id == model.GymId).Franchise.Grade;
+            var grades = (await _context.Franchise.Include(x => x.Grade).FirstOrDefaultAsync(x => x.Id == model.FranchiseId)).Grade;
             foreach (var grade in grades)
             {
                 var logsForGrade = climbLogs.Where(x => grade.Id.Equals(x.Climb.GradeId));
@@ -93,25 +92,6 @@ namespace Boulderlog.Controllers
             return View(model);
         }
 
-        // GET: ClimbLog/Details/5
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var climbLog = await _context.ClimbLog
-        //        .Include(c => c.Climb)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (climbLog == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(climbLog);
-        //}
-
         // GET: ClimbLog/Create
         public IActionResult Create(string climbId)
         {
@@ -137,59 +117,6 @@ namespace Boulderlog.Controllers
             ViewData["ClimbId"] = new SelectList(_context.Climb, "Id", "Id", climbLog.ClimbId);
             return View(climbLog);
         }
-
-        //// GET: ClimbLog/Edit/5
-        //public async Task<IActionResult> Edit(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var climbLog = await _context.ClimbLog.FindAsync(id);
-        //    if (climbLog == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["ClimbId"] = new SelectList(_context.Climb, "Id", "Id", climbLog.ClimbId);
-        //    return View(climbLog);
-        //}
-
-        //// POST: ClimbLog/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("TimeStamp,Type,ClimbId")] ClimbLog climbLog)
-        //{
-        //    if (id != climbLog.Id)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(climbLog);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!ClimbLogExists(climbLog.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["ClimbId"] = new SelectList(_context.Climb, "Id", "Id", climbLog.ClimbId);
-        //    return View(climbLog);
-        //}
 
         // GET: ClimbLog/Delete/5
         public async Task<IActionResult> Delete(string id)
