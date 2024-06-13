@@ -32,7 +32,7 @@
 <h3>Stats by Gym</h3>
 <div class="row">
     <form method="get">
-        <select asp-for="GymId" id="Gym" class="form-control" asp-items="Model.Gyms" onchange="this.form.submit()"></select>
+        <select asp-for="GymId" id="Gym" class="form-control" asp-for="Model.SelectedGymId" asp-items="Model.Gyms" onchange="this.form.submit()"></select>
         <input type="hidden" asp-for="From" />
         <input type="hidden" asp-for="To" />
     </form>

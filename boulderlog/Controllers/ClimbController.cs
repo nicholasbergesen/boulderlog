@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,12 +149,13 @@ namespace Boulderlog.Controllers
         }
 
         // GET: Climb/Create
-        public IActionResult Create()
+        public IActionResult Create(int? gymId)
         {
-            var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
-            ViewData["Gym"] = new SelectList(gyms, "Id", "Name");
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+            ViewData["Gym"] = new SelectList(gyms, "Id", "Name", null, "Group.Name");
             ViewData["HoldColor"] = new SelectList(Const.HoldColors);
             var model = new Climb();
+            model.GymId = gymId ?? 2;
             model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View(model);
         }
@@ -174,7 +176,8 @@ namespace Boulderlog.Controllers
 
             if (ModelState.IsValid)
             {
-                var climbGrade = await _context.Grade.Include(x => x.Franchise.Grade).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
+                var gym = await _context.Gym.FindAsync(climb.GymId);
+                climb.FranchiseId = gym.FranchiseId;
 
                 _context.Add(climb);
                 await _context.SaveChangesAsync();
@@ -209,9 +212,9 @@ namespace Boulderlog.Controllers
                 return NotFound();
             }
 
-            var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
             var grade = climb.Franchise.Grade.Select(x => new { x.Id, x.ColorName });
-            ViewData["Gym"] = new SelectList(gyms, "Id", "Name", climb.GymId);
+            ViewData["Gym"] = new SelectList(gyms, "Id", "Name", null, "Group.Name");
             ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", climb.GradeId);
             ViewData["Wall"] = new SelectList(climb.Gym.Walls.Split(";"), climb.Wall);
             ViewData["HoldColor"] = new SelectList(Const.HoldColors, climb.HoldColor);
@@ -234,7 +237,9 @@ namespace Boulderlog.Controllers
             {
                 try
                 {
-                    var climbGrade = await _context.Grade.Include(x => x.Franchise).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
+                    var gym = await _context.Gym.FindAsync(climb.GymId);
+                    climb.FranchiseId = gym.FranchiseId;
+
                     _context.Update(climb);
                     await _context.SaveChangesAsync();
                 }
