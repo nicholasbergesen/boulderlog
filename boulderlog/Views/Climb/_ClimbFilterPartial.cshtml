@@ -1,11 +1,11 @@
-﻿@model SelectList
+﻿@model ClimbPageViewModel
 
 <div class="row pt-2 pb-2">
     <div class="col-12">
         <form asp-action="Index" asp-controller="Climb" method="get">
             <div class="d-flex align-items-center">
                 <div class="p-2 d-inline-flex align-items-center">
-                    <span class="pe-1">Gym:</span><select title="Gym" id="Gym" name="gymId" class="form-select" aria-label="Gym" onchange="getGymData()" asp-items="Model"></select>
+                    <span class="pe-1">Gym:</span><select title="Gym" id="Gym" name="gymId" class="form-select" aria-label="Gym" onchange="getGymData()" asp-for="SelectedGymId" asp-items="Model.Gyms"></select>
                 </div>
                 <div class="pr-2 d-inline-flex align-items-center">
                     <span class="pe-1">Grade:</span><select title="Grade" id="Grade" name="gradeId" class="form-select" aria-label="Grade"></select>

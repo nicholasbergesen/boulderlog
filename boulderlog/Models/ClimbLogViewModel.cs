@@ -32,5 +32,6 @@ namespace Boulderlog.Models
         public DateTime To { get; set; }
         public SelectList Gyms { get; set; }
         public int? GymId { get; set; }
+        public int? SelectedGymId { get; set; }
     }
 }

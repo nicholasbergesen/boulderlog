@@ -22,9 +22,9 @@ namespace Boulderlog.Data.Models
         [MaxLength(3)]
         public required string VScale { get; set; }
 
-        public int GymId { get; set; }
+        public int? FranchiseId { get; set; }
 
-        [ForeignKey(nameof(GymId))]
-        public virtual Gym? Gym { get; set; }
+        [ForeignKey(nameof(FranchiseId))]
+        public virtual Franchise? Franchise{ get; set; }
     }
 }

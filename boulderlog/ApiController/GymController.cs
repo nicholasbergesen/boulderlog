@@ -29,7 +29,7 @@ namespace Boulderlog.ApiController
         public async Task<ActionResult<FilterViewModel>> GetGym(int? id)
         {
             var selectedGym = await _context.Gym
-                .Include(x => x.Grades)
+                .Include(x => x.Franchise.Grade)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (selectedGym == null) 
@@ -38,7 +38,7 @@ namespace Boulderlog.ApiController
             }
 
             var model = new FilterViewModel();
-            var grades = selectedGym.Grades.Select(x => new { x.Id, x.ColorName }).ToList();
+            var grades = selectedGym.Franchise.Grade.Select(x => new { x.Id, x.ColorName }).ToList();
             grades.Insert(0, new { Id = (int?)-1, ColorName = "" });
             model.Grade = new SelectList(grades, "Id", "ColorName");
 

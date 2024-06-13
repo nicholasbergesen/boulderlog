@@ -8,5 +8,6 @@ namespace Boulderlog.Models
     {
         public List<ClimbViewModel> ClimbViewModels { get; set; }
         public SelectList Gyms { get; set; }
+        public int SelectedGymId { get; set; }
     }
 }

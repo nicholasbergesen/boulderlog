@@ -3,6 +3,7 @@ using System;
 using Boulderlog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boulderlog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240613071134_AddFranchise")]
+    partial class AddFranchise
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -453,69 +456,6 @@ namespace Boulderlog.Migrations
                             FranchiseId = 2,
                             Name = "Yeonnam",
                             Walls = "Yeonnam;Toitmaru;Sinchon"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            FranchiseId = 2,
-                            Name = "Ilsam",
-                            Walls = "New Wave;Comp;White;Island A;Island B"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            FranchiseId = 2,
-                            Name = "Magok",
-                            Walls = "Sector 1-2;Sector 3-4;Sector 5-6;Sector 7-8"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            FranchiseId = 2,
-                            Name = "SNU",
-                            Walls = "Vertical;Margalef;Arhi;Cone;Hexagon"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            FranchiseId = 2,
-                            Name = "Sinsa",
-                            Walls = "Serosu;Darosu;Narosu;Garosu"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            FranchiseId = 2,
-                            Name = "Sillim",
-                            Walls = "Galaxy Balance;Galaxy Overhang;Milky Way;Andromeda"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            FranchiseId = 2,
-                            Name = "Gangnam",
-                            Walls = "Sector 1-2;Sector 3-4;Sector 5-6;Sector 7-8"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            FranchiseId = 2,
-                            Name = "Sadang",
-                            Walls = "Gwanak;Dongjak;Seocho"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            FranchiseId = 2,
-                            Name = "Yangjae",
-                            Walls = "Dungeon;Slab;Cave;Island;Flat;Arch;Prow"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            FranchiseId = 2,
-                            Name = "Nonhyeon",
-                            Walls = "Bat;Mini Bat;Gogae;Non"
                         });
                 });
 
