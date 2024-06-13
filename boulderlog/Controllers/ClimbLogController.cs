@@ -59,7 +59,7 @@ namespace Boulderlog.Controllers
                 model.SessionBoulders.Add(climbs.Select(x => x.ClimbId).Distinct().Count());
             }
 
-            var grades = _context.Grade.Where(x => x.GymId == model.GymId);
+            var grades = _context.Gym.Include(x => x.Franchise.Grade).FirstOrDefault(x => x.Id == model.GymId).Franchise.Grade;
             foreach (var grade in grades)
             {
                 var logsForGrade = climbLogs.Where(x => grade.Id.Equals(x.Climb.GradeId));

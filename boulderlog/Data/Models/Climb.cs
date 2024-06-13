@@ -31,17 +31,23 @@ namespace Boulderlog.Data.Models
         [Required]
         public string UserId { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual AppUser? User { get; set; }
-
         [DisplayName("Gym")]
         public int? GymId { get; set; }
+
+        [DisplayName("Grade")]
+        public int? GradeId { get; set; }
+
+        [DisplayName("Franchise")]
+        public int? FranchiseId { get; set; }
 
         [ForeignKey(nameof(GymId))]
         public virtual Gym? Gym { get; set; }
 
-        [DisplayName("Grade")]
-        public int? GradeId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public virtual AppUser? User { get; set; }
+
+        [ForeignKey(nameof(FranchiseId))]
+        public virtual Franchise? Franchise { get; set; }
 
         [ForeignKey(nameof(GradeId))]
         public virtual Grade? Grade { get; set; }

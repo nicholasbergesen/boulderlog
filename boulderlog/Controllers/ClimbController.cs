@@ -64,14 +64,14 @@ namespace Boulderlog.Controllers
 
             climbs = climbs
                 .Include(x => x.Grade)
-                .Include(x => x.Grade.Gym);
+                .Include(x => x.Gym);
 
             foreach (var climb in climbs)
             {
                 var climbModel = new ClimbViewModel()
                 {
                     Id = climb.Id,
-                    Gym = climb.Grade.Gym.Name,
+                    Gym = climb.Gym.Name,
                     Grade = climb.Grade.ColorName,
                     GradeColor = climb.Grade.ColorHex,
                     ImageId = climb.ImageId,
@@ -122,7 +122,7 @@ namespace Boulderlog.Controllers
                 .Include(c => c.User)
                 .Include(c => c.ClimbLogs)
                 .Include(x => x.Grade)
-                .Include(x => x.Grade.Gym)
+                .Include(x => x.Gym)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (climb == null)
@@ -133,7 +133,7 @@ namespace Boulderlog.Controllers
             var climbModel = new ClimbViewModel()
             {
                 Id = climb.Id,
-                Gym = climb.Grade.Gym.Name,
+                Gym = climb.Gym.Name,
                 Grade = climb.Grade.ColorName,
                 GradeColor = climb.Grade.ColorHex,
                 ImageId = climb.ImageId,
@@ -173,7 +173,7 @@ namespace Boulderlog.Controllers
 
             if (ModelState.IsValid)
             {
-                var climbGrade = await _context.Grade.Include(x => x.Gym).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
+                var climbGrade = await _context.Grade.Include(x => x.Franchise.Grade).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
 
                 _context.Add(climb);
                 await _context.SaveChangesAsync();
@@ -197,14 +197,19 @@ namespace Boulderlog.Controllers
                 return NotFound();
             }
 
-            var climb = await _context.Climb.Include(x => x.Gym).Include(x => x.Gym.Grades).FirstOrDefaultAsync(x => x.Id == id);
+            var climb = await _context.Climb
+                .Include(x => x.Gym)
+                .Include(x => x.Franchise)
+                .Include(x => x.Franchise.Grade)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             if (climb == null)
             {
                 return NotFound();
             }
 
             var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
-            var grade = climb.Gym.Grades.Select(x => new { x.Id, x.ColorName });
+            var grade = climb.Franchise.Grade.Select(x => new { x.Id, x.ColorName });
             ViewData["Gym"] = new SelectList(gyms, "Id", "Name", climb.GymId);
             ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", climb.GradeId);
             ViewData["Wall"] = new SelectList(climb.Gym.Walls.Split(";"), climb.Wall);
@@ -228,7 +233,7 @@ namespace Boulderlog.Controllers
             {
                 try
                 {
-                    var climbGrade = await _context.Grade.Include(x => x.Gym).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
+                    var climbGrade = await _context.Grade.Include(x => x.Franchise).FirstOrDefaultAsync(x => x.Id == climb.GradeId);
                     _context.Update(climb);
                     await _context.SaveChangesAsync();
                 }

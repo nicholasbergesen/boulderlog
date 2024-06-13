@@ -14,8 +14,8 @@ namespace Boulderlog.Data.Models
         [MaxLength(255)]
         public required string Name { get; set; }
 
-        public ICollection<Gym>? Gyms { get; set; }
+        public ICollection<Gym>? Gym { get; set; }
 
-        public ICollection<Grade>? Grades { get; set; }
+        public ICollection<Grade>? Grade { get; set; }
     }
 }

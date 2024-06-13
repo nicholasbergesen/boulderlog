@@ -96,5 +96,20 @@ namespace Boulderlog.Controllers
 
             return Ok(num);
         }
+
+        [Route("SeedDatabase")]
+        public async Task<IActionResult> SeedDatabase()
+        {
+            var climbs = _context.Climb;
+
+            foreach (var c in climbs)
+            {
+                c.FranchiseId = c.GymId;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }

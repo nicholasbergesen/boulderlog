@@ -18,8 +18,6 @@ namespace Boulderlog.Data.Models
         [MaxLength(1000)]
         public required string Walls { get; set; }
 
-        public ICollection<Grade>? Grades { get; set; }
-
         public int? FranchiseId { get; set; }
 
         [ForeignKey(nameof(FranchiseId))]
