@@ -1,8 +1,6 @@
 ﻿@model ClimbLogViewModel
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h1>Stats</h1>
 <form method="get">
     <div class="row g-4 align-items-center mb-4">
         <div class="col-auto">
@@ -18,21 +16,21 @@
             <input asp-for="To" class="form-control" onchange="this.form.submit()" />
         </div>
 
-        <input asp-for="GymId" type="hidden" value="@Model.Gyms.SelectedValue" />
+        <input asp-for="FranchiseId" type="hidden" />
     </div>
 </form>
 
 <h3>Past Sessions</h3>
-<div>
+<div class="pb-2">
     <canvas id="sessionChart"></canvas>
 </div>
 
 <hr />
 
-<h3>Stats by Gym</h3>
-<div class="row">
+<h3 class="pb-1 pt-1">Stats by Franchise</h3>
+<div class="row mb-4">
     <form method="get">
-        <select asp-for="GymId" id="Gym" class="form-control" asp-for="Model.SelectedGymId" asp-items="Model.Gyms" onchange="this.form.submit()"></select>
+        <select asp-for="FranchiseId" id="Franchise" class="form-control" asp-items="Model.Franchises" onchange="this.form.submit()"></select>
         <input type="hidden" asp-for="From" />
         <input type="hidden" asp-for="To" />
     </form>

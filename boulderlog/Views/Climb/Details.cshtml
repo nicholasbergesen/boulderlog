@@ -1,57 +1,66 @@
 ﻿@model ClimbViewModel
 
-@{
-    ViewData["Title"] = "Details";
-}
-
 <h1>Details</h1>
+<hr />
 <div>
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model)
-        </dt>
-        <dd class = "col-sm-10">
-            <img src="/api/images/@Model.ImageId" alt="Boulder Image" width="250" height="250" class="ps-1" />
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Grade)
-        </dt>
-        <dd class="col-sm-10">
-            <div class="row ps-3">
-                @if (Model.Gym == "TheClimb-B-Hongdae")
-                {
-                    <div class="col-3" style="display:inline-block;width:20px;height:20px;">@Model.Grade</div>
-                }
-                else
-                {
-                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@Model.GradeColor;"></div>
-                }
-
-                @if (Model.HoldColor == "Mint")
-                {
-                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:#3EB489;"></div>
-                }
-                else
-                {
-                    <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@Model.HoldColor;"></div>
-                }
-                <div class="col-6">(Hold)</div>
+    <div class="row">
+        <div class="col-md-4 col-12">
+            <div class="row">
+                <div class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Grade)
+                </div>
+                <div class="col-sm-9">
+                        @if (Model.Gym == "TheClimb-B-Hongdae")
+                        {
+                            <div class="col-3" style="display:inline-block;width:20px;height:20px;">@Model.Grade</div>
+                        }
+                        else
+                        {
+                            <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@Model.GradeColor;"></div>
+                        }
+                </div>
             </div>
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gym)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gym)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Wall)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Wall)
-        </dd>
-    </dl>
-    <h3>Climb logs</h3>
+            <div class="row">
+                <div class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.HoldColor)
+                </div>
+                <div class="col-sm-9">
+                    @if (Model.HoldColor == "Mint")
+                    {
+                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:#3EB489;"></div>
+                    }
+                    else
+                    {
+                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@Model.HoldColor;"></div>
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Gym)
+                </div>
+                <div class="col-sm-9">
+                    @Html.DisplayFor(model => model.Gym)
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-sm-3">
+                    @Html.DisplayNameFor(model => model.Wall)
+                </div>
+                <div class="col-sm-9">
+                    @Html.DisplayFor(model => model.Wall)
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <img src="/api/images/@Model.ImageId" alt="Boulder Image" width="450" class="ps-1" />
+        </div>
+    </div>
+
+    <hr />
+
+    <h3>Logs</h3>
     <table class="table">
         <thead>
             <tr>

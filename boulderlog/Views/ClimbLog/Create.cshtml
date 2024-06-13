@@ -1,7 +1,6 @@
 ﻿@model Boulderlog.Data.Models.ClimbLog
 
 @{
-    ViewData["Title"] = "Create";
     var now = DateTime.Now;
     Model.TimeStamp = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, DateTimeKind.Local);
 }
