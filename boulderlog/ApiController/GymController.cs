@@ -29,7 +29,7 @@ namespace Boulderlog.ApiController
         public async Task<ActionResult<FilterViewModel>> GetGym(int? id)
         {
             var selectedGym = await _context.Gym
-                .Include(x => x.Franchise.Gym)
+                .Include(x => x.Franchise.Grade)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (selectedGym == null) 

@@ -102,10 +102,11 @@ namespace Boulderlog.Controllers
                 climbViewModels.Add(climbModel);
             }
 
-            var gyms = _context.Gym.Select(x => new { x.Id, x.Name });
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
             var pageModel = new ClimbPageViewModel();
-            pageModel.Gyms = new SelectList(gyms, "Id", "Name", gymId ?? 2);
+            pageModel.Gyms = new SelectList(gyms, "Id", "Name", null, "Group.Name");
             pageModel.ClimbViewModels = climbViewModels;
+            pageModel.SelectedGymId = gymId ?? 2;
 
             return View(pageModel);
         }
