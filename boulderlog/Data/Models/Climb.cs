@@ -46,6 +46,6 @@ namespace Boulderlog.Data.Models
         [ForeignKey(nameof(GradeId))]
         public virtual Grade? Grade { get; set; }
 
-        public ICollection<ClimbLog> ClimbLogs { get; set; } = new List<ClimbLog>();
+        public ICollection<ClimbLog>? ClimbLogs { get; set; }
     }
 }
