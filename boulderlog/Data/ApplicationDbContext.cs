@@ -16,8 +16,6 @@ namespace Boulderlog.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Franchise>().HasData(new Franchise() { Id = 1, Name = "TheClimb-B" });
-            builder.Entity<Franchise>().HasData(new Franchise() { Id = 2, Name = "TheClimb" });
-
             builder.Entity<Gym>().HasData(new Gym { Id = 1, Name = "Hongdae", Walls = "Sector1;Sector2", FranchiseId = 1 });
             builder.Entity<Grade>().HasData(new Grade { Id = 1, FranchiseId = 1, VScale = "V0", SortOrder = 1, ColorName = "1", ColorHex = "#FFFFFF" });
             builder.Entity<Grade>().HasData(new Grade { Id = 2, FranchiseId = 1, VScale = "V0", SortOrder = 2, ColorName = "2", ColorHex = "#FFFF00" });
@@ -29,7 +27,18 @@ namespace Boulderlog.Data
             builder.Entity<Grade>().HasData(new Grade { Id = 8, FranchiseId = 1, VScale = "V4", SortOrder = 8, ColorName = "8", ColorHex = "#808080" });
             builder.Entity<Grade>().HasData(new Grade { Id = 9, FranchiseId = 1, VScale = "V5", SortOrder = 9, ColorName = "9", ColorHex = "#A52A2A" });
 
+
+            builder.Entity<Franchise>().HasData(new Franchise() { Id = 2, Name = "TheClimb" });
             builder.Entity<Gym>().HasData(new Gym { Id = 2, Name = "Yeonnam", Walls = "Yeonnam;Toitmaru;Sinchon", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 3, Name = "Ilsam", Walls = "New Wave;Comp;White;Island A;Island B", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 4, Name = "Magok", Walls = "Sector 1-2;Sector 3-4;Sector 5-6;Sector 7-8", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 5, Name = "SNU", Walls = "Vertical;Margalef;Arhi;Cone;Hexagon", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 6, Name = "Sinsa", Walls = "Serosu;Darosu;Narosu;Garosu", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 7, Name = "Sillim", Walls = "Galaxy Balance;Galaxy Overhang;Milky Way;Andromeda", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 8, Name = "Gangnam", Walls = "Sector 1-2;Sector 3-4;Sector 5-6;Sector 7-8", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 9, Name = "Sadang", Walls = "Gwanak;Dongjak;Seocho", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 10, Name = "Yangjae", Walls = "Dungeon;Slab;Cave;Island;Flat;Arch;Prow", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 11, Name = "Nonhyeon", Walls = "Bat;Mini Bat;Gogae;Non", FranchiseId = 2 });
             builder.Entity<Grade>().HasData(new Grade { Id = 10, FranchiseId = 2, VScale = "V0", SortOrder = 1, ColorName = "White", ColorHex = "#FFFFFF" });
             builder.Entity<Grade>().HasData(new Grade { Id = 11, FranchiseId = 2, VScale = "V1", SortOrder = 2, ColorName = "Yellow", ColorHex = "#FFFF00" });
             builder.Entity<Grade>().HasData(new Grade { Id = 12, FranchiseId = 2, VScale = "V2", SortOrder = 3, ColorName = "Orange", ColorHex = "#FFA500" });
