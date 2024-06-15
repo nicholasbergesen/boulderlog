@@ -4,6 +4,7 @@ using Boulderlog.Domain;
 using Boulderlog.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,7 +26,8 @@ namespace Boulderlog.Controllers
         }
 
         // GET: Climb
-        public IActionResult Index(int? gymId, int gradeId, string wall)
+        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 30, VaryByQueryKeys = ["gymId", "gradeId", "wall"])]
+        public IActionResult MyClimbs(int? gymId, int gradeId, string wall)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

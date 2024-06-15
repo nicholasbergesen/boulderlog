@@ -2,7 +2,7 @@
 
 <div class="row pt-2 pb-2">
     <div class="col-12">
-        <form asp-action="Index" asp-controller="Climb" method="get">
+        <form asp-action="MyClimbs" asp-controller="Climb" method="get">
             <div class="row no-gutters">
                 <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
                     <span class="me-1 mt-1 w-25">Gym:</span><select title="Gym" id="Gym" name="gymId" class="form-select" aria-label="Gym" onchange="getGymData()" asp-for="SelectedGymId" asp-items="Model.Gyms"></select>
