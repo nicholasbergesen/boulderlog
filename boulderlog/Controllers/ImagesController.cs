@@ -25,14 +25,14 @@ namespace Boulderlog.Controllers
         // GET: Images
         public async Task<IActionResult> Index()
         {
-            var images = await _context.Image
-                .Select(x => new ImageViewModel() 
-                { 
-                    Id = x.Id, 
-                    CreatedAt = x.CreatedAt, 
+            var images = _context.Image.ToList()
+                .ExceptBy(_context.Climb.Select(x => x.ImageId), x => x.Id)
+                .Select(x => new ImageViewModel()
+                {
+                    Id = x.Id,
+                    CreatedAt = x.CreatedAt,
                     FileType = x.FileType
-                })
-                .ToListAsync();
+                });
 
             return View(images);
         }
