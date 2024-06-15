@@ -22,7 +22,7 @@ namespace Boulderlog.Controllers
         // GET: Temp
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Climb.Include(c => c.Grade).Include(c => c.Gym).Include(c => c.User);
+            var applicationDbContext = _context.Climb.Include(c => c.Grade).Include(c => c.Gym).Include(c => c.CreatedByUser);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -37,7 +37,7 @@ namespace Boulderlog.Controllers
             var climb = await _context.Climb
                 .Include(c => c.Grade)
                 .Include(c => c.Gym)
-                .Include(c => c.User)
+                .Include(c => c.CreatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (climb == null)
             {
@@ -71,7 +71,7 @@ namespace Boulderlog.Controllers
             }
             ViewData["GradeId"] = new SelectList(_context.Grade, "Id", "Id", climb.GradeId);
             ViewData["GymId"] = new SelectList(_context.Gym, "Id", "Id", climb.GymId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.CreatedByUserId);
             return View(climb);
         }
 
@@ -90,7 +90,7 @@ namespace Boulderlog.Controllers
             }
             ViewData["GradeId"] = new SelectList(_context.Grade, "Id", "Id", climb.GradeId);
             ViewData["GymId"] = new SelectList(_context.Gym, "Id", "Id", climb.GymId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.CreatedByUserId);
             return View(climb);
         }
 
@@ -128,7 +128,7 @@ namespace Boulderlog.Controllers
             }
             ViewData["GradeId"] = new SelectList(_context.Grade, "Id", "Id", climb.GradeId);
             ViewData["GymId"] = new SelectList(_context.Gym, "Id", "Id", climb.GymId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.UserId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", climb.CreatedByUserId);
             return View(climb);
         }
 
@@ -143,7 +143,7 @@ namespace Boulderlog.Controllers
             var climb = await _context.Climb
                 .Include(c => c.Grade)
                 .Include(c => c.Gym)
-                .Include(c => c.User)
+                .Include(c => c.CreatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (climb == null)
             {

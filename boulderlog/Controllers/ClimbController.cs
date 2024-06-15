@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,24 +29,23 @@ namespace Boulderlog.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var climbs = _context.Climb
-                .Include(c => c.User)
-                .Include(c => c.ClimbLogs)
+            var climbLogs = _context.ClimbLog
+                .Include(c => c.Climb)
                 .Where(c => c.UserId == userId);
 
             if (gymId.HasValue)
             {
-                climbs = climbs.Where(x => gymId.Equals(x.GymId));
+                climbLogs = climbLogs.Where(x => gymId.Equals(x.Climb.GymId));
             }
 
             if (gradeId > 0)
             {
-                climbs = climbs.Where(x => gradeId.Equals(x.GradeId));
+                climbLogs = climbLogs.Where(x => gradeId.Equals(x.Climb.GradeId));
             }
 
             if (!string.IsNullOrEmpty(wall))
             {
-                climbs = climbs.Where(x => wall.Equals(x.Wall));
+                climbLogs = climbLogs.Where(x => wall.Equals(x.Climb.Wall));
             }
 
             if (gradeId > 0 && gymId.HasValue)
@@ -55,20 +53,21 @@ namespace Boulderlog.Controllers
                 var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
                 var koreaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
                 koreaTime = koreaTime.AddDays(-30);
-                climbs = climbs.Where(c => c.ClimbLogs.Count == 0 || c.ClimbLogs.Any(x => x.TimeStamp > koreaTime));
+                climbLogs = climbLogs.Where(x => x.TimeStamp > koreaTime);
             }
 
             List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
-            var now = DateTime.UtcNow;
-            climbs = climbs
-                .OrderByDescending(x => x.ClimbLogs.Count == 0 ? now : x.ClimbLogs.Max(x => x.TimeStamp));
 
-            climbs = climbs
-                .Include(x => x.Grade)
-                .Include(x => x.Gym);
+            var climbs = climbLogs
+                .Include(x => x.Climb.Gym)
+                .Include(x => x.Climb.Franchise.Grade)
+                .Select(x => x.Climb)
+                .Distinct()
+                .OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
 
             foreach (var climb in climbs)
             {
+                var logsForClimb = climbLogs.Where(x => x.ClimbId == climb.Id);
                 var climbModel = new ClimbViewModel()
                 {
                     Id = climb.Id,
@@ -78,12 +77,11 @@ namespace Boulderlog.Controllers
                     ImageId = climb.ImageId,
                     HoldColor = climb.HoldColor,
                     Wall = climb.Wall,
-                    UserId = climb.UserId,
-                    IsFlashed = "Top" == climb.ClimbLogs.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
+                    UserId = userId,
+                    IsFlashed = "Top" == logsForClimb.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
                 };
 
-                var attempts = climb
-                    .ClimbLogs
+                var attempts = logsForClimb
                     .GroupBy(x => x.Type);
 
                 foreach (var attempt in attempts)
@@ -121,7 +119,7 @@ namespace Boulderlog.Controllers
             }
 
             var climb = await _context.Climb
-                .Include(c => c.User)
+                .Include(c => c.CreatedByUser)
                 .Include(c => c.ClimbLogs)
                 .Include(x => x.Grade)
                 .Include(x => x.Gym)
@@ -141,7 +139,7 @@ namespace Boulderlog.Controllers
                 ImageId = climb.ImageId,
                 HoldColor = climb.HoldColor,
                 Wall = climb.Wall,
-                UserId = climb.UserId,
+                UserId = climb.CreatedByUserId,
                 ClimbLogs = climb.ClimbLogs
             };
 
@@ -156,7 +154,7 @@ namespace Boulderlog.Controllers
             ViewData["HoldColor"] = new SelectList(Const.HoldColors);
             var model = new Climb();
             model.GymId = gymId ?? 2;
-            model.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            model.CreatedByUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return View(model);
         }
 
@@ -165,11 +163,11 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ImageId,GymId,Wall,GradeId,HoldColor,UserId,TimeStamp")] Climb climb)
+        public async Task<IActionResult> Create([Bind("ImageId,GymId,Wall,GradeId,HoldColor,CreatedByUserId,TimeStamp")] Climb climb)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
 
-            if (climb.UserId != userId?.Value)
+            if (climb.CreatedByUserId != userId?.Value)
             {
                 ModelState.AddModelError("UserId", "UserId is invalid");
             }
@@ -226,7 +224,7 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,ImageId,GymId,Wall,GradeId,HoldColor,UserId,GradeOld,GymOld")] Climb climb)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,ImageId,GymId,Wall,GradeId,HoldColor,CreatedByUserId,GradeOld,GymOld")] Climb climb)
         {
             if (id != climb.Id)
             {
@@ -275,7 +273,7 @@ namespace Boulderlog.Controllers
             }
 
             var climb = await _context.Climb
-                .Include(c => c.User)
+                .Include(c => c.CreatedByUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (climb == null)
             {

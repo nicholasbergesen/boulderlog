@@ -29,7 +29,7 @@ namespace Boulderlog.Data.Models
         public string? Wall { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        public string CreatedByUserId { get; set; }
 
         [DisplayName("Gym")]
         public int? GymId { get; set; }
@@ -43,8 +43,8 @@ namespace Boulderlog.Data.Models
         [ForeignKey(nameof(GymId))]
         public virtual Gym? Gym { get; set; }
 
-        [ForeignKey(nameof(UserId))]
-        public virtual AppUser? User { get; set; }
+        [ForeignKey(nameof(CreatedByUserId))]
+        public virtual AppUser? CreatedByUser { get; set; }
 
         [ForeignKey(nameof(FranchiseId))]
         public virtual Franchise? Franchise { get; set; }
