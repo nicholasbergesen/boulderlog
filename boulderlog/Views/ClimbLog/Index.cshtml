@@ -1,7 +1,7 @@
 ﻿@model ClimbLogViewModel
 
 <h1>Stats</h1>
-<form method="get">
+<form method="post">
     <div class="row g-4 align-items-center mb-4">
         <div class="col-auto">
             <label asp-for="From" class="col-form-label"></label>
@@ -29,7 +29,7 @@
 
 <h3 class="pb-1 pt-1">Stats by Franchise</h3>
 <div class="row mb-4">
-    <form method="get">
+    <form method="post">
         <select asp-for="FranchiseId" id="Franchise" class="form-control" asp-items="Model.Franchises" onchange="this.form.submit()"></select>
         <input type="hidden" asp-for="From" />
         <input type="hidden" asp-for="To" />

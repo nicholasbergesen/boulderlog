@@ -33,24 +33,12 @@ namespace Boulderlog.Controllers
 
             var climbLogs = _context.ClimbLog
                 .Include(c => c.Climb)
+                .Include(c => c.Climb.Gym)
+                .Include(c => c.Climb.Grade)
+                .Include(c => c.Climb.Franchise)
                 .Where(c => c.UserId == userId);
 
-            if (gymId.HasValue)
-            {
-                climbLogs = climbLogs.Where(x => gymId.Equals(x.Climb.GymId));
-            }
-
-            if (gradeId > 0)
-            {
-                climbLogs = climbLogs.Where(x => gradeId.Equals(x.Climb.GradeId));
-            }
-
-            if (!string.IsNullOrEmpty(wall))
-            {
-                climbLogs = climbLogs.Where(x => wall.Equals(x.Climb.Wall));
-            }
-
-            if (gradeId > 0 && gymId.HasValue)
+            if (gradeId < 1 || !gymId.HasValue)
             {
                 var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
                 var koreaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
@@ -58,14 +46,28 @@ namespace Boulderlog.Controllers
                 climbLogs = climbLogs.Where(x => x.TimeStamp > koreaTime);
             }
 
-            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
-
             var climbs = climbLogs
-                .Include(x => x.Climb.Gym)
-                .Include(x => x.Climb.Franchise.Grade)
                 .Select(x => x.Climb)
-                .Distinct()
-                .OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
+                .Distinct();
+
+            if (gymId.HasValue)
+            {
+                climbs = climbs.Where(x => gymId.Equals(x.GymId));
+            }
+
+            if (gradeId > 0)
+            {
+                climbs = climbs.Where(x => gradeId.Equals(x.GradeId));
+            }
+
+            if (!string.IsNullOrEmpty(wall))
+            {
+                climbs = climbs.Where(x => wall.Equals(x.Wall));
+            }
+
+            climbs = climbs.OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
+
+            List <ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
 
             foreach (var climb in climbs)
             {
@@ -110,6 +112,19 @@ namespace Boulderlog.Controllers
             pageModel.SelectedGymId = gymId ?? 2;
 
             return View(pageModel);
+        }
+
+        [HttpPost]
+        public IActionResult Session(int? gymId)
+        {
+            var climbs = _context.Climb.Where(x => x.GymId == gymId);
+            return View();
+        }
+
+        public IActionResult Session(int? gymId, int gradeId, string wall)
+        {
+            var climbs = _context.Climb.Where(x => x.GymId == gymId);
+            return View();
         }
 
         // GET: Climb/Details/5
@@ -181,7 +196,7 @@ namespace Boulderlog.Controllers
 
                 _context.Add(climb);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyClimbs));
             }
 
             var gyms = _context.Gym.Select(x => new { x.Id, x.Name, x.Walls });
@@ -254,7 +269,7 @@ namespace Boulderlog.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyClimbs));
             }
 
             var gyms = _context.Gym.Select(x => new { x.Id, x.Name, x.Walls });
@@ -307,7 +322,7 @@ namespace Boulderlog.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyClimbs));
         }
 
         private bool ClimbExists(string id)
