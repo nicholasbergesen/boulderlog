@@ -34,14 +34,14 @@
             <input type="hidden" asp-for="ImageId" />
 
             <div class="form-group">
-                <label asp-for="HoldColor" class="control-label"></label>
-                <select asp-for="HoldColor" class="form-control" asp-items="ViewBag.HoldColor"></select>
-                <span asp-validation-for="HoldColor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="GymId" class="control-label"></label>
                 <select asp-for="GymId" id="Gym" class="form-control" asp-items="ViewBag.Gym" onchange="getGymData()"></select>
                 <span asp-validation-for="Gym" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Wall" class="control-label"></label>
+                <select asp-for="Wall" id="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
+                <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GradeId" class="control-label"></label>
@@ -49,9 +49,9 @@
                 <span asp-validation-for="Grade" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Wall" class="control-label"></label>
-                <select asp-for="Wall" id="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
-                <span asp-validation-for="Wall" class="text-danger"></span>
+                <label asp-for="HoldColor" class="control-label"></label>
+                <select asp-for="HoldColor" class="form-control" asp-items="ViewBag.HoldColor"></select>
+                <span asp-validation-for="HoldColor" class="text-danger"></span>
             </div>
             <div class="form-group pt-3">
                 <input type="submit" value="Edit" class="btn btn-primary" />
