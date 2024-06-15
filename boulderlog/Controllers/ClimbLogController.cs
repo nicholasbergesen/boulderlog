@@ -111,11 +111,10 @@ namespace Boulderlog.Controllers
             {
                 _context.Add(climbLog);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Climb");
+                return Content("Done");
             }
 
-            ViewData["ClimbId"] = new SelectList(_context.Climb, "Id", "Id", climbLog.ClimbId);
-            return View(climbLog);
+            return BadRequest("can't update climb log");
         }
 
         // GET: ClimbLog/Delete/5

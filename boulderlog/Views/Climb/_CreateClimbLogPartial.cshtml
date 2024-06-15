@@ -1,6 +1,6 @@
 ﻿@model Boulderlog.Data.Models.ClimbLog
 
-<form asp-action="Create" asp-controller="ClimbLog">
+<form onsubmit="ajaxPost(event)">
     <input asp-for="TimeStamp" type="hidden" value="@Model.TimeStamp" />
     <input asp-for="Type" type="hidden" value="@Model.Type" />
     <input asp-for="ClimbId" type="hidden" type="hidden" value="@Model.ClimbId" />

@@ -69,14 +69,18 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Attempts: @item.Attempt</span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Attempt", TimeStamp=DateTime.Now})" />
+                            <span class="align-content-center">
+                                Attempts: <span class="count-selector">@item.Attempt</span>
+                            </span>
+                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Attempt", TimeStamp=DateTime.Now})" onclick="@item.Attempt++" />
                         </div>
                     </li>
                     <li class="list-group-item">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center"> Tops: @item.Top</span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Top", TimeStamp=DateTime.Now})" />
+                            <span class="align-content-center">
+                                Tops: <span class="count-selector">@item.Top</span>
+                            </span>
+                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Top", TimeStamp=DateTime.Now})" onclick="@item.Top++" />
                         </div>
                     </li>
                 </ul>
@@ -115,4 +119,27 @@
 
 <script>
     getGymData();
+
+    function ajaxPost(event) {
+        event.preventDefault();
+
+        // Get the anti-forgery token
+        var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("Create", "ClimbLog")',
+            data: $(event.target).serialize() + '&__RequestVerificationToken=' + antiForgeryToken, // Serialize the form data and include the anti-forgery token,
+            success: function (response) {
+                //Update the count
+                let closestCounter = $(event.target).siblings("span").children(".count-selector").first()
+                let newVal = parseInt(closestCounter.text(), 10) + 1;
+                closestCounter.text(newVal);
+            },
+            error: function (xhr, status, error) {
+                console.error("An error occurred for post request: " + error);
+            }
+        });
+    };
+
 </script>
