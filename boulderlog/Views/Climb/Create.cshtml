@@ -99,6 +99,10 @@
 <script src="~/js/climb-create.js" asp-append-version="true"></script>
 <script src="~/js/gym-select.js" asp-append-version="true"></script>
 
+<script>
+    getGymData();
+</script>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
