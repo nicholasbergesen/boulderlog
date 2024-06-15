@@ -30,7 +30,7 @@ namespace Boulderlog.Data
 
             builder.Entity<Franchise>().HasData(new Franchise() { Id = 2, Name = "TheClimb" });
             builder.Entity<Gym>().HasData(new Gym { Id = 2, Name = "Yeonnam", Walls = "Yeonnam;Toitmaru;Sinchon", FranchiseId = 2 });
-            builder.Entity<Gym>().HasData(new Gym { Id = 3, Name = "Ilsam", Walls = "New Wave;Comp;White;Island A;Island B", FranchiseId = 2 });
+            builder.Entity<Gym>().HasData(new Gym { Id = 3, Name = "Ilsan", Walls = "New Wave;Comp;White;Island A;Island B", FranchiseId = 2 });
             builder.Entity<Gym>().HasData(new Gym { Id = 4, Name = "Magok", Walls = "Sector 1-2;Sector 3-4;Sector 5-6;Sector 7-8", FranchiseId = 2 });
             builder.Entity<Gym>().HasData(new Gym { Id = 5, Name = "SNU", Walls = "Vertical;Margalef;Arhi;Cone;Hexagon", FranchiseId = 2 });
             builder.Entity<Gym>().HasData(new Gym { Id = 6, Name = "Sinsa", Walls = "Serosu;Darosu;Narosu;Garosu", FranchiseId = 2 });
