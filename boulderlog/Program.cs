@@ -141,13 +141,18 @@ namespace Boulderlog
 
             app.UseCors();
             app.UseResponseCaching();
+            app.UseAuthentication(); //To ensure that the authentication middleware is used.
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");//.RequireRateLimiting(rateLimitOptions.Policy);
             app.MapRazorPages();//.RequireRateLimiting(rateLimitOptions.Policy);
-
+            app.MapFallback(context =>
+           {
+             context.Response.Redirect("Identity/Account/Login"); //fallback route redirects to Identity/Account/Login whenever an invalid URL is accessed 
+             return Task.CompletedTask;
+           });
             app.Run();
         }
     }
