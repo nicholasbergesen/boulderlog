@@ -122,24 +122,26 @@ namespace Boulderlog.Controllers
 
             if (sessionFilter == null)
             {
-                return View("Error");
+                ViewData["Wall"] = new List<string>();
+
+                return View(new SessionPageViewModel()
+                {
+                    SessionFilter = new SessionFilter() { UserId = userId },
+                    ClimbViewModels = new Dictionary<string, List<ClimbViewModel>>(),
+                    Walls = new List<string>()
+                });
             }
 
             var climbLogs = _context.ClimbLog
                 .Include(c => c.Climb)
                 .Include(c => c.Climb.Gym)
+                .Where(x => sessionFilter.GymId.Value.Equals(x.Climb.GymId))
                 .Include(c => c.Climb.Grade)
-                .Include(c => c.Climb.Franchise)
-                .Where(c => c.UserId == userId);
+                .Include(c => c.Climb.Franchise);
 
             var climbs = climbLogs
                 .Select(x => x.Climb)
                 .Distinct();
-
-            if (sessionFilter.GymId.HasValue)
-            {
-                climbs = climbs.Where(x => sessionFilter.GymId.Value.Equals(x.GymId));
-            }
 
             if (sessionFilter.GradeId.HasValue)
             {
@@ -189,14 +191,14 @@ namespace Boulderlog.Controllers
                     }
                 }
 
-                if(climbViewModels.TryGetValue(climb.Wall, out List<ClimbViewModel> climbModels))
+                if (climbViewModels.TryGetValue(climb.Wall, out List<ClimbViewModel> climbModels))
                 {
                     climbModels.Add(climbModel);
                 }
                 else
                 {
                     climbViewModels.Add(climb.Wall, new List<ClimbViewModel> { climbModel });
-                }    
+                }
             }
 
             var pageModel = new SessionPageViewModel();

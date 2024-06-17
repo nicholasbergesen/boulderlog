@@ -8,5 +8,6 @@ namespace Boulderlog.Models
     {
         public Dictionary<string, List<ClimbViewModel>> ClimbViewModels { get; set; }
         public SessionFilter SessionFilter { get; set; }
+        public List<string> Walls { get; set; }
     }
 }
