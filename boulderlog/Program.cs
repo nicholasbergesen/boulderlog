@@ -147,6 +147,19 @@ namespace Boulderlog
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");//.RequireRateLimiting(rateLimitOptions.Policy);
             app.MapRazorPages();//.RequireRateLimiting(rateLimitOptions.Policy);
+            app.Use(async (context, next) =>
+           {
+              await next();
+
+            if (context.Response.StatusCode == 404)
+            {
+                 context.Response.Redirect("/"); //Redirecting if wrong url or wrong route is added
+            }
+            else if (!context.User.Identity.IsAuthenticated)
+            {
+                 context.Response.Redirect("Identity/Account/Login");
+            }
+        });
 
             app.Run();
         }
