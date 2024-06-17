@@ -15,124 +15,127 @@
 
 <div class="row pt-2 pb-2">
     <div class="col-12">
-        <form asp-action="Session" asp-controller="Climb" method="get">
-            <div class="row no-gutters">
-                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                    <span class="me-1 mt-1 w-25">Gym:</span><select title="Gym" id="Gym" name="gymId" class="form-select" aria-label="Gym" onchange="getGymData()" asp-for="SelectedGymId" asp-items="Model.Gyms"></select>
-                </div>
-                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                    <span class="me-1 mt-1 w-25">Grade:</span><select title="Grade" id="Grade" name="gradeId" class="form-select" aria-label="Grade"></select>
-                </div>
-                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                    <span class="me-1 mt-1 w-25">Wall:</span><select title="Wall" id="Wall" name="wall" class="form-select" aria-label="Wall"></select>
-                </div>
-                <div class="col-lg-6 col-md-3 col-12 d-flex flex-row justify-content-md-start justify-content-end">
-                    <input class="btn btn-secondary mt-1" type="submit" value="Filter" />
-                </div>
+        <div class="row no-gutters">
+            <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                <span class="me-1 mt-1 w-25">Gym:</span> @Html.DisplayFor(x => x.SessionFilter.GymId)
             </div>
-        </form>
+            <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                <span class="me-1 mt-1 w-25">Grade:</span><select title="Grade" id="Grade" name="gradeId" class="form-select" aria-label="Grade"></select>
+            </div>
+            <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                <span class="me-1 mt-1 w-25">Wall:</span><select title="Wall" id="Wall" name="wall" class="form-select" aria-label="Wall"></select>
+            </div>
+            <div class="col-lg-6 col-md-3 col-12 d-flex flex-row justify-content-md-start justify-content-end">
+                <input class="btn btn-secondary mt-1" type="submit" value="Filter" />
+            </div>
+        </div>
     </div>
 </div>
 
 <hr />
 
-<div class="row">
-    @foreach (var item in Model.ClimbViewModels)
-    {
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-            <div class="card">
-                <img src="/api/images/@item.ImageId" class="card-img-top" alt="Boulder Image" style="max-height: 20rem;">
-                <div class="card-body">
-                    <p class="card-text">
-                        <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Grade):</div>
-                            <div class="col-8">
-                                <div class="row ps-3">
-                                    @if (item.Gym == "TheClimb-B-Hongdae")
-                                    {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;">@item.Grade</div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.GradeColor;"></div>
-                                    }
-                                    
-                                    @if (item.HoldColor == "Mint")
-                                    {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:#3EB489;"></div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.HoldColor;"></div>
-                                    }
-                                    <div class="col-6">(Hold)</div>
+@foreach (var wall in Model.ClimbViewModels.Keys)
+{
+    <div class="row">
+        <h3>@wall</h3>
+        <hr />
+        @foreach (var item in Model.ClimbViewModels[wall])
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                <div class="card">
+                    <img src="/api/images/@item.ImageId" class="card-img-top" alt="Boulder Image" style="max-height: 20rem;">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <div class="row">
+                                <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Grade):</div>
+                                <div class="col-8">
+                                    <div class="row ps-3">
+                                        @if (item.Gym == "TheClimb-B-Hongdae")
+                                        {
+                                            <div class="col-3" style="display:inline-block;width:20px;height:20px;">@item.Grade</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.GradeColor;"></div>
+                                        }
+
+                                        @if (item.HoldColor == "Mint")
+                                        {
+                                            <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:#3EB489;"></div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-3" style="display:inline-block;width:20px;height:20px;background-color:@item.HoldColor;"></div>
+                                        }
+                                        <div class="col-6">(Hold)</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Gym):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Gym)</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Wall)</div>
-                        </div>
-                        @if (item.IsFlashed)
-                        {
-                            <div class="float-end">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
-                                    <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z" />
-                                </svg>
+                            <div class="row">
+                                <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Gym):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Gym)</div>
                             </div>
-                        }
-                    </p>
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Wall)</div>
+                            </div>
+                            @if (item.IsFlashed)
+                            {
+                                <div class="float-end">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+                                        <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z" />
+                                    </svg>
+                                </div>
+                            }
+                        </p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="d-flex flex-row justify-content-between">
+                                <span class="align-content-center">
+                                    Attempts: <span class="count-selector">@item.Attempt</span>
+                                </span>
+                                <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Attempt", TimeStamp=DateTime.Now})" onclick="@item.Attempt++" />
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex flex-row justify-content-between">
+                                <span class="align-content-center">
+                                    Tops: <span class="count-selector">@item.Top</span>
+                                </span>
+                                <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Top", TimeStamp=DateTime.Now})" onclick="@item.Top++" />
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="card-footer">
                         <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center">
-                                Attempts: <span class="count-selector">@item.Attempt</span>
-                            </span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Attempt", TimeStamp=DateTime.Now})" onclick="@item.Attempt++" />
+                            <a class="btn btn-dark" asp-action="Create" asp-controller="ClimbLog" asp-route-climbId="@item.Id" alt="create">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tree p-0 m-0 pb-1" viewBox="0 0 16 16">
+                                    <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507" />
+                                </svg>
+                            </a>
+                            <a class="btn btn-dark" asp-action="Edit" asp-route-id="@item.Id" alt="edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil p-0 m-0 pb-1" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                                </svg>
+                            </a>
+                            <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.Id" alt="details">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-card-list p-0 m-0 pb-1" viewBox="0 0 16 16">
+                                    <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
+                                    <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+                                </svg>
+                            </a>
+                            <a class="btn btn-dark" asp-action="Delete" asp-route-id="@item.Id" alt="delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash p-0 m-0 pb-1" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
+                                </svg>
+                            </a>
                         </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="d-flex flex-row justify-content-between">
-                            <span class="align-content-center">
-                                Tops: <span class="count-selector">@item.Top</span>
-                            </span>
-                            <partial name="_CreateClimbLogPartial" model="@(new ClimbLog() { ClimbId = item.Id, Type="Top", TimeStamp=DateTime.Now})" onclick="@item.Top++" />
-                        </div>
-                    </li>
-                </ul>
-                <div class="card-footer">
-                    <div class="d-flex flex-row justify-content-between">
-                        <a class="btn btn-dark" asp-action="Create" asp-controller="ClimbLog" asp-route-climbId="@item.Id" alt="create">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-tree p-0 m-0 pb-1" viewBox="0 0 16 16">
-                                <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507" />
-                            </svg>
-                        </a>
-                        <a class="btn btn-dark" asp-action="Edit" asp-route-id="@item.Id" alt="edit">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil p-0 m-0 pb-1" viewBox="0 0 16 16">
-                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
-                            </svg>
-                        </a>
-                        <a class="btn btn-dark" asp-action="Details" asp-route-id="@item.Id" alt="details">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-card-list p-0 m-0 pb-1" viewBox="0 0 16 16">
-                                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z" />
-                                <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
-                            </svg>
-                        </a>
-                        <a class="btn btn-dark" asp-action="Delete" asp-route-id="@item.Id" alt="delete">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash p-0 m-0 pb-1" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
-                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
-                            </svg>
-                        </a>
                     </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}
 
 <!-- Modal -->
 <div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModallLabel" aria-hidden="true">
@@ -143,8 +146,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form asp-action="CreateSession">
 
+                <form asp-action="CreateSession">
                 </form>
             </div>
             <div class="modal-footer">

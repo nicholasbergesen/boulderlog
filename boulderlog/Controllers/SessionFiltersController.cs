@@ -31,11 +31,19 @@ namespace Boulderlog.Controllers
         }
 
         // GET: SessionFilters/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             ViewData["FranchiseId"] = new SelectList(_context.Franchise, "Id", "Id");
             ViewData["GradeId"] = new SelectList(_context.Grade, "Id", "Id");
             ViewData["GymId"] = new SelectList(_context.Gym, "Id", "Id");
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var sessionFilter = await _context.SessionFilter.FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if (sessionFilter != null)
+            {
+                return View(sessionFilter);
+            }
+
             var model = new SessionFilter()
             {
                 UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
@@ -48,18 +56,27 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GymId,UserId,FranchiseId,GradeId,HoldColor,Wall,LastUpdated")] SessionFilter sessionFilter)
+        public async Task<IActionResult> Create([Bind("Id,GymId,UserId,FranchiseId,GradeId,HoldColor,Wall")] SessionFilter sessionFilter)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sessionFilter);
+                if (sessionFilter.Id != null)
+                {
+                    _context.Update(sessionFilter);
+                }
+                else
+                {
+                    _context.Add(sessionFilter);
+                }
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
+
             ViewData["FranchiseId"] = new SelectList(_context.Franchise, "Id", "Id", sessionFilter.FranchiseId);
             ViewData["GradeId"] = new SelectList(_context.Grade, "Id", "Id", sessionFilter.GradeId);
             ViewData["GymId"] = new SelectList(_context.Gym, "Id", "Id", sessionFilter.GymId);
-            return View(sessionFilter);
+
+            return Ok();
         }
     }
 }

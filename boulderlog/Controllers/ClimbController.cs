@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -114,27 +115,97 @@ namespace Boulderlog.Controllers
             return View(pageModel);
         }
 
-        public IActionResult Session(int? gymId, int gradeId, string wall)
+        public async Task<IActionResult> Session()
         {
-            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
-            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
-            var pageModel = new SessionPageViewModel();
-            pageModel.Gyms = new SelectList(gyms, "Id", "Name", null, "Group.Name");
-            pageModel.ClimbViewModels = climbViewModels;
-            pageModel.SelectedGymId = gymId ?? 2;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var sessionFilter = await _context.SessionFilter.FirstOrDefaultAsync(x => x.UserId == userId);
 
-            return View(pageModel);
-        }
+            if (sessionFilter == null)
+            {
+                return View("Error");
+            }
 
-        [HttpPost]
-        public IActionResult Session(int? gymId)
-        {
-            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
-            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
+            var climbLogs = _context.ClimbLog
+                .Include(c => c.Climb)
+                .Include(c => c.Climb.Gym)
+                .Include(c => c.Climb.Grade)
+                .Include(c => c.Climb.Franchise)
+                .Where(c => c.UserId == userId);
+
+            var climbs = climbLogs
+                .Select(x => x.Climb)
+                .Distinct();
+
+            if (sessionFilter.GymId.HasValue)
+            {
+                climbs = climbs.Where(x => sessionFilter.GymId.Value.Equals(x.GymId));
+            }
+
+            if (sessionFilter.GradeId.HasValue)
+            {
+                climbs = climbs.Where(x => sessionFilter.GradeId.Value.Equals(x.GradeId));
+            }
+
+            if (!string.IsNullOrEmpty(sessionFilter.Wall))
+            {
+                climbs = climbs.Where(x => sessionFilter.Wall.Equals(x.Wall));
+            }
+
+            climbs = climbs.OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
+
+            var climbViewModels = new Dictionary<string, List<ClimbViewModel>>();
+
+            foreach (var climb in climbs)
+            {
+                var logsForClimb = climbLogs.Where(x => x.ClimbId == climb.Id);
+                var climbModel = new ClimbViewModel()
+                {
+                    Id = climb.Id,
+                    Gym = climb.Gym.Name,
+                    Grade = climb.Grade.ColorName,
+                    GradeColor = climb.Grade.ColorHex,
+                    ImageId = climb.ImageId,
+                    HoldColor = climb.HoldColor,
+                    Wall = climb.Wall,
+                    UserId = userId,
+                    IsFlashed = "Top" == logsForClimb.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
+                };
+
+                var attempts = logsForClimb
+                    .GroupBy(x => x.Type);
+
+                foreach (var attempt in attempts)
+                {
+                    switch (attempt.Key)
+                    {
+                        case "Attempt":
+                            climbModel.Attempt = attempt.Count();
+                            break;
+                        case "Top":
+                            climbModel.Top = attempt.Count();
+                            break;
+                        default:
+                            throw new Exception("Unhandled ClimbLog Type");
+                    }
+                }
+
+                if(climbViewModels.TryGetValue(climb.Wall, out List<ClimbViewModel> climbModels))
+                {
+                    climbModels.Add(climbModel);
+                }
+                else
+                {
+                    climbViewModels.Add(climb.Wall, new List<ClimbViewModel> { climbModel });
+                }    
+            }
+
             var pageModel = new SessionPageViewModel();
-            pageModel.Gyms = new SelectList(gyms, "Id", "Name", null, "Group.Name");
+            pageModel.SessionFilter = sessionFilter;
             pageModel.ClimbViewModels = climbViewModels;
-            pageModel.SelectedGymId = gymId ?? 2;
+
+            var grade = _context.Grade.Where(x => x.Id == sessionFilter.GradeId).Select(x => new { x.Id, x.ColorName });
+            ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", sessionFilter.GradeId);
+            ViewData["Wall"] = new SelectList(climbs.First(x => x.GymId == sessionFilter.GymId).Wall.Split(";"), sessionFilter.Wall);
 
             return View(pageModel);
         }
