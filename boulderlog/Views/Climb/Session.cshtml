@@ -1,8 +1,8 @@
-﻿@using Boulderlog.Data.Models
-@model ClimbPageViewModel
+﻿@using Boulderlog.Data.Models;
+@model SessionPageViewModel
 
 <div class="d-flex flex-row justify-content-between">
-    <h1>My Climbs</h1>
+    <h1>Session</h1>
     <p>
         <a type="button" class="btn btn-secondary" asp-action="Create">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill p-0 m-0 pb-1" viewBox="0 0 16 16">
@@ -15,7 +15,7 @@
 
 <div class="row pt-2 pb-2">
     <div class="col-12">
-        <form asp-action="MyClimbs" asp-controller="Climb" method="get">
+        <form asp-action="Session" asp-controller="Climb" method="get">
             <div class="row no-gutters">
                 <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
                     <span class="me-1 mt-1 w-25">Gym:</span><select title="Gym" id="Gym" name="gymId" class="form-select" aria-label="Gym" onchange="getGymData()" asp-for="SelectedGymId" asp-items="Model.Gyms"></select>
@@ -132,6 +132,26 @@
             </div>
         </div>
     }
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModallLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="cameraModallLabel">Start a new session</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="CreateSession">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="capture-image" data-bs-dismiss="modal" class="btn btn-primary">Capture</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="~/js/gym-select.js" asp-append-version="true"></script>

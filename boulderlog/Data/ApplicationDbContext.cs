@@ -59,5 +59,6 @@ namespace Boulderlog.Data
         public DbSet<Gym> Gym { get; set; }
         public DbSet<Grade> Grade { get; set; }
         public DbSet<Franchise> Franchise { get; set; }
+        public DbSet<Boulderlog.Data.Models.SessionFilter> SessionFilter { get; set; } = default!;
     }
 }

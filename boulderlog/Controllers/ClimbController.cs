@@ -114,17 +114,29 @@ namespace Boulderlog.Controllers
             return View(pageModel);
         }
 
+        public IActionResult Session(int? gymId, int gradeId, string wall)
+        {
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
+            var pageModel = new SessionPageViewModel();
+            pageModel.Gyms = new SelectList(gyms, "Id", "Name", null, "Group.Name");
+            pageModel.ClimbViewModels = climbViewModels;
+            pageModel.SelectedGymId = gymId ?? 2;
+
+            return View(pageModel);
+        }
+
         [HttpPost]
         public IActionResult Session(int? gymId)
         {
-            var climbs = _context.Climb.Where(x => x.GymId == gymId);
-            return View();
-        }
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
+            var pageModel = new SessionPageViewModel();
+            pageModel.Gyms = new SelectList(gyms, "Id", "Name", null, "Group.Name");
+            pageModel.ClimbViewModels = climbViewModels;
+            pageModel.SelectedGymId = gymId ?? 2;
 
-        public IActionResult Session(int? gymId, int gradeId, string wall)
-        {
-            var climbs = _context.Climb.Where(x => x.GymId == gymId);
-            return View();
+            return View(pageModel);
         }
 
         // GET: Climb/Details/5
