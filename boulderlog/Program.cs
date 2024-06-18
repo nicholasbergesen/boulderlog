@@ -155,11 +155,7 @@ namespace Boulderlog
             {
                  context.Response.Redirect("/"); //Redirecting if wrong url or wrong route is added
             }
-            else if (!context.User.Identity.IsAuthenticated)
-            {
-                 context.Response.Redirect("Identity/Account/Login");
-            }
-        });
+           });
 
             app.Run();
         }
