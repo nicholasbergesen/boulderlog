@@ -11,6 +11,9 @@
             Add Climb
         </a>
     </p>
+    <button id="openSessionModal" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sessionModal">
+        Start Session
+    </button>
 </div>
 
 @if (Model.SessionFilter.Id != null)
@@ -37,7 +40,7 @@
     <hr />
 
     <div class="row">
-        @foreach (var wall in ViewBag.Wall)
+        @foreach (var wall in Model.ClimbViewModels.Keys)
         {
             <div class="row">
                 <h3>@wall</h3>
@@ -146,7 +149,7 @@
 @{
     var showModal = Model.SessionFilter.Id == null;
 }
-<div class="modal fade" id="createSession" tabindex="-1" aria-labelledby="createSessionModal" aria-hidden="@showModal">
+<div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="createSessionModal" aria-hidden="@showModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -154,10 +157,10 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <partial name="~/Views/SessionFilters/_CreatePartial.cshtml" action="Create" for="@Model.SessionFilter" />
+                <partial name="~/Views/SessionFilter/_CreatePartial.cshtml" action="Create" for="@Model.SessionFilter" />
             </div>
             <div class="modal-footer">
-                <button type="button" id="capture-image" data-bs-dismiss="modal" class="btn btn-primary">Capture</button>
+                <input type="submit" value="Create" form="sessionForm" class="btn btn-primary" data-bs-dismiss="modal" />
             </div>
         </div>
     </div>
@@ -166,6 +169,8 @@
 <script src="~/js/gym-select.js" asp-append-version="true"></script>
 
 <script>
+    getGymData();
+
     function ajaxPost(event) {
         event.preventDefault();
 

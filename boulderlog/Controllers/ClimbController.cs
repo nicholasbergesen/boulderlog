@@ -122,7 +122,8 @@ namespace Boulderlog.Controllers
 
             if (sessionFilter == null)
             {
-                ViewData["Wall"] = new List<string>();
+                var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+                ViewData["Gym"] = new SelectList(gyms, "Id", "Name", null, "Group.Name");
 
                 return View(new SessionPageViewModel()
                 {
@@ -205,9 +206,9 @@ namespace Boulderlog.Controllers
             pageModel.SessionFilter = sessionFilter;
             pageModel.ClimbViewModels = climbViewModels;
 
-            var grade = _context.Grade.Where(x => x.Id == sessionFilter.GradeId).Select(x => new { x.Id, x.ColorName });
-            ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", sessionFilter.GradeId);
-            ViewData["Wall"] = new SelectList(climbs.First(x => x.GymId == sessionFilter.GymId).Wall.Split(";"), sessionFilter.Wall);
+            //var grade = _context.Grade.Where(x => x.Id == sessionFilter.GradeId).Select(x => new { x.Id, x.ColorName });
+            //ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", sessionFilter.GradeId);
+            //ViewData["Wall"] = new SelectList(climbs.First(x => x.GymId == sessionFilter.GymId).Wall.Split(";"), sessionFilter.Wall);
 
             return View(pageModel);
         }

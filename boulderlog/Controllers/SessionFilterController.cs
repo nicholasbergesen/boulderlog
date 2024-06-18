@@ -14,11 +14,11 @@ using Boulderlog.Domain;
 namespace Boulderlog.Controllers
 {
     [Authorize]
-    public class SessionFiltersController : Controller
+    public class SessionFilterController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SessionFiltersController(ApplicationDbContext context)
+        public SessionFilterController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -28,27 +28,6 @@ namespace Boulderlog.Controllers
         {
             var applicationDbContext = _context.SessionFilter.Include(s => s.Franchise).Include(s => s.Grade).Include(s => s.Gym).Include(s => s.User);
             return View(await applicationDbContext.ToListAsync());
-        }
-
-        // GET: SessionFilters/Create
-        public async Task<IActionResult> Create()
-        {
-            ViewData["FranchiseId"] = new SelectList(_context.Franchise, "Id", "Id");
-            ViewData["GradeId"] = new SelectList(_context.Grade, "Id", "Id");
-            ViewData["GymId"] = new SelectList(_context.Gym, "Id", "Id");
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var sessionFilter = await _context.SessionFilter.FirstOrDefaultAsync(x => x.UserId == userId);
-
-            if (sessionFilter != null)
-            {
-                return View(sessionFilter);
-            }
-
-            var model = new SessionFilter()
-            {
-                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
-            };
-            return View(model);
         }
 
         // POST: SessionFilters/Create
