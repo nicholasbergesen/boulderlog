@@ -42,7 +42,7 @@ namespace Boulderlog.Controllers
             var climbLogs = await _context
                 .ClimbLog
                 .Include(c => c.Climb)
-                .Where(x => x.Climb.CreatedByUserId == userId)
+                .Where(x => x.UserId == userId)
                 .Where(x => model.From <= x.TimeStamp && x.TimeStamp <= model.To)
                 .OrderBy(x => x.TimeStamp)
                 .ToListAsync();
@@ -110,7 +110,7 @@ namespace Boulderlog.Controllers
             var climbLogs = await _context
                 .ClimbLog
                 .Include(c => c.Climb)
-                .Where(x => x.Climb.CreatedByUserId == userId)
+                .Where(x => x.UserId == userId)
                 .Where(x => model.From <= x.TimeStamp && x.TimeStamp <= model.To)
                 .OrderBy(x => x.TimeStamp)
                 .ToListAsync();
