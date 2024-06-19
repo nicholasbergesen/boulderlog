@@ -32,47 +32,24 @@ namespace Boulderlog.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var climbLogs = _context.ClimbLog
-                .Include(c => c.Climb)
-                .Include(c => c.Climb.Gym)
-                .Include(c => c.Climb.Grade)
-                .Include(c => c.Climb.Franchise)
-                .Where(c => c.UserId == userId);
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
+            var koreaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+            koreaTime = koreaTime.AddDays(-30);
 
-            if (gradeId < 1 || !gymId.HasValue)
-            {
-                var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Korea Standard Time");
-                var koreaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
-                koreaTime = koreaTime.AddDays(-30);
-                climbLogs = climbLogs.Where(x => x.TimeStamp > koreaTime);
-            }
-
-            var climbs = climbLogs
-                .Select(x => x.Climb)
-                .Distinct();
-
-            if (gymId.HasValue)
-            {
-                climbs = climbs.Where(x => gymId.Equals(x.GymId));
-            }
-
-            if (gradeId > 0)
-            {
-                climbs = climbs.Where(x => gradeId.Equals(x.GradeId));
-            }
-
-            if (!string.IsNullOrEmpty(wall))
-            {
-                climbs = climbs.Where(x => wall.Equals(x.Wall));
-            }
-
-            climbs = climbs.OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
+            var climbs = _context.Climb
+                .Where(x => !gymId.HasValue || gymId.Value.Equals(x.GymId))
+                .Where(x => gradeId <= 0 || gradeId.Equals(x.GradeId))
+                .Where(x => string.IsNullOrEmpty(wall) || wall.Equals(x.Wall))
+                .Include(x => x.ClimbLogs)
+                .Where(x => x.ClimbLogs.Where(x => !gymId.HasValue || x.TimeStamp > koreaTime).Select(x => x.UserId).Contains(userId))
+                .Include(x => x.Gym)
+                .Include(x => x.Grade)
+                .OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
 
             List <ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
 
             foreach (var climb in climbs)
             {
-                var logsForClimb = climbLogs.Where(x => x.ClimbId == climb.Id);
                 var climbModel = new ClimbViewModel()
                 {
                     Id = climb.Id,
@@ -83,10 +60,10 @@ namespace Boulderlog.Controllers
                     HoldColor = climb.HoldColor,
                     Wall = climb.Wall,
                     UserId = userId,
-                    IsFlashed = "Top" == logsForClimb.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
+                    IsFlashed = "Top" == climb.ClimbLogs.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
                 };
 
-                var attempts = logsForClimb
+                var attempts = climb.ClimbLogs
                     .GroupBy(x => x.Type);
 
                 foreach (var attempt in attempts)
