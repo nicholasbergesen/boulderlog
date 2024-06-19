@@ -26,7 +26,7 @@ namespace Boulderlog.Controllers
         [Authorize(Roles = Const.Role.Admin)]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.SessionFilter.Include(s => s.Franchise).Include(s => s.Grade).Include(s => s.Gym).Include(s => s.User);
+            var applicationDbContext = _context.SessionFilter.Include(s => s.Grade).Include(s => s.Gym).Include(s => s.User);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,10 +35,12 @@ namespace Boulderlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GymId,UserId,FranchiseId,GradeId,HoldColor,Wall")] SessionFilter sessionFilter)
+        public async Task<IActionResult> Create([Bind("Id,GymId,UserId,GradeId,Wall")] SessionFilter sessionFilter)
         {
             if (ModelState.IsValid)
             {
+                sessionFilter.LastUpdated = DateTime.Now;
+
                 if (sessionFilter.Id != null)
                 {
                     _context.Update(sessionFilter);
@@ -51,11 +53,7 @@ namespace Boulderlog.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            ViewData["FranchiseId"] = new SelectList(_context.Franchise, "Id", "Id", sessionFilter.FranchiseId);
-            ViewData["GradeId"] = new SelectList(_context.Grade, "Id", "Id", sessionFilter.GradeId);
-            ViewData["GymId"] = new SelectList(_context.Gym, "Id", "Id", sessionFilter.GymId);
-
-            return Ok();
+            return RedirectToAction("Session", "Climb");
         }
     }
 }

@@ -2,7 +2,7 @@
 @model SessionPageViewModel
 
 <div class="d-flex flex-row justify-content-between">
-    <h1>Session</h1>
+    <h1>@Model.SessionFilter.Gym.Name session</h1>
     <p>
         <a type="button" class="btn btn-secondary" asp-action="Create">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill p-0 m-0 pb-1" viewBox="0 0 16 16">
@@ -20,20 +20,21 @@
 {
     <div class="row pt-2 pb-2">
         <div class="col-12">
-            <div class="row no-gutters">
-                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                    <span class="me-1 mt-1 w-25">Gym:</span> @Html.DisplayFor(x => x.SessionFilter.GymId)
+            <form asp-action="Create" asp-controller="SessionFilter">
+                <input type="hidden" asp-for="SessionFilter.Id" />
+                <input type="hidden" asp-for="SessionFilter.GymId" />
+                <input type="hidden" asp-for="SessionFilter.UserId" />
+
+                <div class="row no-gutters">
+                    <span class="visually-hidden" id="gymIdForSession">@Model.SessionFilter.GymId</span>
+                    <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                        <span class="me-1 mt-1 w-25">Grade:</span><select title="Grade" asp-items="ViewBag.Grade" asp-for="SessionFilter.GradeId" id="Grade" class="form-select" onchange="this.form.submit()"></select>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                        <span class="me-1 mt-1 w-25">Wall:</span><select title="Wall" asp-items="ViewBag.Wall" asp-for="SessionFilter.Wall" id="Wall" class="form-select" onchange="this.form.submit()"></select>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                    <span class="me-1 mt-1 w-25">Grade:</span><select title="Grade" id="Grade" name="gradeId" class="form-select" aria-label="Grade"></select>
-                </div>
-                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                    <span class="me-1 mt-1 w-25">Wall:</span><select title="Wall" id="Wall" name="wall" class="form-select" aria-label="Wall"></select>
-                </div>
-                <div class="col-lg-6 col-md-3 col-12 d-flex flex-row justify-content-md-start justify-content-end">
-                    <input class="btn btn-secondary mt-1" type="submit" value="Filter" />
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
@@ -165,31 +166,3 @@
         </div>
     </div>
 </div>
-
-<script src="~/js/gym-select.js" asp-append-version="true"></script>
-
-<script>
-    getGymData();
-
-    function ajaxPost(event) {
-        event.preventDefault();
-
-        // Get the anti-forgery token
-        var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
-
-        $.ajax({
-            type: "POST",
-            url: '@Url.Action("Create", "ClimbLog")',
-            data: $(event.target).serialize() + '&__RequestVerificationToken=' + antiForgeryToken, // Serialize the form data and include the anti-forgery token,
-            success: function (response) {
-                //Update the count
-                let closestCounter = $(event.target).siblings("span").children(".count-selector").first()
-                let newVal = parseInt(closestCounter.text(), 10) + 1;
-                closestCounter.text(newVal);
-            },
-            error: function (xhr, status, error) {
-                console.error("An error occurred for post request: " + error);
-            }
-        });
-    }
-</script>

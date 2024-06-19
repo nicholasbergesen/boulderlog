@@ -13,9 +13,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.HoldColor)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Wall)
             </th>
             <th>
@@ -23,9 +20,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Gym)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Franchise)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.User)
@@ -40,9 +34,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.HoldColor)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Wall)
             </td>
             <td>
@@ -50,9 +41,6 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Gym.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Franchise.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.User.Id)

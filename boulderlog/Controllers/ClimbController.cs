@@ -118,7 +118,9 @@ namespace Boulderlog.Controllers
         public async Task<IActionResult> Session()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var sessionFilter = await _context.SessionFilter.FirstOrDefaultAsync(x => x.UserId == userId);
+            var sessionFilter = await _context.SessionFilter
+                .Include(x => x.Gym)
+                .FirstOrDefaultAsync(x => x.UserId == userId);
 
             if (sessionFilter == null)
             {
@@ -129,38 +131,21 @@ namespace Boulderlog.Controllers
                 {
                     SessionFilter = new SessionFilter() { UserId = userId },
                     ClimbViewModels = new Dictionary<string, List<ClimbViewModel>>(),
-                    Walls = new List<string>()
                 });
             }
 
-            var climbLogs = _context.ClimbLog
-                .Include(c => c.Climb)
-                .Include(c => c.Climb.Gym)
-                .Where(x => sessionFilter.GymId.Value.Equals(x.Climb.GymId))
-                .Include(c => c.Climb.Grade)
-                .Include(c => c.Climb.Franchise);
-
-            var climbs = climbLogs
-                .Select(x => x.Climb)
-                .Distinct();
-
-            if (sessionFilter.GradeId.HasValue)
-            {
-                climbs = climbs.Where(x => sessionFilter.GradeId.Value.Equals(x.GradeId));
-            }
-
-            if (!string.IsNullOrEmpty(sessionFilter.Wall))
-            {
-                climbs = climbs.Where(x => sessionFilter.Wall.Equals(x.Wall));
-            }
-
-            climbs = climbs.OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
+            var climbs = _context.Climb
+                .Include(x => x.Grade)
+                .Include(x => x.ClimbLogs)
+                .Where(x => !sessionFilter.GradeId.HasValue || sessionFilter.GradeId.Value.Equals(x.GradeId))
+                .Where(x => string.IsNullOrEmpty(sessionFilter.Wall) || sessionFilter.Wall.Equals(x.Wall))
+                .Distinct()
+                .OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
 
             var climbViewModels = new Dictionary<string, List<ClimbViewModel>>();
 
             foreach (var climb in climbs)
             {
-                var logsForClimb = climbLogs.Where(x => x.ClimbId == climb.Id);
                 var climbModel = new ClimbViewModel()
                 {
                     Id = climb.Id,
@@ -171,10 +156,11 @@ namespace Boulderlog.Controllers
                     HoldColor = climb.HoldColor,
                     Wall = climb.Wall,
                     UserId = userId,
-                    IsFlashed = "Top" == logsForClimb.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
+                    IsFlashed = "Top" == climb.ClimbLogs.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
                 };
 
-                var attempts = logsForClimb
+                var attempts = climb.ClimbLogs
+                    .Where(x => x.UserId == userId)
                     .GroupBy(x => x.Type);
 
                 foreach (var attempt in attempts)
@@ -206,9 +192,16 @@ namespace Boulderlog.Controllers
             pageModel.SessionFilter = sessionFilter;
             pageModel.ClimbViewModels = climbViewModels;
 
-            //var grade = _context.Grade.Where(x => x.Id == sessionFilter.GradeId).Select(x => new { x.Id, x.ColorName });
-            //ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", sessionFilter.GradeId);
-            //ViewData["Wall"] = new SelectList(climbs.First(x => x.GymId == sessionFilter.GymId).Wall.Split(";"), sessionFilter.Wall);
+            var gym = await _context.Gym
+                .Include(x => x.Franchise.Grade)
+                .FirstOrDefaultAsync(x => x.Id == sessionFilter.GymId);
+
+            var grades = gym.Franchise.Grade.Select(x => new { x.Id, x.ColorName }).ToList();
+            var walls = gym.Walls.Split(";").Select(x => new { Id = x, Val = x }).ToList();
+            grades.Insert(0, new { Id = (int?)null, ColorName = "" });
+            walls.Insert(0, new { Id = "", Val = "" });
+            ViewData["Grade"] = new SelectList(grades, "Id", "ColorName", sessionFilter.GradeId);
+            ViewData["Wall"] = new SelectList(walls, "Id", "Val", sessionFilter.Wall);
 
             return View(pageModel);
         }

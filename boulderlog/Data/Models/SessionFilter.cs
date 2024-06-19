@@ -14,11 +14,7 @@ namespace Boulderlog.Data.Models
         [MaxLength(36)]
         public required string UserId { get; set; }
         public int? GymId { get; set; }
-        public int? FranchiseId { get; set; }
         public int? GradeId { get; set; }
-
-        [MaxLength(255)]
-        public string? HoldColor { get; set; }
 
         [MaxLength(255)]
         public string? Wall { get; set; }
@@ -28,9 +24,6 @@ namespace Boulderlog.Data.Models
 
         [ForeignKey(nameof(GymId))]
         public virtual Gym? Gym { get; set; }
-
-        [ForeignKey(nameof(FranchiseId))]
-        public Franchise? Franchise { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual AppUser? User { get; set; }
