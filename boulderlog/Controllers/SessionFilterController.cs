@@ -40,6 +40,10 @@ namespace Boulderlog.Controllers
             if (ModelState.IsValid)
             {
                 sessionFilter.LastUpdated = DateTime.Now;
+                if (sessionFilter.GradeId == -1)
+                {
+                    sessionFilter.GradeId = null;
+                }
 
                 if (sessionFilter.Id != null)
                 {

@@ -100,11 +100,11 @@ namespace Boulderlog.Controllers
         [Route("SeedDatabase")]
         public async Task<IActionResult> SeedDatabase()
         {
-            var climbLogs = _context.ClimbLog.Include(x => x.Climb);
+            var climb = _context.Climb.Include(x => x.Gym).Where(x => x.Wall == null);
 
-            foreach (var c in climbLogs)
+            foreach (var c in climb)
             {
-                c.UserId = c.Climb.CreatedByUserId;
+                c.Wall = c.Gym.Walls.Split(';')[0];
             }
 
             await _context.SaveChangesAsync();
