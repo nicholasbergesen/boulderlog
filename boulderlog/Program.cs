@@ -1,3 +1,5 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Boulderlog.Data;
 using Boulderlog.Data.Models;
 using Boulderlog.Domain;
@@ -12,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO.Compression;
 using System.Text.Json.Serialization;
@@ -102,6 +105,13 @@ namespace Boulderlog
                     rateOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
                 });
             }
+
+            builder.Services
+                .AddOpenTelemetry()
+                .UseAzureMonitor(config =>
+                {
+                    config.EnableLiveMetrics = true;
+                });
 
             var app = builder.Build();
 
