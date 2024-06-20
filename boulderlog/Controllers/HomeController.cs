@@ -18,7 +18,7 @@ namespace Boulderlog.Controllers
         {
             if(User?.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Climb");
+                return RedirectToAction("MyClimbs", "Climb");
             }
 
             return View();

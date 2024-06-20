@@ -24,7 +24,7 @@ namespace Boulderlog.ApiController
 
         // GET: api/Images/5
         [HttpGet("{id}")]
-        [ResponseCache(Location = ResponseCacheLocation.Any, Duration = 31536000, VaryByQueryKeys = ["id"])]
+        [ResponseCache(Location = ResponseCacheLocation.Client, Duration = 31536000, VaryByQueryKeys = ["id"])]
         public async Task<IActionResult> GetImage(string id)
         {
             var image = await _context.Image.FindAsync(id);

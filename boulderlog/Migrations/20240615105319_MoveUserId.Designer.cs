@@ -3,6 +3,7 @@ using System;
 using Boulderlog.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Boulderlog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240615105319_MoveUserId")]
+    partial class MoveUserId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
@@ -548,50 +551,6 @@ namespace Boulderlog.Migrations
                     b.ToTable("Image");
                 });
 
-            modelBuilder.Entity("Boulderlog.Data.Models.SessionFilter", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("FranchiseId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("GradeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("GymId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("HoldColor")
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Wall")
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FranchiseId");
-
-                    b.HasIndex("GradeId");
-
-                    b.HasIndex("GymId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("SessionFilter");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -760,35 +719,6 @@ namespace Boulderlog.Migrations
                         .HasForeignKey("FranchiseId");
 
                     b.Navigation("Franchise");
-                });
-
-            modelBuilder.Entity("Boulderlog.Data.Models.SessionFilter", b =>
-                {
-                    b.HasOne("Boulderlog.Data.Models.Franchise", "Franchise")
-                        .WithMany()
-                        .HasForeignKey("FranchiseId");
-
-                    b.HasOne("Boulderlog.Data.Models.Grade", "Grade")
-                        .WithMany()
-                        .HasForeignKey("GradeId");
-
-                    b.HasOne("Boulderlog.Data.Models.Gym", "Gym")
-                        .WithMany()
-                        .HasForeignKey("GymId");
-
-                    b.HasOne("Boulderlog.Data.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Franchise");
-
-                    b.Navigation("Grade");
-
-                    b.Navigation("Gym");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

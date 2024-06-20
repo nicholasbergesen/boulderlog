@@ -17,6 +17,11 @@ namespace Boulderlog.Data.Models
         [MaxLength(255), Required]
         public required string Type { get; set; }
 
+        public string? UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public virtual AppUser? User { get; set; }
+
         [Required]
         public required string ClimbId { get; set; }
 

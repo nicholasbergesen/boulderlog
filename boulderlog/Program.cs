@@ -45,7 +45,6 @@ namespace Boulderlog
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
             });
-
             builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
             {
                 options.Level = CompressionLevel.Fastest;
@@ -141,6 +140,7 @@ namespace Boulderlog
 
             app.UseCors();
             app.UseResponseCaching();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -148,14 +148,14 @@ namespace Boulderlog
                 pattern: "{controller=Home}/{action=Index}/{id?}");//.RequireRateLimiting(rateLimitOptions.Policy);
             app.MapRazorPages();//.RequireRateLimiting(rateLimitOptions.Policy);
             app.Use(async (context, next) =>
-           {
-              await next();
-
-            if (context.Response.StatusCode == 404)
             {
-                 context.Response.Redirect("/"); //Redirecting if wrong url or wrong route is added
-            }
-           });
+                await next();
+
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Response.Redirect("/"); //Redirecting if wrong url or wrong route is added
+                }
+            });
 
             app.Run();
         }

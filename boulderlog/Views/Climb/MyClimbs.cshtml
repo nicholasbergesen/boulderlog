@@ -4,7 +4,7 @@
 <div class="d-flex flex-row justify-content-between">
     <h1>My Climbs</h1>
     <p>
-        <a type="button" class="btn btn-secondary" asp-action="Create">
+        <a type="button" class="btn btn-secondary" asp-action="Create" asp-route-gymId="@Model.SelectedGymId" asp-route-redirectToAction="MyCilmbs">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill p-0 m-0 pb-1" viewBox="0 0 16 16">
                 <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
             </svg>
@@ -13,7 +13,26 @@
     </p>
 </div>
 
-<partial name="_ClimbFilterPartial" model="Model" />
+<div class="row pt-2 pb-2">
+    <div class="col-12">
+        <form asp-action="MyClimbs" asp-controller="Climb" method="get">
+            <div class="row no-gutters">
+                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                    <span class="me-1 mt-1 w-25">Gym:</span><select title="Gym" id="Gym" name="gymId" class="form-select" aria-label="Gym" onchange="getGymData()" asp-for="SelectedGymId" asp-items="Model.Gyms"></select>
+                </div>
+                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                    <span class="me-1 mt-1 w-25">Grade:</span><select title="Grade" id="Grade" name="gradeId" class="form-select" aria-label="Grade"></select>
+                </div>
+                <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
+                    <span class="me-1 mt-1 w-25">Wall:</span><select title="Wall" id="Wall" name="wall" class="form-select" aria-label="Wall"></select>
+                </div>
+                <div class="col-lg-6 col-md-3 col-12 d-flex flex-row justify-content-md-start justify-content-end">
+                    <input class="btn btn-secondary mt-1" type="submit" value="Filter" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 <hr />
 
