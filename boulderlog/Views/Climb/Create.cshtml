@@ -1,4 +1,4 @@
-﻿@model Boulderlog.Data.Models.Climb
+﻿@model CreateClimbViewModel
 
 @{
     var now = DateTime.Now;
@@ -42,7 +42,7 @@
         </form>
         <form asp-action="Create">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="RedirectToAction" />
             <input type="hidden" asp-for="CreatedByUserId" />
             <input type="hidden" asp-for="ImageId" />
             <input type="hidden" asp-for="TimeStamp" />
