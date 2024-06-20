@@ -99,11 +99,11 @@ namespace Boulderlog.Controllers
                 .Include(x => x.Gym)
                 .FirstOrDefaultAsync(x => x.UserId == userId);
 
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+            ViewData["Gym"] = new SelectList(gyms, "Id", "Name", null, "Group.Name");
+
             if (sessionFilter == null)
             {
-                var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
-                ViewData["Gym"] = new SelectList(gyms, "Id", "Name", null, "Group.Name");
-
                 return View(new SessionPageViewModel()
                 {
                     SessionFilter = new SessionFilter() { UserId = userId },

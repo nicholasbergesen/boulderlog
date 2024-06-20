@@ -1,26 +1,30 @@
 ﻿@using Boulderlog.Data.Models;
 @model SessionPageViewModel
 
-<div class="d-flex flex-row justify-content-between">
-    <h1>@Model.SessionFilter.Gym.Name session</h1>
-    <p>
-        <a type="button" class="btn btn-secondary" asp-action="Create" asp-route-gymId="@Model.SessionFilter.GymId" asp-route-redirectToAction="Session">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill p-0 m-0 pb-1" viewBox="0 0 16 16">
-                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
-            </svg>
-            Add Climb
-        </a>
-        <button id="openSessionModal" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sessionModal">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill p-0 m-0 pb-1" viewBox="0 0 16 16">
-                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
-            </svg>
-            Session
-        </button>
-    </p>
-</div>
+@{
+    var hasSessionFilter = Model.SessionFilter.Id != null && Model.SessionFilter.GymId != null;
+}
 
-@if (Model.SessionFilter.Id != null)
+@if (hasSessionFilter)
 {
+    <div class="d-flex flex-row justify-content-between">
+        <h1>@Model.SessionFilter.Gym.Name session</h1>
+        <p>
+            <a type="button" class="btn btn-secondary" asp-action="Create" asp-route-gymId="@Model.SessionFilter.GymId" asp-route-redirectToAction="Session">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill p-0 m-0 pb-1" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
+                </svg>
+                Add Climb
+            </a>
+            <button id="openSessionModal" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#sessionModal" onclick="getGymData()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square-fill p-0 m-0 pb-1" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"></path>
+                </svg>
+                Session
+            </button>
+        </p>
+    </div>
+
     <div class="row pt-2 pb-2">
         <div class="col-12">
             <form asp-action="Create" asp-controller="SessionFilter">
@@ -31,10 +35,10 @@
                 <div class="row no-gutters">
                     <span class="visually-hidden" id="gymIdForSession">@Model.SessionFilter.GymId</span>
                     <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                        <span class="me-1 mt-1 w-25">Grade:</span><select title="Grade" asp-items="ViewBag.Grade" asp-for="SessionFilter.GradeId" id="Grade" class="form-select" onchange="this.form.submit()"></select>
+                        <span class="me-1 mt-1 w-25">Grade:</span><select title="Grade" asp-items="ViewBag.Grade" asp-for="SessionFilter.GradeId" class="form-select" onchange="this.form.submit()"></select>
                     </div>
                     <div class="col-lg-2 col-md-3 col-12 d-flex flex-row align-items-center">
-                        <span class="me-1 mt-1 w-25">Wall:</span><select title="Wall" asp-items="ViewBag.Wall" asp-for="SessionFilter.Wall" id="Wall" class="form-select" onchange="this.form.submit()"></select>
+                        <span class="me-1 mt-1 w-25">Wall:</span><select title="Wall" asp-items="ViewBag.Wall" asp-for="SessionFilter.Wall" class="form-select" onchange="this.form.submit()"></select>
                     </div>
                 </div>
             </form>
@@ -150,14 +154,11 @@
 }
 
 <!-- Modal -->
-@{
-    var showModal = Model.SessionFilter.Id == null;
-}
-<div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="createSessionModal" aria-hidden="@showModal">
+<div class="modal fade" id="sessionModal" tabindex="-1" aria-labelledby="createSessionModal" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="createSessionModal">Start a new session</h1>
+                <h1 class="modal-title fs-5">Start a new session</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -170,7 +171,19 @@
     </div>
 </div>
 
+<script src="~/js/gym-session.js" asp-append-version="true"></script>
+
 <script>
+    $('#sessionModal').on('show.bs.modal', function (event) {
+        getGymData();
+    });
+
+    if ('@hasSessionFilter' == 'False') {
+        $(window).on('load', function () {
+            $('#sessionModal').modal('show');
+        });
+    }
+
     function ajaxPost(event) {
         event.preventDefault();
 
@@ -192,5 +205,4 @@
             }
         });
     };
-
 </script>
