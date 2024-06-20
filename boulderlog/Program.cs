@@ -1,5 +1,4 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Azure.Monitor.OpenTelemetry.Exporter;
 using Boulderlog.Data;
 using Boulderlog.Data.Models;
 using Boulderlog.Domain;

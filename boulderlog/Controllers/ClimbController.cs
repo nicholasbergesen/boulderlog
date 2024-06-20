@@ -4,12 +4,10 @@ using Boulderlog.Domain;
 using Boulderlog.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -46,7 +44,7 @@ namespace Boulderlog.Controllers
                 .Include(x => x.Grade)
                 .OrderByDescending(x => x.ClimbLogs.Max(x => x.TimeStamp));
 
-            List <ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
+            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
 
             foreach (var climb in climbs)
             {
@@ -382,7 +380,7 @@ namespace Boulderlog.Controllers
         {
             var climb = await _context.Climb
                 .Include(x => x.ClimbLogs)
-                .FirstOrDefaultAsync(x=> id.Equals(x.Id));
+                .FirstOrDefaultAsync(x => id.Equals(x.Id));
 
             if (climb != null)
             {

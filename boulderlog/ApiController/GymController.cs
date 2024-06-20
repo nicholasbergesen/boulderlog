@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Boulderlog.Data;
+using Boulderlog.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Boulderlog.Data;
-using Boulderlog.Data.Models;
-using Boulderlog.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Boulderlog.ApiController
 {
@@ -32,7 +28,7 @@ namespace Boulderlog.ApiController
                 .Include(x => x.Franchise.Grade)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (selectedGym == null) 
+            if (selectedGym == null)
             {
                 return NotFound();
             }

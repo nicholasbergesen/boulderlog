@@ -25,6 +25,6 @@ namespace Boulderlog.Data.Models
         public int? FranchiseId { get; set; }
 
         [ForeignKey(nameof(FranchiseId))]
-        public virtual Franchise? Franchise{ get; set; }
+        public virtual Franchise? Franchise { get; set; }
     }
 }

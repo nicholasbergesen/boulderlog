@@ -1,8 +1,6 @@
 ﻿using Boulderlog.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 
 namespace Boulderlog.Data
 {
@@ -26,7 +24,6 @@ namespace Boulderlog.Data
             builder.Entity<Grade>().HasData(new Grade { Id = 7, FranchiseId = 1, VScale = "V3", SortOrder = 7, ColorName = "7", ColorHex = "#800080" });
             builder.Entity<Grade>().HasData(new Grade { Id = 8, FranchiseId = 1, VScale = "V4", SortOrder = 8, ColorName = "8", ColorHex = "#808080" });
             builder.Entity<Grade>().HasData(new Grade { Id = 9, FranchiseId = 1, VScale = "V5", SortOrder = 9, ColorName = "9", ColorHex = "#A52A2A" });
-
 
             builder.Entity<Franchise>().HasData(new Franchise() { Id = 2, Name = "TheClimb" });
             builder.Entity<Gym>().HasData(new Gym { Id = 2, Name = "Yeonnam", Walls = "Yeonnam;Toitmaru;Sinchon", FranchiseId = 2 });

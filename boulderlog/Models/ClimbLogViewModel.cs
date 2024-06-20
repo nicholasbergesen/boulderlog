@@ -1,5 +1,4 @@
-﻿using Boulderlog.Data.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -16,7 +15,7 @@ namespace Boulderlog.Models
         public List<double> GradeSuccessRate_Values { get; set; } = new List<double>();
         public List<string> GradeSuccessRate_Label { get; set; } = new List<string>();
 
-        public List<string> GradeRatioAttempt_Label { get; set; } = new List<string>(); 
+        public List<string> GradeRatioAttempt_Label { get; set; } = new List<string>();
         public List<double> GradeRatioAttempt_Values { get; set; } = new List<double>();
         public List<double> GradeRatioTop_Values { get; set; } = new List<double>();
 

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Boulderlog.Models
+﻿namespace Boulderlog.Models
 {
     public class SessionFilterView
     {
