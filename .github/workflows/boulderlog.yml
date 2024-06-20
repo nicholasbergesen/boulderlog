@@ -48,12 +48,3 @@ jobs:
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
         publish-profile: ${{ secrets.boulderlog_C3C7 }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
-  database_migrations:
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-    - name: Wait 2 minutes for restart
-      run: sleep 120s
-    - name: Run Migration
-      run: curl https://boulderlog.azurewebsites.net/Maintenance/Migration
-  
