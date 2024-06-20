@@ -40,15 +40,26 @@ namespace Boulderlog.Data
             builder.Entity<Gym>().HasData(new Gym { Id = 10, Name = "Yangjae", Walls = "Dungeon;Slab;Cave;Island;Flat;Arch;Prow", FranchiseId = 2 });
             builder.Entity<Gym>().HasData(new Gym { Id = 11, Name = "Nonhyeon", Walls = "Bat;Mini Bat;Gogae;Non", FranchiseId = 2 });
             builder.Entity<Grade>().HasData(new Grade { Id = 10, FranchiseId = 2, VScale = "V0", SortOrder = 1, ColorName = "White", ColorHex = "#FFFFFF" });
-            builder.Entity<Grade>().HasData(new Grade { Id = 11, FranchiseId = 2, VScale = "V1", SortOrder = 2, ColorName = "Yellow", ColorHex = "#FFFF00" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 11, FranchiseId = 2, VScale = "V1", SortOrder = 2, ColorName = "Yellow", ColorHex = "#ede932" });
             builder.Entity<Grade>().HasData(new Grade { Id = 12, FranchiseId = 2, VScale = "V2", SortOrder = 3, ColorName = "Orange", ColorHex = "#FFA500" });
             builder.Entity<Grade>().HasData(new Grade { Id = 13, FranchiseId = 2, VScale = "V3", SortOrder = 4, ColorName = "Green", ColorHex = "#008000" });
-            builder.Entity<Grade>().HasData(new Grade { Id = 14, FranchiseId = 2, VScale = "V4", SortOrder = 5, ColorName = "Blue", ColorHex = "#0000FF" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 14, FranchiseId = 2, VScale = "V4", SortOrder = 5, ColorName = "Blue", ColorHex = "#003153" });
             builder.Entity<Grade>().HasData(new Grade { Id = 15, FranchiseId = 2, VScale = "V5", SortOrder = 6, ColorName = "Red", ColorHex = "#FF0000" });
-            builder.Entity<Grade>().HasData(new Grade { Id = 16, FranchiseId = 2, VScale = "V6", SortOrder = 7, ColorName = "Purple", ColorHex = "#800080" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 16, FranchiseId = 2, VScale = "V6", SortOrder = 7, ColorName = "Purple", ColorHex = "#860d86" });
             builder.Entity<Grade>().HasData(new Grade { Id = 17, FranchiseId = 2, VScale = "V7", SortOrder = 8, ColorName = "Grey", ColorHex = "#808080" });
             builder.Entity<Grade>().HasData(new Grade { Id = 18, FranchiseId = 2, VScale = "V8", SortOrder = 9, ColorName = "Brown", ColorHex = "#A52A2A" });
             builder.Entity<Grade>().HasData(new Grade { Id = 19, FranchiseId = 2, VScale = "V9", SortOrder = 10, ColorName = "Black", ColorHex = "#000000" });
+
+            builder.Entity<Franchise>().HasData(new Franchise() { Id = 3, Name = "Cheese Climbing" });
+            builder.Entity<Gym>().HasData(new Gym { Id = 12, Name = "Yongsan", Walls = "Mozza;Cheddar", FranchiseId = 3 });
+            builder.Entity<Grade>().HasData(new Grade { Id = 20, FranchiseId = 3, VScale = "V0", SortOrder = 1, ColorName = "Red", ColorHex = "#FF0000" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 21, FranchiseId = 3, VScale = "V1", SortOrder = 2, ColorName = "Orange", ColorHex = "#FFA500" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 22, FranchiseId = 3, VScale = "V2", SortOrder = 3, ColorName = "Yellow", ColorHex = "#ede932" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 23, FranchiseId = 3, VScale = "V3", SortOrder = 4, ColorName = "Green", ColorHex = "#008000" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 24, FranchiseId = 3, VScale = "V4", SortOrder = 5, ColorName = "Blue", ColorHex = "#207be4" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 25, FranchiseId = 3, VScale = "V5", SortOrder = 6, ColorName = "Navy", ColorHex = "#003153" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 26, FranchiseId = 3, VScale = "V6", SortOrder = 7, ColorName = "Purple", ColorHex = "#860d86" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 27, FranchiseId = 3, VScale = "V7", SortOrder = 8, ColorName = "Black", ColorHex = "#000000" });
 
             base.OnModelCreating(builder);
         }
