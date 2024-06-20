@@ -14,17 +14,17 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="GymId" class="control-label"></label>
-                <select asp-for="GymId" id="Gym" class="form-control" asp-items="ViewBag.Gym" onchange="getGymData()"></select>
+                <select asp-for="GymId" id="SessionGym" class="form-control" asp-items="ViewBag.Gym" onchange="getGymData()"></select>
                 <span asp-validation-for="GymId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Wall" class="control-label"></label>
-                <select asp-for="Wall" id="Wall" class="form-control"></select>
+                <select asp-for="Wall" id="SessionWall" class="form-control"></select>
                 <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GradeId" class="control-label"></label>
-                <select asp-for="GradeId" id="Grade" class="form-control"></select>
+                <select asp-for="GradeId" id="SessionGrade" class="form-control"></select>
                 <span asp-validation-for="GradeId" class="text-danger"></span>
             </div>
         </form>
