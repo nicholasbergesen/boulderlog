@@ -106,12 +106,15 @@ namespace Boulderlog
                 });
             }
 
-            builder.Services
-                .AddOpenTelemetry()
-                .UseAzureMonitor(config =>
-                {
-                    config.EnableLiveMetrics = true;
-                });
+            if (!builder.Environment.IsDevelopment())
+            {
+                builder.Services
+                    .AddOpenTelemetry()
+                    .UseAzureMonitor(config =>
+                    {
+                        config.EnableLiveMetrics = true;
+                    });
+            }
 
             var app = builder.Build();
 
