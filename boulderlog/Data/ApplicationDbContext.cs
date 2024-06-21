@@ -44,7 +44,7 @@ namespace Boulderlog.Data
             builder.Entity<Grade>().HasData(new Grade { Id = 15, FranchiseId = 2, VScale = "V5", SortOrder = 6, ColorName = "Red", ColorHex = "#FF0000" });
             builder.Entity<Grade>().HasData(new Grade { Id = 16, FranchiseId = 2, VScale = "V6", SortOrder = 7, ColorName = "Purple", ColorHex = "#860d86" });
             builder.Entity<Grade>().HasData(new Grade { Id = 17, FranchiseId = 2, VScale = "V7", SortOrder = 8, ColorName = "Grey", ColorHex = "#808080" });
-            builder.Entity<Grade>().HasData(new Grade { Id = 18, FranchiseId = 2, VScale = "V8", SortOrder = 9, ColorName = "Brown", ColorHex = "#A52A2A" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 18, FranchiseId = 2, VScale = "V8", SortOrder = 9, ColorName = "Brown", ColorHex = "#AB5236" });
             builder.Entity<Grade>().HasData(new Grade { Id = 19, FranchiseId = 2, VScale = "V9", SortOrder = 10, ColorName = "Black", ColorHex = "#000000" });
 
             builder.Entity<Franchise>().HasData(new Franchise() { Id = 3, Name = "Cheese Climbing" });

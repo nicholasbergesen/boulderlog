@@ -46,6 +46,7 @@
             <input type="hidden" asp-for="CreatedByUserId" />
             <input type="hidden" asp-for="ImageId" />
             <input type="hidden" asp-for="TimeStamp" />
+            <input type="hidden" asp-for="GradeId" id="gradeValue" />
 
             <div class="form-group">
                 <label asp-for="GymId" class="control-label"></label>
@@ -59,7 +60,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="GradeId" class="control-label"></label>
-                <select asp-for="GradeId" id="Grade" class="form-control" asp-items="ViewBag.Grade"></select>
+                <div id="Grade">
+                </div>
                 <span asp-validation-for="GradeId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -100,7 +102,28 @@
 <script src="~/js/gym-select.js" asp-append-version="true"></script>
 
 <script>
-    getGymData();
+    //getGymData();
+
+    async function getColors() {
+        const request = new Request(`/api/gym/${@Model.GymId}`);
+        let response = await fetch(request);
+        let body = await response.json();
+
+        $("#Grade input").remove();
+        $("#Grade label").remove();
+
+        $.each(body.grade, function (i, v) {
+            $("#Grade").append($(`<input type='radio' class='btn-check' name='colors' id='${v.id}' />`));
+            $("#Grade").append($(`<label class='btn p-2 me-3 mt-3 border-3' style='background-color:${v.colorHex};width:30px;height:30px' onclick='setGradeId(event)' for='${v.id}'></label>`));
+        });
+    }
+
+    function setGradeId(event) {
+        console.log($(event.target).attr("for"));
+        $("#gradeValue").val($(event.target).attr("for"));
+    }
+
+    getColors();
 </script>
 
 @section Scripts {

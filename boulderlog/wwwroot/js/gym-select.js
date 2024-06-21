@@ -8,7 +8,7 @@
     $("#Wall option").remove();
 
     $.each(body.grade, function (i, v) {
-        $("#Grade").append($('<option></option>').val(v.value).html(v.text));
+        $("#Grade").append($('<option></option>').val(v.id).html(v.colorName));
     });
 
     $.each(body.wall, function (i, v) {
