@@ -272,12 +272,9 @@ namespace Boulderlog.Controllers
                 }
             }
 
-            var gyms = _context.Gym.Select(x => new { x.Id, x.Name, x.Walls });
-            var grade = _context.Grade.Where(x => x.Id == climbViewModel.GymId).Select(x => new { x.Id, x.ColorName });
-            ViewData["Gym"] = new SelectList(gyms, "Id", "Name", climbViewModel.GymId);
-            ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", climbViewModel.GradeId);
-            ViewData["Wall"] = new SelectList(gyms.First(x => x.Id == climbViewModel.GymId).Walls.Split(";"), climbViewModel.Wall);
-            ViewData["HoldColor"] = new SelectList(Const.HoldColors, "ColorName", "ColorName", climbViewModel.HoldColor);
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+            ViewData["Gym"] = new SelectList(gyms, "Id", "Name", climbViewModel.GymId, "Group.Name");
+            ViewData["HoldColor"] = Const.HoldColors;
             return View(climbViewModel);
         }
 

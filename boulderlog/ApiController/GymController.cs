@@ -42,11 +42,8 @@ namespace Boulderlog.ApiController
                 ColorHex = x.ColorHex,
                 ColorName = x.ColorName,
             }).ToList();
-            //grades.Insert(0, new { Id = (int?)-1, ColorName = "" });
-            //model.Grade = new SelectList(grades, "Id", "ColorName");
 
             var walls = selectedGym.Walls.Split(";").ToList();
-            walls.Insert(0, "");
             model.Wall = new SelectList(walls);
             model.Grade = grades;
 

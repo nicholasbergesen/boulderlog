@@ -48,30 +48,32 @@
             <input type="hidden" asp-for="TimeStamp" />
             <input type="hidden" asp-for="GradeId" id="gradeValue" />
             <input type="hidden" asp-for="HoldColor" id="holdColorValue" />
+            <input type="hidden" asp-for="Wall" id="wallValue" />
 
             <div class="form-group">
                 <label asp-for="GymId" class="control-label"></label>
                 <select asp-for="GymId" id="Gym" class="form-control" asp-items="ViewBag.Gym" onchange="getGymData()"></select>
                 <span asp-validation-for="GymId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Wall" class="control-label"></label>
-                <select asp-for="Wall" id="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
+            <div class="form-group mt-2">
+                <label asp-for="Wall" class="control-label mb-2"></label>
+                <div id="Wall">
+                </div>
                 <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
-                <label asp-for="GradeId" class="control-label"></label>
+                <label asp-for="GradeId" class="control-label mb-2"></label>
                 <div id="Grade">
                 </div>
                 <span asp-validation-for="GradeId" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
-                <label asp-for="HoldColor" class="control-label"></label>
+                <label asp-for="HoldColor" class="control-label mb-2"></label>
                 <div>
                     @foreach (var color in ViewBag.HoldColor)
                     {
                         <input type="radio" class="btn-check" name="holdcolors" id="@color.ColorName" />
-                        <label class="btn p-2 me-3 mt-3 border-3" style="background-color:@color.ColorHex;width:30px;height:30px" onclick="setSelection(event, '#holdColorValue')" for="@color.ColorName"></label>
+                        <label class="btn p-2 me-3 mt-2 border-3" style="background-color:@color.ColorHex;width:30px;height:30px" onclick="setSelection(event, '#holdColorValue')" for="@color.ColorName"></label>
                     }
                 </div>
                 <span asp-validation-for="HoldColor" class="text-danger"></span>
@@ -104,6 +106,18 @@
 <script src="~/js/climb-create.js" asp-append-version="true"></script>
 
 <script>
+    var urlParams = new URLSearchParams(window.location.search);
+    const gradeId = urlParams.get("gradeId");
+    const wall = urlParams.get("wall");
+
+    if (gradeId) {
+        $("#gradeValue").val(gradeId);
+    }
+
+    if (wall) {
+        $("#wallValue").val(wall);
+    }
+
     async function getGymData() {
         const request = new Request(`/api/gym/${@Model.GymId}`);
         let response = await fetch(request);
@@ -111,28 +125,18 @@
 
         $("#Grade input").remove();
         $("#Grade label").remove();
-        $("#Wall option").remove();
+        $("#Wall input").remove();
+        $("#Wall label").remove();
 
         $.each(body.grade, function (i, v) {
             $("#Grade").append($(`<input type='radio' class='btn-check' name='colors' id='${v.id}' />`));
-                $("#Grade").append($(`<label class='btn p-2 me-3 mt-3 border-3' style='background-color:${v.colorHex};width:30px;height:30px' onclick="setSelection(event, '#gradeValue')" for='${v.id}'></label>`));
+            $("#Grade").append($(`<label class='btn p-2 me-3 mt-2 border-3' style='background-color:${v.colorHex};width:30px;height:30px' onclick="setSelection(event, '#gradeValue')" for='${v.id}'></label>`));
         });
 
         $.each(body.wall, function (i, v) {
-            $("#Wall").append($('<option></option>').val(v.text).html(v.text));
+            $("#Wall").append($(`<input type='radio' class='btn-check' name='walls' id='${v.text}' />`));
+            $("#Wall").append($(`<label class='btn btn-outline-secondary p-2 me-2' onclick="setSelection(event, '#wallValue')" for='${v.text}'>${v.text}</label>`));
         });
-
-        var urlParams = new URLSearchParams(window.location.search);
-        const gradeId = urlParams.get("gradeId");
-        const wall = urlParams.get("wall");
-
-        if (gradeId) {
-            $("#gradeValue").val(gradeId);
-        }
-
-        if (wall) {
-            $(`#Wall option[value='${wall}']`).attr("selected", "selected");
-        }
     }
 
     function setSelection(event, target) {

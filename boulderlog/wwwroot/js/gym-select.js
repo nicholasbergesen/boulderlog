@@ -12,6 +12,7 @@
         $("#Grade").append($('<option></option>').val(v.id).html(v.colorName));
     });
 
+    $("#Wall").append($('<option></option>').val("").html(""));
     $.each(body.wall, function (i, v) {
         $("#Wall").append($('<option></option>').val(v.text).html(v.text));
     });
