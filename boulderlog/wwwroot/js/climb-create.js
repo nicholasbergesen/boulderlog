@@ -3,7 +3,6 @@
 });
 
 document.querySelector("#file-image").addEventListener('change', async function (event) {
-    console.log(event)
     let file = event.target.files[0];
     let arrayBuffer = await file.arrayBuffer();
     let base64 = btoa(new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''));

@@ -119,7 +119,8 @@
     }
 
     async function getGymData() {
-        const request = new Request(`/api/gym/${@Model.GymId}`);
+        var gymIdVal = $("#Gym option:selected").val() ?? @Model.GymId
+        const request = new Request(`/api/gym/${gymIdVal}`);
         let response = await fetch(request);
         let body = await response.json();
 
