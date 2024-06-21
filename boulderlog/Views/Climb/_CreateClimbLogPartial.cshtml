@@ -3,6 +3,7 @@
 <form onsubmit="ajaxPost(event)">
     <input asp-for="TimeStamp" type="hidden" value="@Model.TimeStamp" />
     <input asp-for="Type" type="hidden" value="@Model.Type" />
-    <input asp-for="ClimbId" type="hidden" type="hidden" value="@Model.ClimbId" />
+    <input asp-for="ClimbId" type="hidden" value="@Model.ClimbId" />
+    <input asp-for="UserId" type="hidden" value="@Model.UserId" />
     <input type="submit" class="btn btn-secondary" value="+" />
 </form>

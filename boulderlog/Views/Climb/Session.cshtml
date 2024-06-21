@@ -91,14 +91,14 @@
                                     <div class="row">
                                         <div class="col-4 m-0">@Html.DisplayNameFor(modelItem => item.Wall):</div> <div class="col-8">@Html.DisplayFor(modelItem => item.Wall)</div>
                                     </div>
-                                    @if (item.IsFlashed)
-                                    {
-                                        <div class="float-end">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
-                                                <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z" />
-                                            </svg>
-                                        </div>
+                                    @{
+                                        var hideFlash = item.IsFlashed ? "" : "visually-hidden";
                                     }
+                                    <div class="float-end @hideFlash" id="flash">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge-fill" viewBox="0 0 16 16">
+                                            <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09z" />
+                                        </svg>
+                                    </div>
                                 </p>
                             </div>
                             <ul class="list-group list-group-flush">
@@ -195,6 +195,13 @@
             url: '@Url.Action("Create", "ClimbLog")',
             data: $(event.target).serialize() + '&__RequestVerificationToken=' + antiForgeryToken, // Serialize the form data and include the anti-forgery token,
             success: function (response) {
+                //Update flash
+                var firstTop = true
+                $.each($("span .count-selector"), function (i, v) { firstTop = $(v).html() == '0' })
+                if (firstTop) {
+                    $("#flash").removeClass("visually-hidden")
+                }
+
                 //Update the count
                 let closestCounter = $(event.target).siblings("span").children(".count-selector").first()
                 let newVal = parseInt(closestCounter.text(), 10) + 1;

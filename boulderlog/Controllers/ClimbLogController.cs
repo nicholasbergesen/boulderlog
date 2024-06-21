@@ -175,6 +175,7 @@ namespace Boulderlog.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TimeStamp,Type,ClimbId")] ClimbLog climbLog)
         {
+            climbLog.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (ModelState.IsValid)
             {
                 _context.Add(climbLog);
