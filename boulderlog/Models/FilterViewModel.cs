@@ -6,11 +6,11 @@ namespace Boulderlog.Models
 {
     public class FilterViewModel
     {
-        public List<GradeDTO> Grade { get; set; }
+        public IEnumerable<ColorDTO> Grade { get; set; }
         public SelectList Wall { get; set; }
     }
 
-    public class GradeDTO 
+    public class ColorDTO 
     {
         public int Id { get; set; }
         public string ColorHex { get;set; }

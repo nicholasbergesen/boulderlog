@@ -47,6 +47,7 @@
             <input type="hidden" asp-for="ImageId" />
             <input type="hidden" asp-for="TimeStamp" />
             <input type="hidden" asp-for="GradeId" id="gradeValue" />
+            <input type="hidden" asp-for="HoldColor" id="holdColorValue" />
 
             <div class="form-group">
                 <label asp-for="GymId" class="control-label"></label>
@@ -58,15 +59,19 @@
                 <select asp-for="Wall" id="Wall" class="form-control" asp-items="ViewBag.Wall"></select>
                 <span asp-validation-for="Wall" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="GradeId" class="control-label"></label>
                 <div id="Grade">
                 </div>
                 <span asp-validation-for="GradeId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="HoldColor" class="control-label"></label>
-                <select asp-for="HoldColor" class="form-control" asp-items="ViewBag.HoldColor"></select>
+                @foreach (var color in ViewBag.HoldColor)
+                {
+                    <input type='radio' class='btn-check' name='holdcolors' id='@color.ColorName' />
+                    <label class="btn p-2 me-3 mt-3 border-3" style="background-color:@color.ColorHex;width:30px;height:30px" onclick="setSelection(event, '#holdColorValue')" for="@color.ColorName"></label>
+                }
                 <span asp-validation-for="HoldColor" class="text-danger"></span>
             </div>
             <div class="form-group mt-2">
@@ -99,31 +104,44 @@
 </div>
 
 <script src="~/js/climb-create.js" asp-append-version="true"></script>
-<script src="~/js/gym-select.js" asp-append-version="true"></script>
 
 <script>
-    //getGymData();
-
-    async function getColors() {
+    async function getGymData() {
         const request = new Request(`/api/gym/${@Model.GymId}`);
         let response = await fetch(request);
         let body = await response.json();
 
         $("#Grade input").remove();
         $("#Grade label").remove();
+        $("#Wall option").remove();
 
         $.each(body.grade, function (i, v) {
             $("#Grade").append($(`<input type='radio' class='btn-check' name='colors' id='${v.id}' />`));
-            $("#Grade").append($(`<label class='btn p-2 me-3 mt-3 border-3' style='background-color:${v.colorHex};width:30px;height:30px' onclick='setGradeId(event)' for='${v.id}'></label>`));
+                $("#Grade").append($(`<label class='btn p-2 me-3 mt-3 border-3' style='background-color:${v.colorHex};width:30px;height:30px' onclick="setSelection(event, '#gradeValue')" for='${v.id}'></label>`));
         });
+
+        $.each(body.wall, function (i, v) {
+            $("#Wall").append($('<option></option>').val(v.text).html(v.text));
+        });
+
+        var urlParams = new URLSearchParams(window.location.search);
+        const gradeId = urlParams.get("gradeId");
+        const wall = urlParams.get("wall");
+
+        if (gradeId) {
+            $("#gradeValue").val(gradeId);
+        }
+
+        if (wall) {
+            $(`#Wall option[value='${wall}']`).attr("selected", "selected");
+        }
     }
 
-    function setGradeId(event) {
-        console.log($(event.target).attr("for"));
-        $("#gradeValue").val($(event.target).attr("for"));
+    function setSelection(event, target) {
+        $(target).val($(event.target).attr("for"));
     }
 
-    getColors();
+    getGymData();
 </script>
 
 @section Scripts {

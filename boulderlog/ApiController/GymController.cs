@@ -1,4 +1,5 @@
 ﻿using Boulderlog.Data;
+using Boulderlog.Domain;
 using Boulderlog.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -35,7 +36,7 @@ namespace Boulderlog.ApiController
 
             var model = new FilterViewModel();
             var grades = selectedGym.Franchise.Grade.Select(x =>
-            new GradeDTO()
+            new ColorDTO()
             {
                 Id = x.Id.Value,
                 ColorHex = x.ColorHex,

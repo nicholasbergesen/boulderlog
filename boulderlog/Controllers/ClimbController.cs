@@ -223,7 +223,7 @@ namespace Boulderlog.Controllers
         {
             var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
             ViewData["Gym"] = new SelectList(gyms, "Id", "Name", null, "Group.Name");
-            ViewData["HoldColor"] = new SelectList(Const.HoldColors);
+            ViewData["HoldColor"] = Const.HoldColors;
             var model = new CreateClimbViewModel();
             model.GymId = gymId ?? 2;
             model.RedirectToAction = redirectToAction;
@@ -277,7 +277,7 @@ namespace Boulderlog.Controllers
             ViewData["Gym"] = new SelectList(gyms, "Id", "Name", climbViewModel.GymId);
             ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", climbViewModel.GradeId);
             ViewData["Wall"] = new SelectList(gyms.First(x => x.Id == climbViewModel.GymId).Walls.Split(";"), climbViewModel.Wall);
-            ViewData["HoldColor"] = new SelectList(Const.HoldColors, climbViewModel.HoldColor);
+            ViewData["HoldColor"] = new SelectList(Const.HoldColors, "ColorName", "ColorName", climbViewModel.HoldColor);
             return View(climbViewModel);
         }
 
@@ -305,7 +305,7 @@ namespace Boulderlog.Controllers
             ViewData["Gym"] = new SelectList(gyms, "Id", "Name", null, "Group.Name");
             ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", climb.GradeId);
             ViewData["Wall"] = new SelectList(climb.Gym.Walls.Split(";"), climb.Wall);
-            ViewData["HoldColor"] = new SelectList(Const.HoldColors, climb.HoldColor);
+            ViewData["HoldColor"] = new SelectList(Const.HoldColors, "ColorName", "ColorName", climb.HoldColor);
             return View(climb);
         }
 
@@ -350,7 +350,7 @@ namespace Boulderlog.Controllers
             ViewData["Gym"] = new SelectList(gyms, "Id", "Name", climb.GymId);
             ViewData["Grade"] = new SelectList(grade, "Id", "ColorName", climb.GradeId);
             ViewData["Wall"] = new SelectList(gyms.First(x => x.Id == climb.GymId).Walls.Split(";"), climb.Wall);
-            ViewData["HoldColor"] = new SelectList(Const.HoldColors, climb.HoldColor);
+            ViewData["HoldColor"] = new SelectList(Const.HoldColors, "ColorName", "ColorName", climb.HoldColor);
             return View(climb);
         }
 
