@@ -14,13 +14,13 @@
                 <div class="pe-1">
                     @if (string.IsNullOrEmpty(Model.ImageId))
                     {
-                        <canvas class="placeholder" id="canvas" width="250" height="250"></canvas>
+                        <canvas class="placeholder" id="canvas" width="400" height="400"></canvas>
                         <span></span>
                     }
                     else
                     {
-                        <img src="/api/images/@Model.ImageId" width="250" height="250" id="imageTag" />
-                        <canvas class="visually-hidden" id="canvas" width="250" height="250"></canvas>
+                        <img src="/api/images/@Model.ImageId" width="400" height="400" id="imageTag" />
+                        <canvas class="visually-hidden" id="canvas" width="400" height="400"></canvas>
                     }
                 </div>
                 <div>
@@ -68,11 +68,11 @@
             <div class="form-group mt-2">
                 <label asp-for="HoldColor" class="control-label"></label>
                 <div>
-                @foreach (var color in ViewBag.HoldColor)
-                {
-                    <input type='radio' class='btn-check' name='holdcolors' id='@color.ColorName' />
-                    <label class="btn p-2 me-3 mt-3 border-3" style="background-color:@color.ColorHex;width:30px;height:30px" onclick="setSelection(event, '#holdColorValue')" for="@color.ColorName"></label>
-                }
+                    @foreach (var color in ViewBag.HoldColor)
+                    {
+                        <input type="radio" class="btn-check" name="holdcolors" id="@color.ColorName" />
+                        <label class="btn p-2 me-3 mt-3 border-3" style="background-color:@color.ColorHex;width:30px;height:30px" onclick="setSelection(event, '#holdColorValue')" for="@color.ColorName"></label>
+                    }
                 </div>
                 <span asp-validation-for="HoldColor" class="text-danger"></span>
             </div>
@@ -92,7 +92,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <video id="video" width="250" height="250" autoplay="" playsinline=""></video>
+                <video id="video" width="400" height="400" autoplay="" playsinline=""></video>
             </div>
             <div class="modal-footer">
                 <button type="button" id="capture-image" data-bs-dismiss="modal" class="btn btn-primary">Capture</button>
