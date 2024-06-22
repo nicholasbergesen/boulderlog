@@ -126,6 +126,7 @@ namespace Boulderlog.Controllers
 
             foreach (var climb in climbs)
             {
+                var userClimbLogs = climb.ClimbLogs.Where(x => x.UserId == userId);
                 var climbModel = new ClimbViewModel()
                 {
                     Id = climb.Id,
@@ -136,11 +137,10 @@ namespace Boulderlog.Controllers
                     HoldColor = climb.HoldColor,
                     Wall = climb.Wall,
                     UserId = userId,
-                    IsFlashed = "Top" == climb.ClimbLogs.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
+                    IsFlashed = "Top" == userClimbLogs.OrderBy(x => x.TimeStamp).FirstOrDefault()?.Type
                 };
 
-                var attempts = climb.ClimbLogs
-                    .Where(x => x.UserId == userId)
+                var attempts = userClimbLogs
                     .GroupBy(x => x.Type);
 
                 foreach (var attempt in attempts)
