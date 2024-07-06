@@ -112,6 +112,7 @@ namespace Boulderlog.Controllers
             var climbs = _context.Climb
                 .Include(x => x.Grade)
                 .Include(x => x.ClimbLogs)
+                .Where(x => x.IsArchived == false)
                 .Where(x => x.GymId == sessionFilter.GymId)
                 .Where(x => !sessionFilter.GradeId.HasValue || sessionFilter.GradeId.Value.Equals(x.GradeId))
                 .Where(x => string.IsNullOrEmpty(sessionFilter.Wall) || sessionFilter.Wall.Equals(x.Wall))

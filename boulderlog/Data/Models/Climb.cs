@@ -28,6 +28,8 @@ namespace Boulderlog.Data.Models
         [MaxLength(255)]
         public string? Wall { get; set; }
 
+        public bool IsArchived { get; set; }
+
         [Required]
         public string CreatedByUserId { get; set; }
 
