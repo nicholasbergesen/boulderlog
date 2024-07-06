@@ -8,7 +8,7 @@
     $("#SessionWall option").remove();
 
     $.each(body.grade, function (i, v) {
-        $("#SessionGrade").append($('<option></option>').val(v.value).html(v.text));
+        $("#SessionGrade").append($('<option></option>').val(v.id).html(v.colorName));
     });
 
     $.each(body.wall, function (i, v) {
