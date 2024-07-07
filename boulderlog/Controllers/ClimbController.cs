@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static Boulderlog.Models.ArchiveViewModel;
 
 namespace Boulderlog.Controllers
 {
@@ -181,6 +182,66 @@ namespace Boulderlog.Controllers
             ViewData["Wall"] = new SelectList(walls, "Id", "Val", sessionFilter.Wall);
 
             return View(pageModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Archive(int? gymId, string wall, DateTime? to)
+        {
+            to ??= DateTime.Now;
+            gymId ??= 2;
+
+            var climbs = _context.Climb
+                .Where(x => x.IsArchived == false)
+                .Where(x => gymId.Value.Equals(x.GymId))
+                .Where(x => string.IsNullOrEmpty(wall) || wall.Equals(x.Wall))
+                .Include(x => x.Gym)
+                .Include(x => x.Grade)
+                .Where(x => x.TimeStamp < to.Value);
+
+            List<ClimbViewModel> climbViewModels = new List<ClimbViewModel>();
+
+            foreach (var climb in climbs)
+            {
+                var climbModel = new ClimbViewModel()
+                {
+                    Id = climb.Id,
+                    Gym = climb.Gym.Name,
+                    Grade = climb.Grade.ColorName,
+                    GradeColor = climb.Grade.ColorHex,
+                    ImageId = climb.ImageId,
+                    HoldColor = climb.HoldColor,
+                    Wall = climb.Wall,
+                };
+
+                climbViewModels.Add(climbModel);
+            }
+
+            var gyms = _context.Gym.Include(x => x.Franchise).Select(x => new { x.Id, x.Name, Group = new SelectListGroup { Name = x.Franchise.Name } });
+            var pageModel = new ArchiveViewModel();
+            pageModel.Gyms = new SelectList(gyms, "Id", "Name", null, "Group.Name");
+            pageModel.ClimbViewModels = climbViewModels;
+            pageModel.SelectedGymId = gymId.Value;
+            pageModel.To = to.Value;
+
+            return View(pageModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Archive(DateTime to, int gymId, string wall)
+        {
+            var climbs = _context.Climb
+               .Where(x => gymId.Equals(x.GymId))
+               .Where(x => wall.Equals(x.Wall))
+               .Where(x => x.TimeStamp < to);
+
+            foreach (var climb in climbs)
+            {
+                climb.IsArchived = true;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Archive");
         }
 
         // GET: Climb/Details/5

@@ -40,7 +40,7 @@ namespace Boulderlog.Data
             builder.Entity<Grade>().HasData(new Grade { Id = 11, FranchiseId = 2, VScale = "V1", SortOrder = 2, ColorName = "Yellow", ColorHex = "#ede932" });
             builder.Entity<Grade>().HasData(new Grade { Id = 12, FranchiseId = 2, VScale = "V2", SortOrder = 3, ColorName = "Orange", ColorHex = "#FFA500" });
             builder.Entity<Grade>().HasData(new Grade { Id = 13, FranchiseId = 2, VScale = "V3", SortOrder = 4, ColorName = "Green", ColorHex = "#008000" });
-            builder.Entity<Grade>().HasData(new Grade { Id = 14, FranchiseId = 2, VScale = "V4", SortOrder = 5, ColorName = "Blue", ColorHex = "#003153" });
+            builder.Entity<Grade>().HasData(new Grade { Id = 14, FranchiseId = 2, VScale = "V4", SortOrder = 5, ColorName = "Blue", ColorHex = "#0033ff" });
             builder.Entity<Grade>().HasData(new Grade { Id = 15, FranchiseId = 2, VScale = "V5", SortOrder = 6, ColorName = "Red", ColorHex = "#FF0000" });
             builder.Entity<Grade>().HasData(new Grade { Id = 16, FranchiseId = 2, VScale = "V6", SortOrder = 7, ColorName = "Purple", ColorHex = "#860d86" });
             builder.Entity<Grade>().HasData(new Grade { Id = 17, FranchiseId = 2, VScale = "V7", SortOrder = 8, ColorName = "Grey", ColorHex = "#808080" });
