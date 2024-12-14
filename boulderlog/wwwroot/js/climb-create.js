@@ -29,12 +29,16 @@ document.querySelector("#open-camera-modal").addEventListener('click', async fun
     let stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
     let video = document.getElementById('video')
     video.srcObject = stream;
+
+    $("#imageTag").width(video.videoWidth)
+    $("#canvas").width(video.videoWidth)
+    $("#canvas").height(video.videoHeight)
 });
 
 document.querySelector("#capture-image").addEventListener('click', async function () {
     let canvas = document.querySelector("#canvas");
     let video = document.getElementById('video')
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
     video.srcObject.getTracks()[0].stop();
     $(canvas).removeClass("placeholder");
     let image_data_url = canvas.toDataURL('image/jpeg');
